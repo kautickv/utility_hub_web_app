@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: Sample Cloudformation template test
+
+# Create a bucket and enable website-static hosting
+Resources:
+  S3BucketStaticHosting:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      AccessControl: PublicRead
+      BucketName: react-frontend-41545345643545653
+      MetricsConfigurations:
+        - Id: EntireBucket
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+    DeletionPolicy: Retain
+  SampleBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3BucketStaticHosting
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - "s3:GetObject"
+            Effect: Allow
+            Resource: !Join
+              - ""
+              - - "arn:aws:s3:::"
+                - !Ref S3BucketStaticHosting
+                - /*
+            Principal: "*"
+Outputs:
+  WebsiteURL:
+    Value: !GetAtt
+      - S3BucketStaticHosting
+      - WebsiteURL
+    Description: URL for website hosted on S3
