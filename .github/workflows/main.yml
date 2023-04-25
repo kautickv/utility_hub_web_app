@@ -11,7 +11,7 @@ jobs:
 
       - name: Build React Front-end
         run: |
+          cd ./front_end
           npm build
           echo "Build complete"
-          cd ./front_end
           ls
