@@ -9,9 +9,16 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Build React Front-end
+      - name: Install react dependencies
         run: |
           cd ./front_end
-          npm build
-          echo "Build complete"
+          npm install
+          echo "Install complete"
+          ls
+
+      - name: Build React Project
+        run: |
+          cd ./front_end
+          npm run build
+          echo "Build Complete"
           ls
