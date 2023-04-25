@@ -9,7 +9,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Execute shell commands
+      - name: Build React Front-end
         run: |
-          echo "Hello World"
+          npm build
+          echo "Build complete"
+          cd ./front_end
           ls
