@@ -7,7 +7,6 @@ Resources:
   S3BucketStaticHosting:
     Type: "AWS::S3::Bucket"
     Properties:
-      AccessControl: PublicRead
       BucketName: react-frontend-41545345643545653
       MetricsConfigurations:
         - Id: EntireBucket
