@@ -16,3 +16,15 @@ Sync S3 buclet to local folder
 
 Run a cloudformatin stack template
  - This function will create a stack in cloudformation and run the template. Fails if 
+
+
+
+
+
+Important info:
+
+1. This is the present working directory in github actions:
+    /home/runner/work/password_generator_webapp/password_generator_webapp
+
+2. Run terraform like that. Unable to add it to environment variables
+    C:\Users\kautick.vaisnavsing\Desktop\Software\Terraform\terraform.exe --version
