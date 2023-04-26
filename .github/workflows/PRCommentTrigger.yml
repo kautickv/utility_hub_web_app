@@ -15,8 +15,10 @@ jobs:
       - name: Print branch name
         run: echo "Current branch is ${{ github.ref }}"
 
-      - name: Print Ref value
-        run: echo "Branch that was checked out was ${{ github.event.pull_request.head.ref }}"
+      - name: Print Github Context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
 
       - name: Terrafrom configuration check
         id: fmt
