@@ -6,6 +6,7 @@ jobs:
     name: PR comment
     if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
+    if: contains(github.event.comment.body, 'Deploy')
     steps:
       - run: |
           echo A comment on PR $NUMBER
