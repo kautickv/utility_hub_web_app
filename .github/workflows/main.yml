@@ -11,7 +11,8 @@ jobs:
 
       - name: Test AWS CLI
         run: |
-          aws configure list-profiles
+          aws --version
+          pwd
 
       - name: Test moving to ~
         run: |
