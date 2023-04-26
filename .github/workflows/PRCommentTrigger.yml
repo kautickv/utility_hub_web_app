@@ -12,6 +12,7 @@ jobs:
 
       - name: Change to Infra directory
         run: cd /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
+        
       - name: Terrafrom configuration check
         id: fmt
         run: terraform fmt -check
