@@ -12,23 +12,31 @@ jobs:
 
       - name: Change to Infra directory
         run: cd /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
-        
+
       - name: Terrafrom configuration check
         id: fmt
-        run: terraform fmt -check
+        run: |
+          terraform fmt -check
+          ls
         continue-on-error: true
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: |
+          terraform init
+          ls
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate
+        run: |
+          terraform validate
+          ls
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan
+        run: |
+          terraform plan
+          ls
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
