@@ -17,6 +17,7 @@ jobs:
 
       - name: Terrafrom configuration check
         id: fmt
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: |
           terraform fmt -check
           ls
@@ -24,23 +25,27 @@ jobs:
 
       - name: Terraform Init
         id: init
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: |
           terraform init
           ls
 
       - name: Terraform Validate
         id: validate
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: |
           terraform validate
           ls
 
       - name: Terraform Plan
         id: plan
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: |
           terraform plan
           ls
 
       - name: Terraform Apply
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: terraform apply -auto-approve
 
         env:
