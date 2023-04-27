@@ -1,3 +1,5 @@
+## Checkout https://dev.to/zirkelc/trigger-github-workflow-for-comment-on-pull-request-45l2
+
 on: issue_comment
 
 jobs:
@@ -75,7 +77,6 @@ jobs:
       - name: Terraform Apply
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: terraform apply -auto-approve
-
 
       - name: Set latest commit status as ${{ job.status }}
         uses: myrotvorets/set-commit-status-action@master
