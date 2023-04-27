@@ -11,14 +11,16 @@ jobs:
       issues: read
       pull-requests: read
       statuses: write
-      
+
     steps:
       - uses: hashicorp/setup-terraform@v2
 
+      # The above permission contents, issues and pull-requests permission are needed for this step
       - name: Get PR Branch
         uses: xt0rted/pull-request-comment-branch@v2
         id: comment-branch
 
+      # The above statuses permission are needed for this step.
       - name: Set latest commit status as pending
         uses: myrotvorets/set-commit-status-action@master
         with:
@@ -26,26 +28,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: pending
 
+      # Checkout the branch in the PR to run changes
       - name: Checkout PR Branch
         uses: actions/checkout@v3
         with:
           ref: ${{ steps.comment-branch.outputs.head_ref }}
-
-      - name: Get branch name
-        id: branch-name
-        uses: tj-actions/branch-names@v6
-      
-      - name: Running on the default branch.
-        if: steps.branch-name.outputs.is_default == 'true'
-        run: |
-          echo "Running on default: ${{ steps.branch-name.outputs.current_branch }}"
-        # Outputs: "Running on default: main".
-      
-      - name: Running on a pull request branch.
-        if: steps.branch-name.outputs.is_default == 'false'
-        run: |
-          echo "Running on pr: ${{ steps.branch-name.outputs.current_branch }}"
-        # Outputs: "Running on pr: feature/test".
 
       - name: Terrafrom configuration check
         id: fmt
@@ -79,6 +66,15 @@ jobs:
       - name: Terraform Apply
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: terraform apply -auto-approve
+
+
+      - name: Set latest commit status as ${{ job.status }}
+        uses: myrotvorets/set-commit-status-action@master
+        if: always()
+        with:
+          sha: ${{ steps.comment-branch.outputs.head_sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
 
         env:
           aws-access-key-id: ${{secrets.AWS_ACCESS_KEY}}
