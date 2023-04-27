@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
     bucket         = "password-generator-terraform-state-management-bucket"
-    key            = "dev/passwordGeneratorTerraformState"
-    region         = "us-east-1"
+    key            = "dev/passwordGeneratorTerraformState" 
+    region         = "us-east-1" 
   }
 }
 
