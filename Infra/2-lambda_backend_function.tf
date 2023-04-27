@@ -20,7 +20,7 @@ POLICY
 
 # Attach basic execution policy to the above role
 resource "aws_iam_role_policy_attachment" "hello_lambda_policy" {
-  role       = aws_iam_role.hello_lambda_exec.name
+  role       = aws_iam_role.password-generator-backend-lambda-function_exec.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
@@ -30,14 +30,14 @@ resource "aws_lambda_function" "password-generator-backend-lambda-function" {
   function_name = "password-generator-backend-lambda-function"
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
-  s3_key    = aws_s3_object.lambda_hello.key
+  s3_key    = aws_s3_object.password-generator-backend-lambda-function-object.key
 
   runtime = "python3.9"
   handler = "../back_end/hello_world.py"
 
   source_code_hash = data.archive_file.password-generator-backend-lambda-function-zip.output_base64sha256
 
-  role = aws_iam_role.password-generator-backend-lambda-function.arn
+  role = aws_iam_role.password-generator-backend-lambda-function_exec.arn
 }
 
 # Create a cloudwatch log group for lambda execution logs
