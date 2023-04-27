@@ -6,6 +6,10 @@ jobs:
     name: PR comment
     if: ${{ github.event.issue.pull_request && github.event.comment.body == 'Deploy' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
     steps:
       - uses: hashicorp/setup-terraform@v2
 
@@ -19,7 +23,7 @@ jobs:
           sha: ${{ steps.comment-branch.outputs.head_sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           status: pending
-          
+
       - name: Checkout PR Branch
         uses: actions/checkout@v3
         with:
