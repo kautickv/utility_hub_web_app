@@ -1,6 +1,6 @@
 # Create an IAM role to assign to lambda function
 resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
-  name = "password_generator_lambda_backend_role"
+  name = "password-generator-backend-lambda-function_exec"
 
   assume_role_policy = <<POLICY
 {
