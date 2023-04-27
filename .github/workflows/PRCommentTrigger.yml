@@ -15,14 +15,6 @@ jobs:
     steps:
       - uses: hashicorp/setup-terraform@v2
 
-      # The above statuses permission are needed for this step.
-      - name: Set latest commit status as pending
-        uses: myrotvorets/set-commit-status-action@master
-        with:
-          sha: ${{ steps.comment-branch.outputs.head_sha }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          status: pending
-
       # The above permission contents, issues and pull-requests permission are needed for this step
       - name: Get PR Branch
         uses: xt0rted/pull-request-comment-branch@v2
@@ -34,6 +26,13 @@ jobs:
         with:
           ref: ${{ steps.comment-branch.outputs.head_ref }}
 
+      # The above statuses permission are needed for this step.
+      - name: Set latest commit status as pending
+        uses: myrotvorets/set-commit-status-action@master
+        with:
+          sha: ${{ steps.comment-branch.outputs.head_sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: pending
       
       - name: Set AWS Credentials
         env:
