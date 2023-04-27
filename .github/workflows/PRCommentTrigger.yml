@@ -70,14 +70,7 @@ jobs:
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: |
           terraform plan -out=tfplan
-          echo "::set-output name=tfplan::$(cat tfplan)"
         continue-on-error: true
-
-      - name: Save Terraform Plan
-        uses: actions/upload-artifact@v2
-        with:
-          name: terraform-plan
-          path: tfplan
 
       - name: Terraform Apply
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
