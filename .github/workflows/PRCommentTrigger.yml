@@ -10,6 +10,8 @@ jobs:
       contents: read
       issues: read
       pull-requests: read
+      statuses: write
+      
     steps:
       - uses: hashicorp/setup-terraform@v2
 
