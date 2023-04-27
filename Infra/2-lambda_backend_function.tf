@@ -33,7 +33,7 @@ resource "aws_lambda_function" "password-generator-backend-lambda-function" {
   s3_key    = aws_s3_object.password-generator-backend-lambda-function-object.key
 
   runtime = "python3.9"
-  handler = "../back_end/hello_world.py"
+  handler = "hello_world.py"
 
   source_code_hash = data.archive_file.password-generator-backend-lambda-function-zip.output_base64sha256
 
