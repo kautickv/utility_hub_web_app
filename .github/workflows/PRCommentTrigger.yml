@@ -10,7 +10,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
 
       - name: Get PR Branch
-        uses: xt0rted/pull-request-comment-branch@v1
+        uses: xt0rted/pull-request-comment-branch@v2
         id: comment-branch
 
       - name: Checkout PR Branch
