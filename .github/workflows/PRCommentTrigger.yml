@@ -9,10 +9,14 @@ jobs:
     steps:
       - uses: hashicorp/setup-terraform@v2
 
-      - name: Checkout All Branches
+      - name: Get PR Branch
+        uses: xt0rted/pull-request-comment-branch@v1
+        id: comment-branch
+
+      - name: Checkout PR Branch
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          ref: ${{ steps.comment-branch.outputs.head_ref }}
 
       - name: Get branch name
         id: branch-name
@@ -29,7 +33,7 @@ jobs:
         run: |
           echo "Running on pr: ${{ steps.branch-name.outputs.current_branch }}"
         # Outputs: "Running on pr: feature/test".
-        
+
       - name: Terrafrom configuration check
         id: fmt
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
