@@ -10,20 +10,26 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
 
       - name: Checkout All Branches
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Get all pull requests
-        uses: octokit/rest.js@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v6
+      
+      - name: Running on the default branch.
+        if: steps.branch-name.outputs.is_default == 'true'
         run: |
-          const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-          const { data: pullRequests } = await octokit.pulls.list({ owner: 'owner', repo: 'repo', state: 'open' });
-          for (const pullRequest of pullRequests) {
-            console.log(pullRequest.number);
-          }
+          echo "Running on default: ${{ steps.branch-name.outputs.current_branch }}"
+        # Outputs: "Running on default: main".
+      
+      - name: Running on a pull request branch.
+        if: steps.branch-name.outputs.is_default == 'false'
+        run: |
+          echo "Running on pr: ${{ steps.branch-name.outputs.current_branch }}"
+        # Outputs: "Running on pr: feature/test".
+        
       - name: Terrafrom configuration check
         id: fmt
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
