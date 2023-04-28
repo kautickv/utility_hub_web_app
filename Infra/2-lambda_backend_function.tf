@@ -26,7 +26,7 @@ resource "aws_s3_object" "password-generator-backend-lambda-function-layer-objec
   key    = "layer.zip"
   source = data.archive_file.layer.output_path
 
-  etag = filemd5(data.archive_file.layer.output_path)
+  etag = filemd5(data.archive_file.password-generator-backend-lambda-function-layer-object.output_path)
 }
 
 # Put zip folder inside a layer
