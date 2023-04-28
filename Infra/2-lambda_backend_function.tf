@@ -14,7 +14,6 @@ data "archive_file" "layer" {
   type        = "zip"
   source_dir  = "../${path.module}/back_end/layer"
   output_path = "../${path.module}/back_end/layer.zip"
-  depends_on  = [null_resource.pip_install]
 }
 
 # Create an object for the module zip folder and add it to bucket we created earlier
