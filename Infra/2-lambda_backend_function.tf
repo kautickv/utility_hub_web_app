@@ -1,3 +1,32 @@
+# Install all python dependencies. Inside the back_end folder and store in a folder called layer
+resource "null_resource" "pip_install" {
+  triggers = {
+    shell_hash = "${sha256(file("../${path.module}/back_end/requirements.txt"))}"
+  }
+}
+
+# Create an object for the module zip folder and add it to bucket we created earlier
+resource "aws_s3_object" "password-generator-backend-lambda-function-layer-object" {
+  bucket = aws_s3_bucket.lambda_bucket.id
+
+  key    = "layer.zip"
+  source = "${path.module}/layer.zip"
+
+  etag = filemd5("${path.module}/layer.zip")
+}
+
+# Put zip folder inside a layer
+resource "aws_lambda_layer_version" "layer" {
+  layer_name          = "Python-layer-SOC-landing-page"
+  s3_bucket = aws_s3_bucket.lambda_bucket.id
+  s3_key    = aws_s3_object.password-generator-backend-lambda-function-layer-object.key
+ # source_code_hash    = data.archive_file.layer.output_base64sha256
+  compatible_runtimes = ["python3.9", "python3.8", "python3.7", "python3.6"]
+
+}
+
+
+
 # Create an IAM role to assign to lambda function
 resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
   name = "password-generator-backend-lambda-function_exec"
@@ -34,10 +63,14 @@ resource "aws_lambda_function" "password-generator-backend-lambda-function" {
 
   runtime = "python3.9"
   handler = "hello_world.lambda_handler"
-
   source_code_hash = data.archive_file.password-generator-backend-lambda-function-zip.output_base64sha256
-
   role = aws_iam_role.password-generator-backend-lambda-function_exec.arn
+  layers = [aws_lambda_layer_version.layer.arn]
+  environment {
+    variables = {
+      "MESSAGE" = "Terraform sends its regards"
+    }
+  }
 }
 
 # Create a cloudwatch log group for lambda execution logs
@@ -55,6 +88,7 @@ data "archive_file" "password-generator-backend-lambda-function-zip" {
   output_path = "../${path.module}/back_end.zip"
 }
 
+# Upload zip file to s3 bucket created earlier
 resource "aws_s3_object" "password-generator-backend-lambda-function-object" {
   bucket = aws_s3_bucket.lambda_bucket.id
 
@@ -63,6 +97,3 @@ resource "aws_s3_object" "password-generator-backend-lambda-function-object" {
 
   etag = filemd5(data.archive_file.password-generator-backend-lambda-function-zip.output_path)
 }
-
-
-
