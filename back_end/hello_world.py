@@ -1,7 +1,9 @@
+import requests
+
 def lambda_handler(event, context):
     print(event)
-    print("Hello World")
+    response = requests.get('https://google.com')
     return {
-        'statusCode': 200,
-        'body': 'Hello World!'
+        'statusCode': response.status_code,
+        'body': response.text
     }
