@@ -17,12 +17,27 @@ data "archive_file" "layer" {
   depends_on  = [null_resource.pip_install]
 }
 
+# Create an object for the module zip folder and add it to bucket we created earlier
+
+# Upload zip file to s3 bucket created earlier
+resource "aws_s3_object" "password-generator-backend-lambda-function-layer-object" {
+  bucket = aws_s3_bucket.lambda_bucket.id
+
+  key    = "layer.zip"
+  source = data.archive_file.layer.output_path
+
+  etag = filemd5(data.archive_file.layer.output_path)
+}
+
+# Put zip folder inside a layer
 resource "aws_lambda_layer_version" "layer" {
   layer_name          = "Python-layer-SOC-landing-page"
-  filename            = data.archive_file.layer.output_path
+  s3_bucket = aws_s3_bucket.lambda_bucket.id
+  s3_key    = aws_s3_object.layer.key
   source_code_hash    = data.archive_file.layer.output_base64sha256
   compatible_runtimes = ["python3.9", "python3.8", "python3.7", "python3.6"]
 }
+
 
 
 # Create an IAM role to assign to lambda function
@@ -86,6 +101,7 @@ data "archive_file" "password-generator-backend-lambda-function-zip" {
   output_path = "../${path.module}/back_end.zip"
 }
 
+# Upload zip file to s3 bucket created earlier
 resource "aws_s3_object" "password-generator-backend-lambda-function-object" {
   bucket = aws_s3_bucket.lambda_bucket.id
 
