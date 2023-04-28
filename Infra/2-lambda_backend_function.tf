@@ -9,7 +9,7 @@ resource "null_resource" "pip_install" {
 resource "aws_s3_object" "password-generator-backend-lambda-function-layer-object" {
   bucket = aws_s3_bucket.lambda_bucket.id
 
-  key    = "../${path.module}/back_end/layer.zip"
+  key    = "layer.zip"
   source = "../${path.module}/back_end/layer.zip"
 
   etag = filemd5("../${path.module}/back_end/layer.zip")
