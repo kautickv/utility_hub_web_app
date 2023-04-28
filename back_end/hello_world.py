@@ -1,10 +1,7 @@
-import numpy
-import pandas
-
+import requests
 
 def lambda_handler(event, context):
-    fake = Faker()
-    name = fake.name()
+    name = "fdhdfhdfh"
     print(f'Hello, {name}!')
     return {
         'statusCode': 200,
