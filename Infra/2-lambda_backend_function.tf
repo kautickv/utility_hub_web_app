@@ -5,7 +5,7 @@ resource "null_resource" "pip_install" {
   }
 
   provisioner "local-exec" {
-    command = "mkdir -p ../${path.module}/back_end/layer && python3 -m pip install -r ../${path.module}/back_end/requirements.txt -t ../${path.module}/back_end/layer/python"
+    command = "mkdir -p ../${path.module}/back_end/layer && python3 -m pip install -r ../${path.module}/back_end/requirements.txt -t ../${path.module}/back_end/layer"
   }
 }
 
@@ -13,6 +13,7 @@ resource "null_resource" "pip_install" {
 data "archive_file" "layer" {
   type        = "zip"
   source_dir  = "../${path.module}/back_end/layer"
+  output_file_mode = "0666"
   output_path = "../${path.module}/back_end/layer.zip"
 }
 
