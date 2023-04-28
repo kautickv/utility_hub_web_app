@@ -9,7 +9,7 @@ resource "null_resource" "pip_install" {
   }
 
    provisioner "local-exec" {
-    command = "zip -r layer.zip python/"
+    command = "cd python && zip -r ../layer.zip ."
   }
 }
 
