@@ -11,6 +11,8 @@ resource "null_resource" "pip_install" {
    provisioner "local-exec" {
     command = "cd python && zip -r ../layer.zip ."
   }
+
+  depends_on = [null_resource.pip_install]
 }
 
 # Put zip folder inside a layer
