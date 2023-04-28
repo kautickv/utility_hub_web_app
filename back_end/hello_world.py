@@ -1,4 +1,7 @@
 from faker import Faker
+import numpy as py
+import pandas as pd
+import matplotlib.pyplot as plt
 
 def lambda_handler(event, context):
     fake = Faker()
