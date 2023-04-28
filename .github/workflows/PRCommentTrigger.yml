@@ -46,13 +46,13 @@ jobs:
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           aws configure set default.region $AWS_DEFAULT_REGION
 
-      - name: Terrafrom configuration check
+      - name: Build and zip python requirement file
         id: fmt
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/back_end
         run: |
-          terraform fmt -check
+          python -m pip install -r requirements.txt -t ./python
+          zip -r python.zip python/
           ls
-        continue-on-error: true
 
       - name: Terraform Init
         id: init
