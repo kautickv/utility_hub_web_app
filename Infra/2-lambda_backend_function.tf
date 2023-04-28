@@ -5,7 +5,7 @@ resource "null_resource" "pip_install" {
   }
 
   provisioner "local-exec" {
-    command = "python3 -m pip install -r requirements.txt -t ../${path.module}/back_end/layer"
+    command = "python3 -m pip install -r ../${path.module}/back_end/requirements.txt -t ../${path.module}/back_end/layer"
   }
 }
 
