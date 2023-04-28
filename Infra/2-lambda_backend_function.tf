@@ -26,14 +26,14 @@ resource "aws_s3_object" "password-generator-backend-lambda-function-layer-objec
   key    = "layer.zip"
   source = data.archive_file.layer.output_path
 
-  etag = filemd5(data.archive_file.password-generator-backend-lambda-function-layer-object.output_path)
+  etag = filemd5(data.archive_file.layer.output_path)
 }
 
 # Put zip folder inside a layer
 resource "aws_lambda_layer_version" "layer" {
   layer_name          = "Python-layer-SOC-landing-page"
   s3_bucket = aws_s3_bucket.lambda_bucket.id
-  s3_key    = aws_s3_object.layer.key
+  s3_key    = aws_s3_object.password-generator-backend-lambda-function-layer-object.key
   source_code_hash    = data.archive_file.layer.output_base64sha256
   compatible_runtimes = ["python3.9", "python3.8", "python3.7", "python3.6"]
 }
