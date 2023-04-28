@@ -1,9 +1,10 @@
-import requests
+from faker import Faker
 
 def lambda_handler(event, context):
-    print(event)
-    response = requests.get('https://google.com')
+    fake = Faker()
+    name = fake.name()
+    print(f'Hello, {name}!')
     return {
-        'statusCode': response.status_code,
-        'body': response.text
+        'statusCode': 200,
+        'body': f'Hello, {name}!'
     }
