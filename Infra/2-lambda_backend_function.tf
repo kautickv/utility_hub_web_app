@@ -1,7 +1,7 @@
 # Install all python dependencies. Inside the back_end folder and store in a folder called layer
 resource "null_resource" "pip_install" {
   triggers = {
-    shell_hash = "${sha256(file("../${path.module}/back_end/layer"))}"
+    shell_hash = "${sha256(file("../${path.module}/back_end/requirements.txt"))}"
   }
 }
 
