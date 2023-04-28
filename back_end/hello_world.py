@@ -1,6 +1,6 @@
+
 import numpy
 import pandas
-
 
 def lambda_handler(event, context):
     fake = Faker()
