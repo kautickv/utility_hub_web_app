@@ -19,7 +19,7 @@ resource "aws_s3_object" "password-generator-backend-lambda-function-layer-objec
 resource "aws_lambda_layer_version" "layer" {
   layer_name          = "Python-layer-SOC-landing-page"
   s3_bucket = aws_s3_bucket.lambda_bucket.id
-  s3_key    = aws_s3_object.password-generator-backend-lambda-function-layer-object.key
+  s3_key    = aws_s3_object.password-generator-backend-lambda-function-layer-object.version_id
  # source_code_hash    = data.archive_file.layer.output_base64sha256
   compatible_runtimes = ["python3.9", "python3.8", "python3.7", "python3.6"]
 
