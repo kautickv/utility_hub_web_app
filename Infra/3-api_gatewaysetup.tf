@@ -1,6 +1,6 @@
 resource "aws_apigatewayv2_api" "prod" {
   name          = "prod"
-  protocol_type = "REST"
+  protocol_type = "HTTP"
 }
 
 resource "aws_apigatewayv2_stage" "dev" {
