@@ -19,12 +19,15 @@ resource "aws_api_gateway_method" "get_home_method" {
   rest_api_id   = aws_api_gateway_rest_api.password_generator_api_gateway.id
 }
 
-# Integrate the above get method
+# Integrate the above get method with our backend lambda function created earlier.
 resource "aws_api_gateway_integration" "get_home_integration" {
   http_method = aws_api_gateway_method.get_home_method.http_method
   resource_id = aws_api_gateway_resource.password_generator_api_gateway_home_resource.id
   rest_api_id = aws_api_gateway_rest_api.password_generator_api_gateway.id
-  type        = "MOCK"
+  type        = "AWS_PROXY"
+  integration_http_method = "POST"
+  uri = aws_lambda_function.password-generator-backend-lambda-function.invoke_arn
+
 }
 
 # Deploy for above api
