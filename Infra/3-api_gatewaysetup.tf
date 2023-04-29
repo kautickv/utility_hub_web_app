@@ -19,6 +19,18 @@ resource "aws_api_gateway_method" "get_home_method" {
   rest_api_id   = aws_api_gateway_rest_api.password_generator_api_gateway.id
 }
 
+# Add permissions for api gateway to invoke lambda
+resource "aws_lambda_permission" "lambda_permission" {
+  statement_id  = "AllowBackendLambdaInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.password-generator-backend-lambda-function.function_name
+  principal     = "apigateway.amazonaws.com"
+
+  # The /* part allows invocation from any stage, method and resource path
+  # within API Gateway.
+  source_arn = "${aws_api_gateway_rest_api.password_generator_api_gateway.execution_arn}/*"
+}
+
 # Integrate the above get method with our backend lambda function created earlier.
 resource "aws_api_gateway_integration" "get_home_integration" {
   http_method = aws_api_gateway_method.get_home_method.http_method
