@@ -29,7 +29,7 @@ resource "aws_api_gateway_integration" "get_home_integration" {
 
 # Deploy for above api
 resource "aws_api_gateway_deployment" "password_generator_api_gateway_deployment" {
-  rest_api_id = aws_api_gateway_rest_api.example.id
+  rest_api_id = aws_api_gateway_rest_api.password_generator_api_gateway.id
 
   triggers = {
     # NOTE: The configuration below will satisfy ordering considerations,
