@@ -1,10 +1,10 @@
-resource "aws_apigatewayv2_api" "prod" {
-  name          = "prod"
+resource "aws_apigatewayv2_api" "password_generator_api_gateway_prod" {
+  name          = "password_generator_api_gateway_prod"
   protocol_type = "HTTP"
 }
 
 resource "aws_apigatewayv2_stage" "dev" {
-  api_id = aws_apigatewayv2_api.prod.id
+  api_id = aws_apigatewayv2_api.password_generator_api_gateway_prod.id
 
   name        = "dev"
   auto_deploy = true
@@ -29,7 +29,7 @@ resource "aws_apigatewayv2_stage" "dev" {
 }
 
 resource "aws_cloudwatch_log_group" "prod_api_gw" {
-  name = "/aws/api-gw/${aws_apigatewayv2_api.prod.name}"
+  name = "/aws/api-gw/${aws_apigatewayv2_api.password_generator_api_gateway_prod.name}"
 
   retention_in_days = 14
 }
