@@ -75,7 +75,7 @@ resource "aws_api_gateway_stage" "password_generator_api_gateway_stage" {
 
 # Print the invoke url for /home on terminal
 output "invoke_url" {
-  value = aws_api_gateway_deployment.password_generator_api_gateway_deployment.invoke_url
+  value = aws_api_gateway_stage.password_generator_api_gateway_stage.invoke_url
 }
 
 
