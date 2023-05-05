@@ -1,21 +1,3 @@
-resource "aws_iam_policy" "static_hosting_bucket_policy"{
-    name = "${var.bucket_name}_bucket_policy"
-    path = "/"
-    description = "${var.bucket_name} bucket policy"
-    policy = jsonencode({
-        Version = "2012-10-17"
-        Statement = [
-            {
-                Sid = "PublicReadGetObject"
-                Effect = "Allow"
-                Principle = "*"
-                Action = "S3:GetObject"
-                Resource = "arn:aws:s3:::${bucket_name}/*"
-            }
-        ]
-    })
-}
-
 # S3 bucket for website.
 resource "aws_s3_bucket" "www_bucket" {
   bucket = "www.${var.bucket_name}"
