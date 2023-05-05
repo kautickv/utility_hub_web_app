@@ -91,7 +91,7 @@ resource "null_resource" "save_invoke_url_to_file" {
     # This ensures that the null_resource is recreated whenever the
     # invoke_url output changes, which ensures that the file is updated
     # with the latest invoke URL.
-    invoke_url = output.invoke_url
+    invoke_url = output.value
   }
 
   provisioner "local-exec" {
