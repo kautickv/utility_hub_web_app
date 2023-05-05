@@ -28,3 +28,7 @@ Important info:
 
 2. Run terraform like that. Unable to add it to environment variables
     C:\Users\kautick.vaisnavsing\Desktop\Software\Terraform\terraform.exe --version
+
+
+
+Okta custom application development.

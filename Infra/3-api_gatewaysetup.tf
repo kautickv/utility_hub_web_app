@@ -72,3 +72,33 @@ resource "aws_api_gateway_stage" "password_generator_api_gateway_stage" {
   rest_api_id   = aws_api_gateway_rest_api.password_generator_api_gateway.id
   stage_name    = "dev"
 }
+
+# Print the invoke url for /home on terminal
+output "invoke_url" {
+  value = aws_api_gateway_deployment.password_generator_api_gateway_deployment.invoke_url
+}
+
+# Encode invoke url for /home inside a json object
+locals {
+  output_json = jsonencode({
+    invoke_url = aws_api_gateway_deployment.password_generator_api_gateway_deployment.invoke_url
+  })
+}
+
+# Save Json object to local storage
+resource "null_resource" "save_invoke_url_to_file" {
+  triggers = {
+    # This ensures that the null_resource is recreated whenever the
+    # invoke_url output changes, which ensures that the file is updated
+    # with the latest invoke URL.
+    invoke_url = output.invoke_url
+  }
+
+  provisioner "local-exec" {
+    command = <<EOT
+      echo '${local.output_json}' > invoke_url.json
+    EOT
+  }
+}
+
+
