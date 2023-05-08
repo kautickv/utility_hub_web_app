@@ -4,6 +4,16 @@ resource "aws_s3_bucket" "static_hosting_bucket_name" {
   force_destroy = true
 }
 
+# Create and assign a bucket policy to unblock all public access to s3 bucket
+resource "aws_s3_bucket_public_access_block" "lambda_bucket" {
+  bucket = aws_s3_bucket.lambda_bucket.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
 # Configure s3 bucket for static hosting
 resource "aws_s3_bucket_website_configuration" "static_hosting_bucket_config" {
     bucket = aws_s3_bucket.static_hosting_bucket_name.id
