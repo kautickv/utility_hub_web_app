@@ -3,7 +3,6 @@
 resource "aws_s3_bucket" "lambda_bucket" {
   bucket        = "password-generator-lambda-python-backend-code-s3-bucket"
   force_destroy = true
-  tags = var.common_tags
 }
 
 # Create and assign a bucket policy to block all public access to s3 bucket

@@ -2,9 +2,8 @@
 resource "aws_s3_bucket" "static_hosting_bucket_name" {
   bucket = "${var.bucket_name}"
   force_destroy = true
-
-  tags = var.common_tags
 }
+
 
 
 #Create a json object for s3 bucket policy to make bucket public
