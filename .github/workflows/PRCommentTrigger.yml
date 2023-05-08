@@ -47,12 +47,20 @@ jobs:
           aws configure set default.region $AWS_DEFAULT_REGION
 
       - name: Build and zip python requirement file
-        id: fmt
+        id: backend_build
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/back_end
         run: |
           python -m pip install -r requirements.txt -t ./python
           zip -r ../Infra/layer.zip python/
           rm -r python
+          ls
+
+      - name: Install React Dependencies and build
+        id: frontend_build
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/front_end
+        run: |
+          npm ci
+          npm run build
           ls
 
       - name: Terraform Init
