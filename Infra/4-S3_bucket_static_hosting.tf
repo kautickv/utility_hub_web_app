@@ -6,8 +6,12 @@ resource "aws_s3_bucket" "static_hosting_bucket_name" {
 #configure above bucket as a static website
 resource "aws_s3_bucket_website_configuration" "static_hosting_bucket_config" {
   bucket = aws_s3_bucket.static_hosting_bucket_name.bucket
-  index_document = {
+  index_document {
     suffix = "index.html"
+  }
+
+  error_document {
+    key = "error.html"
   }
 }
 
