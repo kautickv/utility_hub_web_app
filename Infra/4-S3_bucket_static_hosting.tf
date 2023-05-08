@@ -20,7 +20,6 @@ resource "aws_s3_bucket_cors_configuration" "static_bucket_cors_config" {
 data "aws_iam_policy_document" "s3_read_permissions" {
   statement {
     effect = "Allow"
-    principal = "*"
     actions = [
       "s3:GetObject"
     ]
