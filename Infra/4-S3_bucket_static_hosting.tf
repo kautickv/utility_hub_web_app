@@ -23,8 +23,6 @@ data "aws_iam_policy_document" "s3_read_permissions" {
                  "${aws_s3_bucket.static_hosting_bucket_name.arn}/*"
     ]
   }
-
-  tags = var.common_tags
 }
 
 # Assign the above policy to s3 static hosting bucket
