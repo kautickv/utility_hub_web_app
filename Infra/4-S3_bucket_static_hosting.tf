@@ -5,8 +5,8 @@ resource "aws_s3_bucket" "static_hosting_bucket_name" {
 }
 
 # Create and assign a bucket policy to unblock all public access to s3 bucket
-resource "aws_s3_bucket_public_access_block" "lambda_bucket" {
-  bucket = aws_s3_bucket.lambda_bucket.id
+resource "aws_s3_bucket_public_access_block" "static_hosting_bucket_name" {
+  bucket = aws_s3_bucket.static_hosting_bucket_name.id
 
   block_public_acls       = false
   block_public_policy     = false
