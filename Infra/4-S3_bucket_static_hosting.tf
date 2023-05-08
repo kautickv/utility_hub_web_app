@@ -4,7 +4,18 @@ resource "aws_s3_bucket" "static_hosting_bucket_name" {
   force_destroy = true
 }
 
+# Configure s3 bucket for static hosting
+resource "aws_s3_bucket_website_configuration" "static_hosting_bucket_config" {
+    bucket = aws_s3_bucket.static_hosting_bucket_name.id
 
+    index_document {
+        suffix = "index.html"
+    }
+
+  error_document {
+    key = "error.html"
+  }
+}
 
 #Create a json object for s3 bucket policy to make bucket public
 data "aws_iam_policy_document" "s3_read_permissions" {
