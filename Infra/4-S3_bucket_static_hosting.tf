@@ -6,6 +6,7 @@ resource "aws_s3_bucket" "static_hosting_bucket_name" {
 #Create a json object for s3 bucket policy to make bucket public
 data "aws_iam_policy_document" "s3_read_permissions" {
   statement {
+    sid = "AllowPublicReadAccess"
     effect = "Allow"
     principals {
       type        = "*"
