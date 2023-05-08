@@ -51,3 +51,8 @@ resource "aws_s3_bucket_policy" "s3_allow_public_access" {
   bucket = aws_s3_bucket.static_hosting_bucket_name.id
   policy = data.aws_iam_policy_document.s3_read_permissions.json
 }
+
+# Print the bucket website endpoint to terminal
+output "website_endpoint" {
+  value = aws_s3_bucket_website_configuration.static_hosting_bucket_config.website_endpoint
+}
