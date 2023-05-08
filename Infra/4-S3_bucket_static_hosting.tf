@@ -4,15 +4,6 @@ resource "aws_s3_bucket" "static_hosting_bucket_name" {
   force_destroy = true
 }
 
-# Create and assign a bucket policy to unblock all public access to s3 bucket
-resource "aws_s3_bucket_public_access_block" "static_hosting_bucket_name" {
-  bucket = aws_s3_bucket.static_hosting_bucket_name.id
-
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
-}
 
 #Create a json object for s3 bucket policy to make bucket public
 data "aws_iam_policy_document" "s3_read_permissions" {
