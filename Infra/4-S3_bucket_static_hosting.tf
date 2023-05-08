@@ -3,14 +3,12 @@ resource "aws_s3_bucket" "static_hosting_bucket_name" {
   bucket = "${var.bucket_name}"
 }
 
-# Create and assign a bucket policy to unblock all public access to s3 bucket
-resource "aws_s3_bucket_public_access_block" "static_hosting_bucket_name" {
-  bucket = aws_s3_bucket.static_hosting_bucket_name.id
-
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
+#configure above bucket as a static website
+resource "aws_s3_bucket_website_configuration" "static_hosting_bucket_config" {
+  bucket = aws_s3_bucket.static_hosting_bucket_name.bucket
+  index_document = {
+    suffix = "index.html"
+  }
 }
 
 #Create a json object for s3 bucket policy to make bucket public
