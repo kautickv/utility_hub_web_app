@@ -59,13 +59,7 @@ resource "aws_s3_object" "build_upload"{
     key = each.value
     source = "../${path.module}/front_end/build/${each.value}"
     etag = filemd5("../${path.module}/front_end/build/${each.value}")
-
-    dynamic "metadata" {
-        for_each = each.value == "index.html" ? [1] : []
-        content {
-            Content-Type = "text/html"
-        }
-    }
+    content-type = "text/html"
 }
 
 # Print the bucket website endpoint to terminal
