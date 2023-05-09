@@ -6,6 +6,8 @@ Steps to set up CICD pipeline on github actions:
        Second way is to create an IAM Role and use trust relationships. (Not sure how this one works)
        Check out this link to setup credentials: https://github.com/marketplace/actions/configure-aws-credentials-for-github-actions
 3. Generate secrets for IAM user and add into Git secrets.
+4. Make sure we have a domain name bought and a hosted zone configured to host the front end react app
+5. Request an SSL certificate and copy and paste the certificate arn into the terraform.tfvars file.
 
 
 
