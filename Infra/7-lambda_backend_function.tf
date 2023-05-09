@@ -31,20 +31,18 @@ resource "aws_lambda_layer_version" "layer" {
 resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
   name = "password-generator-backend-lambda-function_exec"
 
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-POLICY
+  assume_role_policy = jsonencode({
+   "Version" : "2012-10-17",
+   "Statement" : [
+     {
+       "Effect" : "Allow",
+       "Principal" : {
+         "Service" : "lambda.amazonaws.com"
+       },
+       "Action" : "sts:AssumeRole"
+     }
+   ]
+  })
 }
 
 # Attach basic execution policy to the above role
