@@ -52,6 +52,15 @@ resource "aws_s3_bucket_policy" "s3_allow_public_access" {
   policy = data.aws_iam_policy_document.s3_read_permissions.json
 }
 
+# Upload build folder inside s3
+resource "aws_s3_object" "build_upload"{
+    for_each = fileset("../${path.module}/front_end/build/", "**")
+    bucket = aws_s3_bucket.static_hosting_bucket_name.id
+    key = each.value
+    source = "../${path.module}/front_end/build/${each.value}"
+    etag = filemd5("../${path.module}/front_end/build/${each.value}")
+}
+
 # Print the bucket website endpoint to terminal
 output "website_endpoint" {
   value = aws_s3_bucket_website_configuration.static_hosting_bucket_config.website_endpoint
