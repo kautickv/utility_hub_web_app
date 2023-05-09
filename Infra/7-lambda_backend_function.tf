@@ -51,6 +51,21 @@ resource "aws_iam_role_policy_attachment" "hello_lambda_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+# Attach another policy to lambda assume role to give dynamoDb access
+resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
+   name = "dynamodb_lambda_policy"
+   role = aws_iam_role.iam_for_lambda.id
+   policy = jsonencode({
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+           "Effect" : "Allow",
+           "Action" : ["dynamodb:*"],
+           "Resource" : "${aws_dynamodb_table.sign_in_user_table.arn}"
+        }
+      ]
+   })
+}
 
 # Create the lambda fucntion which will handle backend requests
 resource "aws_lambda_function" "password-generator-backend-lambda-function" {
@@ -67,7 +82,7 @@ resource "aws_lambda_function" "password-generator-backend-lambda-function" {
   environment {
     variables = {
       "MESSAGE" = "Terraform sends its regards",
-      "DynamoDB" = "DynamoDb credentials goes here"
+      "USERS_TABLE" = aws_dynamodb_table.sign_in_user_table.name
     }
   }
 
