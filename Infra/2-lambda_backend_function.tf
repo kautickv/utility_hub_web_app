@@ -68,9 +68,13 @@ resource "aws_lambda_function" "password-generator-backend-lambda-function" {
   layers = [aws_lambda_layer_version.layer.arn]
   environment {
     variables = {
-      "MESSAGE" = "Terraform sends its regards"
+      "MESSAGE" = "Terraform sends its regards",
+      "DynamoDB" = "DynamoDb credentials goes here"
     }
   }
+
+  timeout = "15"
+  memory_size = "128"
 }
 
 # Create a cloudwatch log group for lambda execution logs
