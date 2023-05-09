@@ -52,16 +52,11 @@ resource "aws_s3_bucket_policy" "s3_allow_public_access" {
   policy = data.aws_iam_policy_document.s3_read_permissions.json
 }
 
-# Upload build folder inside s3
-resource "aws_s3_object" "build_upload"{
-    for_each = fileset("../${path.module}/front_end/build/", "**")
-    bucket = aws_s3_bucket.static_hosting_bucket_name.id
-    key = each.value
-    source = "../${path.module}/front_end/build/${each.value}"
-    etag = filemd5("../${path.module}/front_end/build/${each.value}")
-    metadata = {
-        Content-Type: "text/html"
-    }
+# Sync build folder with static hosting s3 bucket
+resource "null_resource" "sync_s3_with_build_folder"{
+  provisioner "local-exec" {
+    command = "aws s3 sync ../${path.module}/front_end/build s3://${aws_s3_bucket.static_hosting_bucket_name.id}"
+  }
 }
 
 # Print the bucket website endpoint to terminal
