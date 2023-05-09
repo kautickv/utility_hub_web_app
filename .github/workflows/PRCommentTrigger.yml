@@ -59,6 +59,7 @@ jobs:
         id: frontend_build
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/front_end
         run: |
+          npm install
           npm ci
           npm run build
           ls
