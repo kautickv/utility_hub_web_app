@@ -25,8 +25,6 @@ resource "aws_lambda_layer_version" "layer" {
 
 }
 
-
-
 # Create an IAM role to assign to lambda function
 resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
   name = "password-generator-backend-lambda-function_exec"
@@ -53,8 +51,8 @@ resource "aws_iam_role_policy_attachment" "hello_lambda_policy" {
 
 # Attach another policy to lambda assume role to give dynamoDb access
 resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
-   name = "dynamodb_lambda_policy"
-   role = aws_iam_role.iam_for_lambda.id
+   name = "password_generator_dynamodb_lambda_policy"
+   role = aws_iam_role.password-generator-backend-lambda-function_exec.id
    policy = jsonencode({
       "Version" : "2012-10-17",
       "Statement" : [
