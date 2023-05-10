@@ -1,0 +1,51 @@
+on:
+  push:
+    branches:
+      - main
+jobs:
+  execute-shell-commands:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install react dependencies
+        run: |
+          cd ./front_end
+          npm install
+          echo "Install complete"
+          ls
+
+      - name: Build React Project
+        run: |
+          cd ./front_end
+          npm run build
+          echo "Build Complete"
+          ls
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  execute-shell-commands:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Test AWS CLI
+        run: |
+          aws --version
+          pwd
+
+      - name: Test moving to ~
+        run: |
+          cd ~
+          ls
+          pwd
+
+        env:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: us-east-1
