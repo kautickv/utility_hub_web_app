@@ -52,11 +52,9 @@ resource "aws_s3_bucket_policy" "s3_allow_public_access" {
   policy = data.aws_iam_policy_document.s3_read_permissions.json
 }
 
-# Sync build folder with static hosting s3 bucket
-resource "null_resource" "sync_s3_with_build_folder"{
-  provisioner "local-exec" {
-    command = "aws s3 sync ../${path.module}/front_end/build s3://${aws_s3_bucket.static_hosting_bucket_name.id}"
-  }
+# Print the bucket id
+output "S3_bucket_hosting_id" {
+  value = aws_s3_bucket.static_hosting_bucket_name.id
 }
 
 # Print the bucket website endpoint to terminal
