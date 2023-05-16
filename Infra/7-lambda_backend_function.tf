@@ -25,26 +25,22 @@ resource "aws_lambda_layer_version" "layer" {
 
 }
 
-
-
 # Create an IAM role to assign to lambda function
 resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
   name = "password-generator-backend-lambda-function_exec"
 
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-POLICY
+  assume_role_policy = jsonencode({
+   "Version" : "2012-10-17",
+   "Statement" : [
+     {
+       "Effect" : "Allow",
+       "Principal" : {
+         "Service" : "lambda.amazonaws.com"
+       },
+       "Action" : "sts:AssumeRole"
+     }
+   ]
+  })
 }
 
 # Attach basic execution policy to the above role
@@ -53,6 +49,21 @@ resource "aws_iam_role_policy_attachment" "hello_lambda_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+# Attach another policy to lambda assume role to give dynamoDb access
+resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
+   name = "password_generator_dynamodb_lambda_policy"
+   role = aws_iam_role.password-generator-backend-lambda-function_exec.id
+   policy = jsonencode({
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+           "Effect" : "Allow",
+           "Action" : ["dynamodb:*"],
+           "Resource" : "${aws_dynamodb_table.sign_in_user_table.arn}"
+        }
+      ]
+   })
+}
 
 # Create the lambda fucntion which will handle backend requests
 resource "aws_lambda_function" "password-generator-backend-lambda-function" {
@@ -68,9 +79,13 @@ resource "aws_lambda_function" "password-generator-backend-lambda-function" {
   layers = [aws_lambda_layer_version.layer.arn]
   environment {
     variables = {
-      "MESSAGE" = "Terraform sends its regards"
+      "MESSAGE" = "Terraform sends its regards",
+      "USERS_TABLE" = aws_dynamodb_table.sign_in_user_table.name
     }
   }
+
+  timeout = "15"
+  memory_size = "128"
 }
 
 # Create a cloudwatch log group for lambda execution logs

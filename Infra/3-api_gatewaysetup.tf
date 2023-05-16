@@ -78,13 +78,6 @@ output "invoke_url" {
   value = aws_api_gateway_stage.password_generator_api_gateway_stage.invoke_url
 }
 
-#Save file on local disk inside the front_end folder
-resource "local_file" "react_environment_vars"{
-  content = jsonencode({
-    REACT_APP_API_URL=aws_api_gateway_stage.password_generator_api_gateway_stage.invoke_url
-  })
-  filename = "$./{path.module}/front_end/.env"
-}
 
 
 
