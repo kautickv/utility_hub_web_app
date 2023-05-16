@@ -84,7 +84,7 @@ jobs:
         id: create_json
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: |
-          echo $(terraform output -json) | jq . > ../front_end/settings.json
+          terraform output -json
       
         # Install all react dependencies and build project.
       - name: Install React Dependencies and build
