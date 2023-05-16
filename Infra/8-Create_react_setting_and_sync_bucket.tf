@@ -25,3 +25,29 @@ resource "null_resource" "list_directory" {
     command = "cd ../${path.module}/front_end/ && ls -a"
   }
 }
+
+#build the react project and create the /build folder
+resource "null_resource" "install_and_build_react_dependencies" {
+  
+  #Force this block to run every time
+  triggers = {
+    always_run = timestamp()
+  }
+
+  provisioner "local-exec" {
+    command = "cd ../${path.module}/front_end/ && npm install && npm ci && npm run build && ls"
+  }
+}
+
+# Sync the build folder with the s3 static hosting bucket
+resource "null_resource" "sync_build_to_hosting_bucket" {
+  
+  #Force this block to run every time
+  triggers = {
+    always_run = timestamp()
+  }
+
+  provisioner "local-exec" {
+    command = "cd ../${path.module}/front_end/ && aws s3 sync ./build 's3://${aws_s3_bucket.static_hosting_bucket_name.id}'"
+  }
+}
