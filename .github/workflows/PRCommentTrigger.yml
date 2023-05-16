@@ -99,7 +99,7 @@ jobs:
         # Get bucket name from settings.json and sync build folder
       - name: Sync S3 bucket with react build folder
         id: S3_sync
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/front_end
         run: |
           ls
 
