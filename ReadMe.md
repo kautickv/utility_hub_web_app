@@ -28,3 +28,13 @@ Important info:
 
 2. Run terraform like that. Unable to add it to environment variables
     C:\Users\kautick.vaisnavsing\Desktop\Software\Terraform\terraform.exe --version
+
+
+
+ISSUES:
+
+1. Everytime terraform script applies, a new layer is created irrespective if changes has been made to the layer. This will consume a lot of storage and cam cost money.
+
+2. If bucket name is changed from the terraform.tfvars file, the terraform script failes as its trying to look for a bucket with the previous name. Think of a way to solve this.
+
+
