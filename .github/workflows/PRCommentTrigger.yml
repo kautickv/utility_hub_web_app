@@ -55,15 +55,6 @@ jobs:
           rm -r python
           ls
 
-      - name: Install React Dependencies and build
-        id: frontend_build
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/front_end
-        run: |
-          npm install
-          npm ci
-          npm run build
-          ls
-
       - name: Terraform Init
         id: init
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
