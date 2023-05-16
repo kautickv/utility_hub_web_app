@@ -88,6 +88,12 @@ jobs:
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: terraform apply -auto-approve
 
+      - name: Create JSON file
+        id: create_json
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/front_end
+        run: |
+          echo $(terraform output -json) | jq . > settings.json
+
       - name: Set latest commit status as ${{ job.status }}
         uses: myrotvorets/set-commit-status-action@master
         if: always()
