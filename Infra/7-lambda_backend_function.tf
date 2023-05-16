@@ -44,7 +44,7 @@ resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
 }
 
 # Attach basic execution policy to the above role
-resource "aws_iam_role_policy_attachment" "hello_lambda_policy" {
+resource "aws_iam_role_policy_attachment" "backend_lambda_policies" {
   role       = aws_iam_role.password-generator-backend-lambda-function_exec.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
@@ -80,7 +80,7 @@ resource "aws_lambda_function" "password-generator-backend-lambda-function" {
   environment {
     variables = {
       "MESSAGE" = "Terraform sends its regards",
-      "USERS_TABLE" = aws_dynamodb_table.sign_in_user_table.name
+      "DYNAMO_TABLE_NAME" = aws_dynamodb_table.sign_in_user_table.name
     }
   }
 
