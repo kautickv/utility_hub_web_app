@@ -55,3 +55,4 @@ resource "aws_dynamodb_table" "sign_in_user_table" {
     read_capacity      = 1
   }
 }
+
