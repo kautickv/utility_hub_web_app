@@ -96,6 +96,14 @@ jobs:
           npm ci
           npm run build
           ls
+      
+        # Get bucket name from settings.json and sync build folder
+      - name: Sync S3 bucket with react build folder
+        id: S3_sync
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/front_end
+        run: |
+          BUCKET_NAME=$(python -c "import json; print(json.load(open('settings.json'))['S3_bucket_hosting_id']['value'])")
+          aws s3 sync ./build "s3://$BUCKET_NAME"
 
       - name: Set latest commit status as ${{ job.status }}
         uses: myrotvorets/set-commit-status-action@master
