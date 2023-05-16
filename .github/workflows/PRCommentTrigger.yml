@@ -54,16 +54,6 @@ jobs:
           zip -r ../Infra/layer.zip python/
           rm -r python
           ls
-          
-        # Install all react dependencies and build project.
-      - name: Install React Dependencies and build
-        id: frontend_build
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/front_end
-        run: |
-          npm install
-          npm ci
-          npm run build
-          ls
 
       - name: Terraform Init
         id: init
