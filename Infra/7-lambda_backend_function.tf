@@ -44,7 +44,7 @@ resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
 }
 
 # Attach basic execution policy to the above role
-resource "aws_iam_role_policy_attachment" "backend_lambda_policies" {
+resource "aws_iam_role_policy_attachment" "hello_lambda_policy" {
   role       = aws_iam_role.password-generator-backend-lambda-function_exec.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
