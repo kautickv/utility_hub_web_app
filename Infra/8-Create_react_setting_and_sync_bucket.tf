@@ -5,6 +5,11 @@
 # Create .env and store in front_end folder. Contains API gateway invoke url, s3 website endpoint.
 resource "local_file" "react_env_file" {
   
+  #Force this block to run every time
+  triggers = {
+    timestamp = timestamp()
+  }
+
   filename = "../${path.module}/front_end/.env"
   content  = <<-EOF
     REACT_APP_API_GATEWAY_BASE_URL=aws_api_gateway_stage.password_generator_api_gateway_stage.invoke_url
@@ -15,6 +20,12 @@ resource "local_file" "react_env_file" {
 }
 
 resource "null_resource" "list_directory" {
+  
+  #Force this block to run every time
+  triggers = {
+    always_run = timestamp()
+  }
+
   provisioner "local-exec" {
     command = "cd ../${path.module}/front_end/ && ls"
   }
