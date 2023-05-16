@@ -91,7 +91,7 @@ jobs:
         # Save terraform outputs to settings.json
       - name: Create JSON file
         id: create_json
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/front_end
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: |
           terraform output -json
 
