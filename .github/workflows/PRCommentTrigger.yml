@@ -79,20 +79,6 @@ jobs:
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: terraform apply -auto-approve
 
-        # Save terraform outputs to settings.json in front_end folder
-      - name: Create JSON file
-        id: create_json
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
-        run: |
-          terraform output -json > ../front_end/settings.json
-      
-        # Get bucket name from settings.json and sync build folder
-      - name: Sync S3 bucket with react build folder
-        id: S3_sync
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/front_end
-        run: |
-          ls
-
       - name: Set latest commit status as ${{ job.status }}
         uses: myrotvorets/set-commit-status-action@master
         if: always()
