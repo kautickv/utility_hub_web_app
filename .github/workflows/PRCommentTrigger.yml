@@ -55,15 +55,6 @@ jobs:
           rm -r python
           ls
 
-      - name: Install React Dependencies and build
-        id: frontend_build
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/front_end
-        run: |
-          npm install
-          npm ci
-          npm run build
-          ls
-
       - name: Terraform Init
         id: init
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
@@ -88,12 +79,22 @@ jobs:
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: terraform apply -auto-approve
 
-        # Save terraform outputs to settings.json
+        # Save terraform outputs to settings.json in front_end folder
       - name: Create JSON file
         id: create_json
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
         run: |
-          terraform output -json
+          echo $(terraform output -json) | jq . > ../front_end/settings.json
+      
+        # Install all react dependencies and build project.
+      - name: Install React Dependencies and build
+        id: frontend_build
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/front_end
+        run: |
+          npm install
+          npm ci
+          npm run build
+          ls
 
       - name: Set latest commit status as ${{ job.status }}
         uses: myrotvorets/set-commit-status-action@master
