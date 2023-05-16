@@ -4,11 +4,6 @@
 
 # Create .env and store in front_end folder. Contains API gateway invoke url, s3 website endpoint.
 resource "local_file" "react_env_file" {
-  
-  #Force this block to run every time
-  triggers = {
-    timestamp = timestamp()
-  }
 
   filename = "../${path.module}/front_end/.env"
   content  = <<-EOF
