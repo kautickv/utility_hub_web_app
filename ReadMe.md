@@ -1,28 +1,3 @@
-Steps to set up CICD pipeline on github actions:
-
-1. Create an IAM user on AWS
-2. Create an IAM role and assign it to the user. Give the role proper access.
-     - There might be two ways to go about this: One way is to create an IAM user and use API Access keys.
-       Second way is to create an IAM Role and use trust relationships. (Not sure how this one works)
-       Check out this link to setup credentials: https://github.com/marketplace/actions/configure-aws-credentials-for-github-actions
-3. Generate secrets for IAM user and add into Git secrets.
-4. Make sure we have a domain name bought and a hosted zone configured to host the front end react app
-5. Request an SSL certificate and copy and paste the certificate arn into the terraform.tfvars file.
-
-
-
-
-Commands:
-Sync S3 buclet to local folder
-    aws s3 sync --profile <profile name> <local url>  <bucket uri>
-
-Run a cloudformatin stack template
- - This function will create a stack in cloudformation and run the template. Fails if 
-
-
-
-
-
 Important info:
 
 1. This is the present working directory in github actions:
@@ -30,14 +5,6 @@ Important info:
 
 2. Run terraform like that. Unable to add it to environment variables
     C:\Users\kautick.vaisnavsing\Desktop\Software\Terraform\terraform.exe --version
-
-
-
-ISSUES:
-
-1. Everytime terraform script applies, a new layer is created irrespective if changes has been made to the layer. This will consume a lot of storage and cam cost money.
-
-2. If bucket name is changed from the terraform.tfvars file, the terraform script failes as its trying to look for a bucket with the previous name. Think of a way to solve this.
 
 
 # Team Communication Web Tool
@@ -68,24 +35,26 @@ The project follows a continuous integration and deployment approach. The source
 
 Infrastructure provisioning is managed using Terraform. The Terraform configuration files define and provision all the required AWS resources, including Lambda functions, API Gateway, DynamoDB tables, and S3 buckets.
 
-## Additional Features
-
-In addition to the core features mentioned above, the project includes the following additional features:
-
-- **Real-time Updates:** Real-time capabilities are implemented using AWS WebSocket API to provide instant updates to users as new posts, comments, or reactions occur within the system.
-- **Notifications:** Push notifications are enabled to notify users of important updates or mentions, ensuring that users stay informed even when they are not actively using the web tool.
-- **User Profiles:** Users can create profiles with additional information such as a profile picture, bio, and contact details. This enhances personalization and promotes team bonding.
-- **Team Management:** Features to create and manage teams within the web tool are implemented. Users can join multiple teams and customize their newsfeed based on team-specific updates.
-- **Trending Topics:** Content analysis is performed on updates to display trending topics or popular tags, helping users discover important discussions and stay updated on relevant subjects.
 
 ## Getting Started
 
 To set up the project locally, follow these steps:
 
 1. Clone the repository: `git clone <repository-url>`
-2. Install the required dependencies: `npm install`
-3. Configure the AWS credentials and other necessary environment variables.
-4. Start the development server: `npm start`
+2. Create an IAM user on AWS.
+3. Create an IAM role and assign it to the user. Give the role proper access.
+   - There might be two ways to go about this: One way is to create an IAM user and use API Access keys.
+     The second way is to create an IAM Role and use trust relationships. (Not sure how this one works)
+     Check out this link to set up credentials: [Configure AWS Credentials for GitHub Actions](https://github.com/marketplace/actions/configure-aws-credentials-for-github-actions)
+4. Generate secrets for IAM user and add them to Git secrets.
+5. Ensure that you have bought a domain name and configured a hosted zone to host the front-end React app.
+6. Request an SSL certificate and copy and paste the certificate ARN into the terraform.tfvars file.
+7. Create an S3 bucket and update the "0-provider.tf" file with the bucket name. This bucket will store the Terraform states.
+   - Key = "dev/passwordGeneratorTerraformState" # Folder structure to determine where to store the state.
+8. Update the "terraform.tfvars" file with a chosen domain name for the app (e.g., myapp.example.com).
+9. Update the "terraform.tfvars" file with the desired bucket name for React static hosting. Ideally, the bucket name should be the same as the domain name of the app.
+10. Update the "terraform.tfvars" file with the SSL_certificate_arn (once requested and approved from certificate manager). Also, update the hosted_zone_id. Obtain these values from the AWS management console.
+
 
 For detailed instructions and additional configuration options, please refer to the [documentation](docs/).
 
@@ -100,10 +69,6 @@ We welcome contributions to the Team Communication Web Tool project. To contribu
 
 Please ensure that your code adheres to the project's coding standards and includes appropriate tests.
 
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
 ## Acknowledgments
 
 We would like to thank the open-source community for their contributions and the following libraries and frameworks:
@@ -116,3 +81,9 @@ We would like to thank the open-source community for their contributions and the
 ## Contact
 
 For any questions or inquiries, please contact the project team at [email protected]
+
+## Current Issues
+
+1. Every time the Terraform script is applied, a new layer is created irrespective of whether changes have been made to the layer. This can consume a lot of storage and cost money.
+
+2. If the bucket name is changed in the terraform.tfvars file, the Terraform script fails as it tries to look for a bucket with the previous name. Find a way to solve this.
