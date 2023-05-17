@@ -2,7 +2,7 @@
 
 variable "app_name"{
     type = string
-    description = "The name of the app. This will prepend all aws resource names"
+    description = "The name of the app. This will prepend all aws resource names. This name cannot contain _ or uppercase letters or symbols"
 }
 
 variable "common_tags"{

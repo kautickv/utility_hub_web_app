@@ -1,4 +1,5 @@
-app_name = "password_generator"
+# App name cannot contain _ or uppercase letters.
+app_name = "password-generator"
 
 domain_name = "passwordgenerator.vaisnavsingkautick.com"
 bucket_name = "passwordgenerator.vaisnavsingkautick.com"
