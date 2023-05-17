@@ -2,6 +2,15 @@
 resource "aws_api_gateway_rest_api" "password_generator_api_gateway" {
   name = "${var.app_name}_api_gateway"
   description = "REST API gateway for ${var.app_name} app. "
+
+  # Enable CORS
+  cors_configuration {
+    allow_origin      = "*"
+    allow_headers     = "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+    allow_methods     = "GET,POST,OPTIONS"
+    expose_headers    = "x-amzn-Remapped-Access-Control-Allow-*"
+    max_age_seconds   = 3600
+  }
 }
 
 # Add a resource to that API gateway called home
