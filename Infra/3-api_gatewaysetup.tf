@@ -33,7 +33,7 @@ resource "aws_api_gateway_method_response" "options_200" {
         "method.response.header.Access-Control-Allow-Methods" = true,
         "method.response.header.Access-Control-Allow-Origin" = true
     }
-    depends_on = ["aws_api_gateway_method.options_method"]
+    depends_on = [aws_api_gateway_method.options_method]
 }
 
 resource "aws_api_gateway_integration" "options_integration" {
@@ -41,7 +41,7 @@ resource "aws_api_gateway_integration" "options_integration" {
     resource_id   = aws_api_gateway_resource.password_generator_api_gateway_home_resource.id
     http_method   = aws_api_gateway_method.options_method.http_method
     type          = "MOCK"
-    depends_on = ["aws_api_gateway_method.options_method"]
+    depends_on = [aws_api_gateway_method.options_method]
 }
 
 resource "aws_api_gateway_integration_response" "options_integration_response" {
@@ -54,7 +54,7 @@ resource "aws_api_gateway_integration_response" "options_integration_response" {
         "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'",
         "method.response.header.Access-Control-Allow-Origin" = "'*'"
     }
-    depends_on = ["aws_api_gateway_method_response.options_200"]
+    depends_on = [aws_api_gateway_method_response.options_200]
 }
 
 # Add a GET method to "home" resource created above
@@ -73,7 +73,7 @@ resource "aws_api_gateway_method_response" "get_home_method_response_200" {
     response_parameters = {
         "method.response.header.Access-Control-Allow-Origin" = true
     }
-    depends_on = ["aws_api_gateway_method.get_home_method"]
+    depends_on = [aws_api_gateway_method.get_home_method]
 }
 
 # Add permissions for api gateway to invoke lambda
@@ -119,8 +119,6 @@ resource "aws_api_gateway_deployment" "password_generator_api_gateway_deployment
       aws_api_gateway_method_response.options_200.id,
       aws_api_gateway_integration.options_integration.id,
       aws_api_gateway_integration_response.options_integration_response.id,
-      
-
     ]))
   }
 
