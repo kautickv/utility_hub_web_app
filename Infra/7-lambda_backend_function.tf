@@ -27,7 +27,7 @@ resource "aws_lambda_layer_version" "layer" {
 
 # Create an IAM role to assign to lambda function
 resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
-  name = "password-generator-backend-lambda-function_exec"
+  name = "${var.app_name}-backend-lambda-function_exec"
 
   assume_role_policy = jsonencode({
    "Version" : "2012-10-17",
@@ -67,7 +67,7 @@ resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
 
 # Create the lambda fucntion which will handle backend requests
 resource "aws_lambda_function" "password-generator-backend-lambda-function" {
-  function_name = "password-generator-backend-lambda-function"
+  function_name = "${var.app_name}-backend-lambda-function"
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.password-generator-backend-lambda-function-object.key

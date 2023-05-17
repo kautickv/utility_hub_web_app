@@ -1,7 +1,7 @@
 # Create a REST API gateway in AWS
 resource "aws_api_gateway_rest_api" "password_generator_api_gateway" {
-  name = "password_generator_api_gateway"
-  description = "REST API gateway for password_generator app. "
+  name = "${var.app_name}_api_gateway"
+  description = "REST API gateway for ${var.app_name} app. "
 }
 
 # Add a resource to that API gateway called home
