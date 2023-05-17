@@ -5,11 +5,6 @@ variable "app_name"{
     description = "The name of the app. This will prepend all aws resource names"
 }
 
-variable "environment_type"{
-    type = string
-    description = "Should be prod or qa80a"
-}
-
 variable "common_tags"{
     description = "Common tags you want to apply to all components"
 }
