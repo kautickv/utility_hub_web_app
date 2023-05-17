@@ -54,6 +54,7 @@ To set up the project locally, follow these steps:
 8. Update the "terraform.tfvars" file with a chosen domain name for the app (e.g., myapp.example.com).
 9. Update the "terraform.tfvars" file with the desired bucket name for React static hosting. Ideally, the bucket name should be the same as the domain name of the app.
 10. Update the "terraform.tfvars" file with the SSL_certificate_arn (once requested and approved from certificate manager). Also, update the hosted_zone_id. Obtain these values from the AWS management console.
+11. Update the "terraform.tfvars" file with a name of your app. Be careful on the naming limitation. (See description of variable in variables.tf)
 
 
 For detailed instructions and additional configuration options, please refer to the [documentation](docs/).
