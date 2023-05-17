@@ -2,7 +2,9 @@ def lambda_handler(event, context):
     
     return {
         'statusCode': 200,
-        'body': 'Item added to DynamoDB table.',
+        'body': {
+            "Message": "Success"
+        },
         'headers' : {
             'Access-Control-Allow-Origin' : '*'
         }
