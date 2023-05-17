@@ -13,6 +13,7 @@ function App() {
   }
 
   async function copytoClipboard(){
+    console.log(process.env.REACT_APP_API_GATEWAY_BASE_URL + "/home")
     try {
       const response = await fetch(process.env.REACT_APP_API_GATEWAY_BASE_URL + "/home");
       const jsonData = await response.json();
