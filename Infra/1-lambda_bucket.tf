@@ -1,7 +1,7 @@
 
 # Create a s3 bucket to store zip of lambda code
 resource "aws_s3_bucket" "lambda_bucket" {
-  bucket        = "password-generator-lambda-python-backend-code-s3-bucket"
+  bucket        = "${var.app_name}-lambda-python-backend-code-s3-bucket"
   force_destroy = true
 }
 

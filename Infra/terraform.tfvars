@@ -1,3 +1,5 @@
+app_name = "password_generator"
+
 domain_name = "passwordgenerator.vaisnavsingkautick.com"
 bucket_name = "passwordgenerator.vaisnavsingkautick.com"
 

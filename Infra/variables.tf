@@ -1,9 +1,26 @@
+#variables
+
+variable "app_name"{
+    type = string
+    description = "The name of the app. This will prepend all aws resource names"
+}
+
+variable "environment_type"{
+    type = string
+    description = "Should be prod or qa80a"
+}
+
+variable "common_tags"{
+    description = "Common tags you want to apply to all components"
+}
+
+
+
 # All variables related to S3 bucket static hosting
 variable "domain_name"{
     type = string
     description = "The domain name of the website"
 }
-
 
 variable "bucket_name" {
     type = string
@@ -20,10 +37,4 @@ variable "SSL_certificate_arn" {
 variable "hosted_zone_id" {
     type = string
     description = "The hosted zone ID into which record will be created."
-}
-
-
-# All other variables
-variable "common_tags"{
-    description = "Common tags you want to apply to all components"
 }
