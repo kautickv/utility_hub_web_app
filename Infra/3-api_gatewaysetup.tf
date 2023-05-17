@@ -71,6 +71,30 @@ resource "aws_api_gateway_method" "get_home_method" {
   rest_api_id   = aws_api_gateway_rest_api.password_generator_api_gateway.id
 }
 
+# Add a method response for the GET method
+resource "aws_api_gateway_method_response" "success_get_home_method" {
+  rest_api_id = aws_api_gateway_rest_api.password_generator_api_gateway.id
+  resource_id = aws_api_gateway_resource.password_generator_api_gateway_home_resource.id
+  http_method = aws_api_gateway_method.get_home_method.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+  }
+}
+
+# Add an integration response for the GET method
+resource "aws_api_gateway_integration_response" "get_home_integration_response" {
+  rest_api_id = aws_api_gateway_rest_api.password_generator_api_gateway.id
+  resource_id = aws_api_gateway_resource.password_generator_api_gateway_home_resource.id
+  http_method = aws_api_gateway_method.get_home_method.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+  }
+}
+
 # Add permissions for api gateway to invoke lambda
 resource "aws_lambda_permission" "lambda_permission" {
   statement_id  = "AllowBackendLambdaInvoke"
@@ -110,6 +134,12 @@ resource "aws_api_gateway_deployment" "password_generator_api_gateway_deployment
       aws_api_gateway_resource.password_generator_api_gateway_home_resource.id,
       aws_api_gateway_method.get_home_method.id,
       aws_api_gateway_integration.get_home_integration.id,
+      aws_api_gateway_method_response.success_get_home_method.id,
+      aws_api_gateway_integration_response.get_home_integration_response.id,
+      aws_api_gateway_method.options_home_method.id,
+      aws_api_gateway_method_response.success_options_home_method.id,
+      aws_api_gateway_integration.options_home_integration.id,
+      aws_api_gateway_integration_response.options_home_integration_response.id,
     ]))
   }
 
