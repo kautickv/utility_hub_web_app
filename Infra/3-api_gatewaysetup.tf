@@ -160,6 +160,7 @@ resource "aws_api_gateway_deployment" "password_generator_api_gateway_deployment
       aws_api_gateway_resource.password_generator_api_gateway_creds_resource.id,
       aws_api_gateway_method.get_creds_method.id,
       aws_api_gateway_integration.get_creds_integration.id,
+      aws_api_gateway_rest_api.password_generator_api_gateway.root_resource_id,  # Include root resource ID
     ]))
   }
 
