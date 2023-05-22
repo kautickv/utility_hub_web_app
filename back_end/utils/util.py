@@ -1,10 +1,10 @@
 import json
 
 
-def buildResponse(code, message,jwt_token=""):
+def buildResponse(code, message, jwt_token=""):
     
     return{
-        'statusCode': 200,
+        'statusCode': code,
         'headers':{
            'Access-Control-Allow-Origin': '*',
             'Access-Control-Expose-Headers':'x-amzn-Remapped-Authorization',
