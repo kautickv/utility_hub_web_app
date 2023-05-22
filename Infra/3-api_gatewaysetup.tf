@@ -1,7 +1,7 @@
 # Create a REST API gateway in AWS
 resource "aws_api_gateway_rest_api" "password_generator_api_gateway" {
   name        = "${var.app_name}_api_gateway"
-  description = "REST API gateway for ${var.app_name} app. "
+  description = "REST API gateway for ${var.app_name} app."
 }
 
 # Add a resource to that API gateway called home
@@ -99,7 +99,7 @@ resource "aws_api_gateway_integration" "get_home_integration" {
 
 # Create a resource called "auth" inside the API gateway
 resource "aws_api_gateway_resource" "password_generator_api_gateway_auth_resource" {
-  parent_id   = aws_api_gateway_resource.password_generator_api_gateway_home_resource.id
+  parent_id   = aws_api_gateway_rest_api.password_generator_api_gateway.root_resource_id
   path_part   = "auth"
   rest_api_id = aws_api_gateway_rest_api.password_generator_api_gateway.id
 }
@@ -175,7 +175,7 @@ resource "aws_api_gateway_stage" "password_generator_api_gateway_stage" {
   stage_name    = "dev"
 }
 
-# Print the invoke URL for /home on terminal
+# Print the invoke URL for /auth/creds on terminal
 output "invoke_url" {
   value = aws_api_gateway_stage.password_generator_api_gateway_stage.invoke_url
 }
