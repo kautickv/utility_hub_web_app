@@ -27,7 +27,7 @@ resource "aws_lambda_layer_version" "layer" {
 
 # Create an IAM role to assign to lambda function
 resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
-  name = "password-generator-backend-lambda-function_exec"
+  name = "${var.app_name}-backend-lambda-function_exec"
 
   assume_role_policy = jsonencode({
    "Version" : "2012-10-17",
@@ -67,20 +67,20 @@ resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
 
 # Create the lambda fucntion which will handle backend requests
 resource "aws_lambda_function" "password-generator-backend-lambda-function" {
-  function_name = "password-generator-backend-lambda-function"
+  function_name = "${var.app_name}-backend-lambda-function"
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.password-generator-backend-lambda-function-object.key
 
   runtime = "python3.9"
-  handler = "hello_world.lambda_handler"
+  handler = "index.lambda_handler"
   source_code_hash = data.archive_file.password-generator-backend-lambda-function-zip.output_base64sha256
   role = aws_iam_role.password-generator-backend-lambda-function_exec.arn
   layers = [aws_lambda_layer_version.layer.arn]
   environment {
     variables = {
       "MESSAGE" = "Terraform sends its regards",
-      "USERS_TABLE" = aws_dynamodb_table.sign_in_user_table.name
+      "DYNAMO_TABLE_NAME" = aws_dynamodb_table.sign_in_user_table.name
     }
   }
 

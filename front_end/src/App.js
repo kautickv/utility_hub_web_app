@@ -12,8 +12,15 @@ function App() {
     console.log("Password has been generated");
   }
 
-  function copytoClipboard(){
-    console.log('copied');
+  async function copytoClipboard(){
+    console.log(process.env.REACT_APP_API_GATEWAY_BASE_URL + "/home")
+    try {
+      const response = await fetch(process.env.REACT_APP_API_GATEWAY_BASE_URL + "/home");
+      const jsonData = await response.json();
+      console.log(jsonData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
   return (
     <div className='App'>
