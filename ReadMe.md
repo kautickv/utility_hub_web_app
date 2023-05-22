@@ -81,7 +81,7 @@ We would like to thank the open-source community for their contributions and the
 
 ## Contact
 
-For any questions or inquiries, please contact the project team at [email protected]
+For any questions or inquiries, please contact the SOC team.
 
 ## Current Issues
 
