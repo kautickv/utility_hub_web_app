@@ -26,7 +26,6 @@ function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
       })
         .then((response) => response.json())
         .then(async (response) => {
@@ -34,13 +33,6 @@ function Login() {
           message = JSON.parse(message);
           console.log(message);
           if (response.status === 200) {
-            // Save jwttoken in localstorage
-            let token = response.headers
-              .get("x-amzn-Remapped-Authorization")
-              .split(" ")[1]
-              .trim();
-            localStorage.setItem("jwtToken", token);
-
             // Redirect user to main application
             window.location.href = "/home";
             }

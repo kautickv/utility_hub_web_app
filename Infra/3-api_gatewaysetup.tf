@@ -356,6 +356,20 @@ resource "aws_api_gateway_integration" "post_login_integration" {
   uri                     = aws_lambda_function.password-generator-backend-lambda-function.invoke_arn
 }
 
+# Configure CORS for the POST integration on "login" resource
+resource "aws_api_gateway_integration_response" "post_login_integration_response" {
+  rest_api_id   = aws_api_gateway_rest_api.password_generator_api_gateway.id
+  resource_id   = aws_api_gateway_resource.password_generator_api_gateway_login_resource.id
+  http_method   = aws_api_gateway_method.post_login_method.http_method
+  status_code   = aws_api_gateway_method_response.post_login_method_response_200.status_code
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+  depends_on = [aws_api_gateway_method_response.post_login_method_response_200]
+}
+
 # Add Options method for login resource
 resource "aws_api_gateway_method" "options_login_method" {
   rest_api_id   = aws_api_gateway_rest_api.password_generator_api_gateway.id
@@ -533,6 +547,7 @@ resource "aws_api_gateway_deployment" "password_generator_api_gateway_deployment
       aws_api_gateway_method_response.options_logout_method_response_200.id,
       aws_api_gateway_integration.options_logout_integration.id,
       aws_api_gateway_integration_response.options_logout_integration_response.id,
+      aws_api_gateway_integration_response.post_login_integration_response.id,
     ]))
   }
 
