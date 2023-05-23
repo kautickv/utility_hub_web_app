@@ -50,7 +50,7 @@ resource "aws_iam_role_policy_attachment" "hello_lambda_policy" {
 }
 
 # Attach another policy to lambda assume role to give dynamoDb access
-resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
+resource "aws_iam_role_policy" "dynamodb_ssm-lambda-policy" {
    name = "password_generator_dynamodb_lambda_policy"
    role = aws_iam_role.password-generator-backend-lambda-function_exec.id
    policy = jsonencode({
