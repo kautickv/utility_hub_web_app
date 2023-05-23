@@ -1,6 +1,7 @@
 import boto3
 import base64
 from utils.util import buildResponse
+import json
 
 def encrypt_to_base64(text):
     text_bytes = text.encode('utf-8')  # Convert text to bytes using UTF-8 encoding
@@ -14,26 +15,19 @@ def get_creds_handler(event, context):
         # Return google Client_id and redirect_uri to user
         # Create a Boto3 client for SSM
         ssm_client = boto3.client('ssm')
-
+        # Read configuration file
+        with open('../config.json') as f:
+            configs = json.load(f)
         # Retrieve the client_id
         response = ssm_client.get_parameter(
-            Name="/password-generator/google-client/client-id",
+            Name=configs['ssm_parameter_paths']['client_id'],
             WithDecryption=True
         )
         # Extract the client_id
         client_id = response['Parameter']['Value']
 
-        # Retrieve the redirect_uri
-        response = ssm_client.get_parameter(
-            Name="/password-generator/google-client/redirect-uris",
-            WithDecryption=True
-        )
-        # Extract the client_id
-        redirect_uri = response['Parameter']['Value']
-
         return buildResponse(200, {
             "client_id_base64": encrypt_to_base64(client_id),
-            "redirect_uri_base64": encrypt_to_base64(redirect_uri),
         })
     except Exception as e:
         print(f"Error in get_creds. Error: {str(e)}")

@@ -14,6 +14,7 @@ function Login() {
   useEffect(() => {
     // Check if url already contains code
     const url = window.location.href;
+    const redirectUrl = url.split("?")[0]
     const hasCode = url.includes("code=");
 
     if (hasCode) {
@@ -24,6 +25,7 @@ function Login() {
       // Send POST api call to login endpoint to exchange code for token.
       let payload = {
         code: code,
+        redirectUrl: redirectUrl
       };
       fetch(`${process.env.REACT_APP_API_GATEWAY_BASE_URL}/auth/login`, {
         method: "POST",
@@ -49,7 +51,7 @@ function Login() {
       const fetchCreds = async () => {
         try {
           const response = await fetch(
-            process.env.REACT_APP_API_GATEWAY_BASE_URL + "/auth/creds"
+            `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/auth/creds`
           );
           const data = await response.json();
           // Decode client_id
@@ -57,11 +59,7 @@ function Login() {
           let utf8 = decodeURIComponent(escape(ascii));
           setClient_id(utf8);
 
-          // Decode redirect_uri
-          ascii = atob(data.redirect_uri_base64);
-          utf8 = decodeURIComponent(escape(ascii));
-          //setRedirect_uri(utf8);
-          setRedirect_uri("http://localhost:3000");
+          setRedirect_uri(redirectUrl);
         } catch (error) {
           // Handle any errors that may occur during the fetch or decoding process
           console.error("Error fetching data:", error);
