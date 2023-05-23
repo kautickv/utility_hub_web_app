@@ -182,6 +182,8 @@ resource "aws_api_gateway_method_response" "get_creds_method_response_200" {
   }
   response_parameters = {
     "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
   }
   depends_on = [aws_api_gateway_method.get_creds_method]
 }
@@ -258,6 +260,8 @@ resource "aws_api_gateway_method_response" "post_verify_method_response_200" {
   }
   response_parameters = {
     "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
   }
   depends_on = [aws_api_gateway_method.post_verify_method]
 }
@@ -342,6 +346,8 @@ resource "aws_api_gateway_method_response" "post_login_method_response_200" {
   }
   response_parameters = {
     "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
   }
   depends_on = [aws_api_gateway_method.post_login_method]
 }
@@ -440,6 +446,8 @@ resource "aws_api_gateway_method_response" "post_logout_method_response_200" {
   }
   response_parameters = {
     "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
   }
   depends_on = [aws_api_gateway_method.post_logout_method]
 }
