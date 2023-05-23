@@ -16,7 +16,7 @@ def get_creds_handler(event, context):
         # Create a Boto3 client for SSM
         ssm_client = boto3.client('ssm')
         # Read configuration file
-        with open('../config.json') as f:
+        with open('config.json') as f:
             configs = json.load(f)
         # Retrieve the client_id
         response = ssm_client.get_parameter(

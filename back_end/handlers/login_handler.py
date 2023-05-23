@@ -1,5 +1,5 @@
 from utils.util import buildResponse
-from utils.util import DynamoDBManager
+from utils.DynamoDBManager import DynamoDBManager
 import boto3
 import requests
 import json
@@ -10,7 +10,7 @@ def get_google_auth_data():
     ssm_client = boto3.client('ssm')
 
     # Read configuration file
-    with open('../config.json') as f:
+    with open('config.json') as f:
         configs = json.load(f)
     # Retrieve the client_id
     response = ssm_client.get_parameter(
@@ -24,10 +24,36 @@ def get_google_auth_data():
             Name=configs['ssm_parameter_paths']['client_secret'],
             WithDecryption=True
         )
+    client_secret = response['Parameter']['Value']
+
+    return {
+        "client_id": client_id,
+        "client_secret": client_secret
+    }
+
+def exchange_code_for_token(body):
+    # This function exchange the code for a token with google
+    google_data = get_google_auth_data()
+    data = {
+        "code": body["code"],
+        "client_id": google_data["client_id"],
+        "client_secret": google_data["client_secret"],
+        "redirect_uri" : body["redirectUrl"],
+        "grant_type": "authorization_code"
+    }
+
+    try:
+      response = requests.post('https://oauth2.googleapis.com/token', data=data)
+      response.raise_for_status()
+      print(response.json())  # Here's your token, you'll likely want to save this in your state
+    except requests.exceptions.HTTPError as err:
+      print(f'Error occurred: {err}')
+
 
 def login_handler(event, context):
     # This function will receive the code provided by google.
     # It should use the code and exchange it for a token and get user information.
+    exchange_code_for_token(event["body"])
     #Add those user information in the database
     # Generate a jwt token and set it as the response header/or return in http body.
     return buildResponse(200, {"message": "OK"})
