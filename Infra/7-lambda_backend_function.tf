@@ -64,7 +64,7 @@ resource "aws_iam_role_policy" "dynamodb_ssm-lambda-policy" {
             ],
            "Resource" : [
              "${aws_dynamodb_table.sign_in_user_table.arn}",
-              "arn:aws:ssm:${var.region}:${var.account_id}:parameter/${parameter_store_path}"
+              "arn:aws:ssm:${var.region}:${var.account_id}:parameter/${var.parameter_store_path}"
            ]
         }
       ]
