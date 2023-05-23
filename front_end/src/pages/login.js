@@ -33,7 +33,7 @@ function Login() {
         .then(async (response) => {
           let message = await response.text();
           message = JSON.parse(message);
-
+          console.log(message);
           if (response.status === 200) {
             // Save jwttoken in localstorage
             let token = response.headers
@@ -76,7 +76,7 @@ function Login() {
 
   function googleLogin() {
     console.log(process.env.REACT_APP_API_GATEWAY_BASE_URL);
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:3000/&response_type=code&client_id=${client_id}`;
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirect_uri}&response_type=code&client_id=${client_id}`;
     window.location = googleAuthUrl;
   }
 
