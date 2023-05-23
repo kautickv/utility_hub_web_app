@@ -40,9 +40,9 @@ resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
        "Action" : "sts:AssumeRole"
      },
      {
-        Effect   = "Allow",
-        Action   = "ssm:GetParameter",
-        Resource = "arn:aws:ssm:us-east-1:324277551001:parameter/password_generator/google_client/*"
+        "Effect"  : "Allow",
+        "Action"   : "ssm:GetParameter",
+        "Resource" : "arn:aws:ssm:us-east-1:324277551001:parameter/password_generator/google_client/*"
       }
    ]
   })
