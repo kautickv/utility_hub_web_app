@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./login.css";
+import { useNavigate  } from 'react-router-dom';
+
+
 function Login() {
   const [client_id, setClient_id] = useState("");
   const [redirect_uri, setRedirect_uri] = useState("");
+  const navigate = useNavigate();
+
 
   // Run this function once every time loads
   useEffect(() => {
@@ -15,63 +20,59 @@ function Login() {
       // Extract code from URL
       const newURL = url.split("code=");
       const code = newURL[1].split("&")[0];
-      console.log(code);
 
       // Send POST api call to login endpoint to exchange code for token.
       let payload = {
         code: code,
       };
-      fetch(process.env.REACT_APP_API_GATEWAY_BASE_URL + "/auth/login", {
+      fetch(`${process.env.REACT_APP_API_GATEWAY_BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then((response) => response.json())
-        .then(async (response) => {
-          let message = await response.text();
-          message = JSON.parse(message);
-          console.log(message);
+        .then((response) => {
+          console.log(response.status);
           if (response.status === 200) {
             // Redirect user to main application
-            window.location.href = "/home";
+            navigate('/home');
+          } else {
+            if (response.status === 503) {
+              console.log("Server error. Please try again later");
             }
-          else{
-            if (response.status === 503){
-                console.log('Server error. Please try again later');
-              }
           }
         })
         .catch((error) => console.error("Error:", error));
     } else {
       console.log("Code not found in URL");
-      const fetchData = async () => {
+      const fetchCreds = async () => {
         try {
-          const response = await fetch(process.env.REACT_APP_API_GATEWAY_BASE_URL + "/auth/creds");
+          const response = await fetch(
+            process.env.REACT_APP_API_GATEWAY_BASE_URL + "/auth/creds"
+          );
           const data = await response.json();
           // Decode client_id
           let ascii = atob(data.client_id_base64);
           let utf8 = decodeURIComponent(escape(ascii));
           setClient_id(utf8);
-    
+
           // Decode redirect_uri
           ascii = atob(data.redirect_uri_base64);
           utf8 = decodeURIComponent(escape(ascii));
           //setRedirect_uri(utf8);
-          setRedirect_uri("http://localhost:3000")
+          setRedirect_uri("http://localhost:3000");
         } catch (error) {
           // Handle any errors that may occur during the fetch or decoding process
           console.error("Error fetching data:", error);
         }
       };
 
-      fetchData();
+      fetchCreds();
     }
   }, []);
 
   function googleLogin() {
-    
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirect_uri}&response_type=code&client_id=${client_id}`;
     console.log(googleAuthUrl);
     window.location = googleAuthUrl;
