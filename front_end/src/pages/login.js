@@ -58,7 +58,8 @@ function Login() {
           // Decode redirect_uri
           ascii = atob(data.redirect_uri_base64);
           utf8 = decodeURIComponent(escape(ascii));
-          setRedirect_uri(utf8);
+          //setRedirect_uri(utf8);
+          setRedirect_uri("http://localhost:3000")
         } catch (error) {
           // Handle any errors that may occur during the fetch or decoding process
           console.error("Error fetching data:", error);
@@ -72,6 +73,7 @@ function Login() {
   function googleLogin() {
     
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirect_uri}&response_type=code&client_id=${client_id}`;
+    console.log(googleAuthUrl);
     window.location = googleAuthUrl;
   }
 
