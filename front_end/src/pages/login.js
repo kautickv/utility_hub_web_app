@@ -26,6 +26,7 @@ function Login() {
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify(payload)
       })
         .then((response) => response.json())
         .then(async (response) => {
