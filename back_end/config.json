@@ -1,0 +1,13 @@
+{
+    "ssm_parameter_paths": {
+      "client_id": "/password-generator/google-client/client-id",
+      "client_secret": "/password-generator/google-client/client-secret"
+      
+    },
+    "config2": {
+      "client_id": "YOUR_CLIENT_ID_2",
+      "client_secret": "YOUR_CLIENT_SECRET_2",
+      "redirect_uri": "YOUR_REDIRECT_URI_2"
+    }
+  }
+  
