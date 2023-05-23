@@ -405,6 +405,21 @@ resource "aws_api_gateway_integration" "options_login_integration" {
   resource_id   = aws_api_gateway_resource.password_generator_api_gateway_login_resource.id
   http_method   = aws_api_gateway_method.options_login_method.http_method
   type          = "MOCK"
+  request_templates = {
+    "application/json" = <<TEMPLATE
+  {
+    "statusCode": 200,
+    "responseTemplates": {
+      "application/json": "{}"
+    },
+  "responseParameters": {
+    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+    "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS,POST,PUT'",
+    "method.response.header.Access-Control-Allow-Origin": "'*'"
+  }
+}
+  TEMPLATE
+  }
   depends_on    = [aws_api_gateway_method.options_login_method]
 }
 
