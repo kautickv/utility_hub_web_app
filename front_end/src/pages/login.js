@@ -29,7 +29,6 @@ function Login() {
         body: JSON.stringify(payload),
       })
         .then((response) => response.json())
-        .then((data) => {})
         .then(async (response) => {
           let message = await response.text();
           message = JSON.parse(message);
@@ -44,7 +43,7 @@ function Login() {
 
             // Redirect user to main application
             window.location.href = "/home";
-          }
+            }
           else{
             if (response.status === 503){
                 console.log('Server error. Please try again later');
@@ -54,28 +53,31 @@ function Login() {
         .catch((error) => console.error("Error:", error));
     } else {
       console.log("Code not found in URL");
-      // Fetch client_id and redirect_uri from backend
-      fetch(process.env.REACT_APP_API_GATEWAY_BASE_URL + "/auth/creds")
-        .then((response) => response.json())
-        .then((data) => {
-          // Decode Client_id
-          // Decode Base64 to ASCII for clientID
+      const fetchData = async () => {
+        try {
+          const response = await fetch(process.env.REACT_APP_API_GATEWAY_BASE_URL + "/auth/creds");
+          const data = await response.json();
+          // Decode client_id
           let ascii = atob(data.client_id_base64);
-          // Decode ASCII to UTF-8
           let utf8 = decodeURIComponent(escape(ascii));
           setClient_id(utf8);
-
-          //Decode redirect_uri
+    
+          // Decode redirect_uri
           ascii = atob(data.redirect_uri_base64);
           utf8 = decodeURIComponent(escape(ascii));
           setRedirect_uri(utf8);
-        })
-        .catch((error) => console.error("Error:", error));
+        } catch (error) {
+          // Handle any errors that may occur during the fetch or decoding process
+          console.error("Error fetching data:", error);
+        }
+      };
+
+      fetchData();
     }
   }, []);
 
   function googleLogin() {
-    console.log(process.env.REACT_APP_API_GATEWAY_BASE_URL);
+    
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirect_uri}&response_type=code&client_id=${client_id}`;
     window.location = googleAuthUrl;
   }
