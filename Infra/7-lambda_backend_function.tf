@@ -38,7 +38,12 @@ resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
          "Service" : "lambda.amazonaws.com"
        },
        "Action" : "sts:AssumeRole"
-     }
+     },
+     {
+        Effect   = "Allow",
+        Action   = "ssm:GetParameter",
+        Resource = "arn:aws:ssm:us-east-1:324277551001:parameter/password_generator/google_client/*"
+      }
    ]
   })
 }
