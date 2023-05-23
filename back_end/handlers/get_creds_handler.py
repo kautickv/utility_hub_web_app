@@ -28,7 +28,8 @@ def get_creds_handler(event, context):
             client_id: client_id,
             redirect_uri: redirect_uri,
         })
-    except:
+    except Exception as e:
+        print(f"Error in get_creds. Error: {str(e)}")
         return buildResponse(500, {
             "message": "Internal Server error. Try again later"
         })
