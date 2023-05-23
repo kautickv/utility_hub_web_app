@@ -593,6 +593,8 @@ resource "aws_api_gateway_deployment" "password_generator_api_gateway_deployment
       aws_api_gateway_integration.options_logout_integration.id,
       aws_api_gateway_integration_response.options_logout_integration_response.id,
       aws_api_gateway_integration_response.post_login_integration_response.id,
+      aws_api_gateway_integration_response.post_verify_integration_response.id,
+      aws_api_gateway_integration_response.post_logout_integration_response.id,
     ]))
   }
 
