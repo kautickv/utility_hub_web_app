@@ -2,4 +2,4 @@ from utils.util import buildResponse
 
 def login_handler(event, context):
 
-    return buildResponse(200, "OK from logout handler")
+    return buildResponse(200, {"message": "OK"})

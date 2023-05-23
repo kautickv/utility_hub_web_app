@@ -11,8 +11,6 @@ def buildResponse(code, message, jwt_token=""):
             'Authorization': 'Bearer ' + jwt_token,
             'Content-Type': 'application/json', 
         },
-        'body': json.dumps({
-            'message': message,
-        })
+        'body': json.dumps(message)
 
     }
