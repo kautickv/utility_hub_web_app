@@ -39,11 +39,6 @@ resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
        },
        "Action" : "sts:AssumeRole"
      },
-     {
-        "Effect"  : "Allow",
-        "Action"   : "ssm:GetParameter",
-        "Resource" : "arn:aws:ssm:us-east-1:324277551001:parameter/password_generator/google_client/*"
-      }
    ]
   })
 }
@@ -64,13 +59,20 @@ resource "aws_iam_role_policy" "dynamodb_ssm-lambda-policy" {
         {
            "Effect" : "Allow",
            "Action" : [
-             "dynamodb:*",
-             "ssm:GetParameter"
+             "dynamodb:*"
             ],
            "Resource" : [
-             "${aws_dynamodb_table.sign_in_user_table.arn}",
-             "arn:aws:ssm:us-east-1:324277551001:parameter/password_generator/google_client/*"
+             "${aws_dynamodb_table.sign_in_user_table.arn}"
            ]
+        },
+        {
+          "Effect" : "Allow",
+          "Action" : [
+             "ssm:Describe*",
+              "ssm:Get*",
+              "ssm:List*"
+            ],
+          "Resource": "*"
         },
         {
           "Effect": "Allow",
