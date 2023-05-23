@@ -7,7 +7,7 @@ function App() {
   const [redirect_uri, setRedirect_uri] = useState("");
 
   useEffect(()=>{
-    fetch('https://kitxa58kv4.execute-api.us-east-1.amazonaws.com/dev/auth/creds')
+    fetch(process.env.REACT_APP_API_GATEWAY_BASE_URL + "/auth/creds")
       .then(response => response.json())
       .then(data => {
 
@@ -27,6 +27,7 @@ function App() {
   },[])
 
   function googleLogin(){
+    console.log(process.env.REACT_APP_API_GATEWAY_BASE_URL)
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirect_uri}&response_type=code&client_id=${client_id}`;
     window.location = googleAuthUrl;
   }
