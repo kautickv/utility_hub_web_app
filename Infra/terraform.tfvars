@@ -15,4 +15,4 @@ common_tags = {
 }
 
 
-parameter_store_path = "/password_generator/google_client"
+parameter_store_path = "/password_generator"
