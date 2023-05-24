@@ -2,6 +2,7 @@ import boto3
 import json
 import requests
 from utils.util import buildResponse
+from utils.DynamoDBManager import DynamoDBManager
 
 class GoogleAuth:
 

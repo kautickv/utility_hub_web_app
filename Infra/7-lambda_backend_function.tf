@@ -100,7 +100,7 @@ resource "aws_lambda_function" "password-generator-backend-lambda-function" {
   environment {
     variables = {
       "MESSAGE" = "Terraform sends its regards",
-      "DYNAMO_TABLE_NAME" = aws_dynamodb_table.sign_in_user_table.name
+      "USER_TABLE_NAME" = aws_dynamodb_table.sign_in_user_table.name
     }
   }
 
