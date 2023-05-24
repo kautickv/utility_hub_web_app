@@ -123,6 +123,10 @@ class GoogleAuth:
             if (not self.__signInTableDb.add_item(userData)):
                 raise CustomError(f"(add_user_info_in_db): User Could not be added to database.")
             
+
+            return True
+        
+        
         except Exception as e:
             print(f"Error (add_user_info_in_db): ${str(e)}")
             return False
