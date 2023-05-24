@@ -19,8 +19,7 @@ function Login() {
 
     if (hasCode) {
       // Extract code from URL
-      const newURL = url.split("code=");
-      const code = newURL[1].split("&")[0];
+      const code = extractGoogleCodeFromURL(url);
 
       // Send POST api call to login endpoint to exchange code for token.
       let payload = {
@@ -70,9 +69,16 @@ function Login() {
     }
   });
 
+  function extractGoogleCodeFromURL(newURL){
+    // Create new url object 
+    const parsedURL = new URL (newURL);
+    const authCode = parsedURL.searchParams.get('code');
+
+    return authCode;
+  }
+
   function googleLogin() {
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirect_uri}&response_type=code&client_id=${client_id}`;
-    console.log(googleAuthUrl);
     window.location = googleAuthUrl;
   }
 

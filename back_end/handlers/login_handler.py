@@ -44,16 +44,19 @@ def exchange_code_for_token(body):
 
     try:
       response = requests.post('https://oauth2.googleapis.com/token', data=data)
-      response.raise_for_status()
-      print(response.json())  # Here's your token, you'll likely want to save this in your state
+      # Parse the response
+      tokens = json.loads(response.text)
+      return tokens
     except requests.exceptions.HTTPError as err:
       print(f'Error occurred: {err}')
+      return buildResponse(500, {"message": "Internal server error"})
 
 
-def login_handler(event, context):
+def login_handler(body):
     # This function will receive the code provided by google.
     # It should use the code and exchange it for a token and get user information.
-    exchange_code_for_token(event["body"])
+    token = exchange_code_for_token(body)
+    print(token)
     #Add those user information in the database
     # Generate a jwt token and set it as the response header/or return in http body.
     return buildResponse(200, {"message": "OK"})

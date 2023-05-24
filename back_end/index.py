@@ -3,6 +3,7 @@ from handlers.get_creds_handler import get_creds_handler
 from handlers.login_handler import login_handler
 from handlers.logout_handler import logout_handler
 from handlers.verify_handler import verify_handler
+import json
 
 def lambda_handler(event, context):
 
@@ -15,7 +16,7 @@ def lambda_handler(event, context):
     
     elif http_method == 'POST' and path =='/auth/login':
 
-        return login_handler(event, context)
+        return login_handler(json.loads(event['body']))
     
     elif http_method == 'POST' and path =='/auth/logout':
 
