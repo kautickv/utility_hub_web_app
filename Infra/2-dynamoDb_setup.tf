@@ -16,19 +16,19 @@ resource "aws_dynamodb_table" "sign_in_user_table" {
     type = "S"
   }
   attribute {
-    name = "jwtToken"
+    name = "jwt_token"
     type = "S"
   }
   attribute {
-    name = "accessToken"
+    name = "access_token"
     type = "S"
   }
   attribute {
-    name = "refreshToken"
+    name = "refresh_token"
     type = "S"
   }
   attribute {
-    name = "lastLogout"
+    name = "last_logout"
     type = "S"
   }
   global_secondary_index {
@@ -49,7 +49,23 @@ resource "aws_dynamodb_table" "sign_in_user_table" {
 
   global_secondary_index {
     name               = "JwtTokenIndex"
-    hash_key           = "jwtToken"
+    hash_key           = "jwt_token"
+    projection_type    = "ALL"
+    write_capacity     = 1
+    read_capacity      = 1
+  }
+
+  global_secondary_index {
+    name               = "AccessTokenIndex"
+    hash_key           = "access_token"
+    projection_type    = "ALL"
+    write_capacity     = 1
+    read_capacity      = 1
+  }
+
+  global_secondary_index {
+    name               = "RefreshTokenIndex"
+    hash_key           = "refresh_token"
     projection_type    = "ALL"
     write_capacity     = 1
     read_capacity      = 1
@@ -57,7 +73,7 @@ resource "aws_dynamodb_table" "sign_in_user_table" {
 
   global_secondary_index {
     name               = "LastLogoutIndex"
-    hash_key           = "lastLogout"
+    hash_key           = "last_logout"
     projection_type    = "ALL"
     write_capacity     = 1
     read_capacity      = 1

@@ -17,7 +17,12 @@ def lambda_handler(event, context):
     
     elif http_method == 'POST' and path =='/auth/login':
 
-        return login_handler(json.loads(event['body']))
+        if (json.loads(event['body'])['code']):
+
+            return login_handler(json.loads(event['body']))
+        else:
+            
+            return buildResponse(400, {"message":"Bad Request"})
     
     elif http_method == 'POST' and path =='/auth/logout':
 
