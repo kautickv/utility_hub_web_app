@@ -1,8 +1,12 @@
 import boto3
 import json
 import requests
+import os
+import jwt
+import datetime
 from utils.util import buildResponse
 from utils.DynamoDBManager import DynamoDBManager
+from utils.CustomError import CustomError
 
 class GoogleAuth:
 
@@ -13,19 +17,22 @@ class GoogleAuth:
         self.__user_name = None
         self.__user_email = None
 
+        # Create instance of signin dynamo table
+        self.__signInTableDb = DynamoDBManager(os.getenv('DYNAMO_TABLE_NAME	'))
+
     def get_google_auth_data(self):
 
         try:
             with open('config.json') as f:
                 configs = json.load(f)
             response = self.__ssm_client.get_parameter(
-                    Name=configs['ssm_parameter_paths']['client_id'],
+                    Name=configs['ssm_parameter_paths_google_login']['client_id'],
                     WithDecryption=True
                 )
             client_id = response['Parameter']['Value']
 
             response = self.__ssm_client.get_parameter(
-                    Name=configs['ssm_parameter_paths']['client_secret'],
+                    Name=configs['ssm_parameter_paths_google_login']['client_secret'],
                     WithDecryption=True
                 )
             client_secret = response['Parameter']['Value']
@@ -72,7 +79,55 @@ class GoogleAuth:
         except Exception as e:
             print(f'Error(get_user_info_from_google): {e}')
             return False
-        
+
+    def generate_jwt_token(self, expInHours):
+        # This function will generate and return a jwt token for this user
+        payload = {
+            "email": self.__user_email,
+            "exp":datetime.datetime.utcnow() + datetime.timedelta(hours=expInHours)  # Expiration time
+        }
+
+        # Get secret Key from SSM parameter store
+        try:
+            with open('config.json') as f:
+                configs = json.load(f)
+            response = self.__ssm_client.get_parameter(
+                    Name=configs['ssm_parameter_path_jwt_token_secret']['secret_key'],
+                    WithDecryption=True
+                )
+            secret_key = response['Parameter']['Value']
+
+            # Generate the JWT token
+            token = jwt.encode(payload, secret_key, algorithm='HS256')
+
+            return token
+        except Exception as e:
+            print(f'Error generating jwt secret from ssm parameter store: {e}')
+
+    def add_user_info_in_db(self):
+        # This function will add safe the user information in the user database.
+        # If user already exists, it will override it with the latest information.
+
+        try:
+            userData = {
+                "email": self.__user_email,
+                "first_name": self.__user_name.split(' ')[0],
+                "last_name": self.__user_name.split(' ')[1],
+                "jwt_token": self.generate_jwt_token(3), # Token will be valid for 3 hours
+                "access_token": self.__access_token,
+                "refresh_token": self.__refresh_token,
+                "last_logout": None
+            }
+
+            # Add item in database
+            if (not self.__signInTableDb.add_item(userData)):
+                raise CustomError(f"(add_user_info_in_db): User Could not be added to database.")
+            
+        except Exception as e:
+            print(f"Error (add_user_info_in_db): ${str(e)}")
+            return False
+
+
     # Getter functions
     def get_user_name(self):
         return self.__user_name
