@@ -14,7 +14,7 @@ function Login() {
   useEffect(() => {
     // Check if url already contains code
     const url = window.location.href;
-    const redirectUrl = url.split("?")[0]
+    const redirectUrl = extractDomainFromURL(url);
     const hasCode = url.includes("code=");
 
     if (hasCode) {
@@ -74,13 +74,26 @@ function Login() {
   function extractGoogleCodeFromURL(newURL){
     // Create new url object 
     const parsedURL = new URL (newURL);
-    const authCode = parsedURL.searchParams.get('code');
+    return parsedURL.searchParams.get('code');;
+  }
 
-    return authCode;
+  function extractDomainFromURL(newURL){
+    // Create new url object 
+    let url = new URL (newURL);
+    // Get the full domain with the HTTP protocol
+    let fullDomain = url.protocol + '//' + url.hostname;
+    if (url.port) {
+        fullDomain += ':' + url.port;
+    }
+    if (url.pathname !== '/') {
+        fullDomain += url.pathname;
+    }
+    return fullDomain;
   }
 
   function googleLogin() {
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirect_uri}&response_type=code&client_id=${client_id}`;
+    console.log(redirect_uri);
     window.location = googleAuthUrl;
   }
 
