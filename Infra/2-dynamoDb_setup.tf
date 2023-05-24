@@ -20,6 +20,14 @@ resource "aws_dynamodb_table" "sign_in_user_table" {
     type = "S"
   }
   attribute {
+    name = "accessToken"
+    type = "S"
+  }
+  attribute {
+    name = "refreshToken"
+    type = "S"
+  }
+  attribute {
     name = "lastLogout"
     type = "S"
   }

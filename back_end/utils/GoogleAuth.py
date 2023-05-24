@@ -54,8 +54,8 @@ class GoogleAuth:
             self.__refresh_token = tokens["refresh_token"]
 
             return True
-        except requests.exceptions.HTTPError as err:
-            print(f'Error(exchange_code_for_token): {err}')
+        except Exception as e:
+            print(f'Error(exchange_code_for_token): {e}')
             return False
 
     def get_user_info_from_google(self):
