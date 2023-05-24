@@ -16,7 +16,11 @@ class DynamoDBManager:
 
     def remove_item(self, key):
         try:
+
+            print("Key")
+            print(key)
             self.table.delete_item(Key=key)
+            print("Item has been added")
             return True
         except Exception as e:
             print(f"Error removing item from DynamoDB: {e}")

@@ -20,7 +20,7 @@ def get_creds_handler(event, context):
             configs = json.load(f)
         # Retrieve the client_id
         response = ssm_client.get_parameter(
-            Name=configs['ssm_parameter_paths']['client_id'],
+            Name=configs['ssm_parameter_paths_google_login']['client_id'],
             WithDecryption=True
         )
         # Extract the client_id

@@ -34,7 +34,9 @@ function Login() {
         body: JSON.stringify(payload),
       })
         .then((response) => {
-          console.log(response.status);
+            response.text().then((text) => {
+                console.log(text); // Print the response body
+              });
           if (response.status === 200) {
             // Redirect user to main application
             navigate('/home');
