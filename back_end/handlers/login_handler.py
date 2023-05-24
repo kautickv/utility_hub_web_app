@@ -17,5 +17,8 @@ def login_handler(body):
         return buildResponse(500, {"message":"Internal server error"})
     
     #Add those user information in the database
+    if (not auth.add_user_info_in_db):
+        return buildResponse(500, {"message":"Internal server error"})
+    
     # Generate a jwt token and set it as the response header/or return in http body.
     return buildResponse(200, {"message": "OK"})

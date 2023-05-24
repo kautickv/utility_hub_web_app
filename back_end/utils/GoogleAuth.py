@@ -18,7 +18,7 @@ class GoogleAuth:
         self.__user_email = None
 
         # Create instance of signin dynamo table
-        self.__signInTableDb = DynamoDBManager(os.getenv('DYNAMO_TABLE_NAME	'))
+        self.__signInTableDb = DynamoDBManager(os.getenv('USER_TABLE_NAME'))
 
     def get_google_auth_data(self):
 
