@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [client_id, setClient_id] = useState("");
-  const [redirect_uri, setRedirect_uri] = useState("");
   const navigate = useNavigate();
   let url = useRef(null);
   let redirectUrl = useRef(null);
@@ -15,7 +14,6 @@ function Login() {
     // Check if url already contains code
     url.current = window.location.href;
     redirectUrl.current = extractDomainFromURL(url.current);
-    setRedirect_uri(redirectUrl.current);
     const hasCode = url.current.includes("code=");
 
     if (hasCode) {
@@ -128,7 +126,7 @@ function Login() {
   }
 
   function googleLogin() {
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirect_uri}&response_type=code&client_id=${client_id}`;
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirectUrl.current}&response_type=code&client_id=${client_id}`;
     console.log(redirectUrl.current);
     window.location = googleAuthUrl;
   }
