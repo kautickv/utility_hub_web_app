@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
@@ -7,21 +7,21 @@ function Login() {
   const [client_id, setClient_id] = useState("");
   const [redirect_uri, setRedirect_uri] = useState("");
   const navigate = useNavigate();
-  let url = null;
-  let redirectUrl = null;
+  let url = useRef(null);
+  let redirectUrl = useRef(null);
 
   // Run this function once every time loads
   useEffect(() => {
     // Check if url already contains code
-    url = window.location.href;
-    redirectUrl = extractDomainFromURL(url);
-    const hasCode = url.includes("code=");
+    url.current = window.location.href;
+    redirectUrl.current = extractDomainFromURL(url);
+    const hasCode = url.current.includes("code=");
 
     if (hasCode) {
       handleURLHasCode();
     } else {
         let jwtToken = localStorage.getItem("JWT_Token");
-        if (jwtToken != null || jwtToken != 'undefined') {
+        if (jwtToken !== null || jwtToken !== 'undefined') {
             handleVerifyJWTToken(jwtToken);
         }else{
             handleURLHasNoCode();
