@@ -116,7 +116,7 @@ class GoogleAuth:
                 "jwt_token": self.generate_jwt_token(3), # Token will be valid for 3 hours
                 "access_token": self.__access_token,
                 "refresh_token": self.__refresh_token,
-                "last_logout": None
+                "last_logout": " "
             }
 
             # Add item in database
@@ -126,7 +126,7 @@ class GoogleAuth:
 
             return True
         
-        
+
         except Exception as e:
             print(f"Error (add_user_info_in_db): ${str(e)}")
             return False
