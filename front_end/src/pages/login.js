@@ -1,92 +1,123 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./login.css";
-import { useNavigate  } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [client_id, setClient_id] = useState("");
   const [redirect_uri, setRedirect_uri] = useState("");
   const navigate = useNavigate();
-
+  let url = null;
+  let redirectUrl = null;
 
   // Run this function once every time loads
   useEffect(() => {
     // Check if url already contains code
-    const url = window.location.href;
-    const redirectUrl = extractDomainFromURL(url);
+    url = window.location.href;
+    redirectUrl = extractDomainFromURL(url);
     const hasCode = url.includes("code=");
 
     if (hasCode) {
-      // Extract code from URL
-      const code = extractGoogleCodeFromURL(url);
-
-      // Send POST api call to login endpoint to exchange code for token.
-      let payload = {
-        code: code,
-        redirectUrl: redirectUrl
-      };
-      fetch(`${process.env.REACT_APP_API_GATEWAY_BASE_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      })
-        .then((response) => {
-            response.text().then((text) => {
-                console.log(text); // Print the response body
-              });
-          if (response.status === 200) {
-            // Redirect user to main application
-            navigate('/home');
-          } else {
-            if (response.status === 503) {
-              console.log("Server error. Please try again later");
-            }
-          }
-        })
-        .catch((error) => console.error("Error:", error));
+      handleURLHasCode();
     } else {
-      console.log("Code not found in URL");
-      const fetchCreds = async () => {
-        try {
-          const response = await fetch(
-            `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/auth/creds`
-          );
-          const data = await response.json();
-          // Decode client_id
-          let ascii = atob(data.client_id_base64);
-          let utf8 = decodeURIComponent(escape(ascii));
-          setClient_id(utf8);
-
-          setRedirect_uri(redirectUrl);
-        } catch (error) {
-          // Handle any errors that may occur during the fetch or decoding process
-          console.error("Error fetching data:", error);
+        let jwtToken = localStorage.getItem("JWT_Token");
+        if (jwtToken != null || jwtToken != 'undefined') {
+            handleVerifyJWTToken(jwtToken);
+        }else{
+            handleURLHasNoCode();
         }
-      };
-
-      fetchCreds();
     }
   });
 
-  function extractGoogleCodeFromURL(newURL){
-    // Create new url object 
-    const parsedURL = new URL (newURL);
-    return parsedURL.searchParams.get('code');;
+  function handleVerifyJWTToken(jwtToken){
+    /**
+     * This function will be triggered if a JWTToken is already stored on localStorage.
+     * This function will send an api call to verify endpoint to check if the jwtToken is valid
+     * If Valid, it redirects user to /home page
+     * if not, asks user to sign in again.
+     */
   }
 
-  function extractDomainFromURL(newURL){
-    // Create new url object 
-    let url = new URL (newURL);
+  function handleURLHasNoCode() {
+    /**
+     * This function will be triggered if the URL has no code and no JWT token is saved
+     * locally. Will ask user to login again.
+     */
+
+    console.log("Code not found in URL");
+    const fetchCreds = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/auth/creds`
+        );
+        const data = await response.json();
+        // Decode client_id
+        let ascii = atob(data.client_id_base64);
+        let utf8 = decodeURIComponent(escape(ascii));
+        setClient_id(utf8);
+
+        setRedirect_uri(redirectUrl);
+      } catch (error) {
+        // Handle any errors that may occur during the fetch or decoding process
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchCreds();
+  }
+
+  function handleURLHasCode() {
+    /**
+     * This function will be triggered if the URL has the google code as parameter
+     */
+    // Extract code from URL
+    const code = extractGoogleCodeFromURL(url);
+
+    // Send POST api call to login endpoint to exchange code for token.
+    let payload = {
+      code: code,
+      redirectUrl: redirectUrl,
+    };
+    fetch(`${process.env.REACT_APP_API_GATEWAY_BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          // Authentication success. Save JWT token.
+          response.json().then((data) => {
+            localStorage.setItem("JWT_Token", data.jwtToken);
+          });
+          // Redirect user to main application
+          navigate("/home");
+        } else {
+          if (response.status === 503) {
+            console.log("Server error. Please try again later");
+          }
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  function extractGoogleCodeFromURL(newURL) {
+    // Create new url object
+    const parsedURL = new URL(newURL);
+    return parsedURL.searchParams.get("code");
+  }
+
+  function extractDomainFromURL(newURL) {
+    // Create new url object
+    let url = new URL(newURL);
     // Get the full domain with the HTTP protocol
-    let fullDomain = url.protocol + '//' + url.hostname;
+    let fullDomain = url.protocol + "//" + url.hostname;
     if (url.port) {
-        fullDomain += ':' + url.port;
+      fullDomain += ":" + url.port;
     }
-    if (url.pathname !== '/') {
-        fullDomain += url.pathname;
+    if (url.pathname !== "/") {
+      fullDomain += url.pathname;
     }
     return fullDomain;
   }

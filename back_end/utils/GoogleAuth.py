@@ -16,6 +16,7 @@ class GoogleAuth:
         self.__refresh_token = None
         self.__user_name = None
         self.__user_email = None
+        self.__jwttoken_expiration_duration = 3   # JWT token will expire in 3 hours
 
         # Create instance of signin dynamo table
         self.__signInTableDb = DynamoDBManager(os.getenv('USER_TABLE_NAME'))
@@ -84,6 +85,7 @@ class GoogleAuth:
         # This function will generate and return a jwt token for this user
         payload = {
             "email": self.__user_email,
+            "username": self.__user_name,
             "exp":datetime.datetime.utcnow() + datetime.timedelta(hours=expInHours)  # Expiration time
         }
 
@@ -113,7 +115,7 @@ class GoogleAuth:
                 "email": self.__user_email,
                 "first_name": self.__user_name.split(' ')[0],
                 "last_name": self.__user_name.split(' ')[1],
-                "jwt_token": self.generate_jwt_token(3), # Token will be valid for 3 hours
+                "jwt_token": self.generate_jwt_token(self.__jwttoken_expiration_duration), # Token will be valid for 3 hours
                 "access_token": self.__access_token,
                 "refresh_token": self.__refresh_token,
                 "last_logout": " "
@@ -138,3 +140,6 @@ class GoogleAuth:
     
     def get_user_email(self):
         return self.__user_email
+    
+    def get_jwt_token(self):
+        return self.__jwt_token
