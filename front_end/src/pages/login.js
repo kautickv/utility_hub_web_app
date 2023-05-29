@@ -14,7 +14,7 @@ function Login() {
   useEffect(() => {
     // Check if url already contains code
     url.current = window.location.href;
-    redirectUrl.current = extractDomainFromURL(url);
+    redirectUrl.current = extractDomainFromURL(url.current);
     const hasCode = url.current.includes("code=");
 
     if (hasCode) {
