@@ -15,16 +15,23 @@ function Login() {
     // Check if url already contains code
     url.current = window.location.href;
     redirectUrl.current = extractDomainFromURL(url.current);
+    setRedirect_uri(redirectUrl.current);
     const hasCode = url.current.includes("code=");
 
     if (hasCode) {
       handleURLHasCode();
     } else {
         let jwtToken = localStorage.getItem("JWT_Token");
-        if (jwtToken !== null || jwtToken !== 'undefined') {
+        if (jwtToken !== null && jwtToken !== 'undefined') {
+            console.log("JWTToken called")
             handleVerifyJWTToken(jwtToken);
         }else{
-            handleURLHasNoCode();
+            if (redirectUrl.current !== null && redirectUrl.current !== undefined) {
+                handleURLHasNoCode();
+            } else {
+                // You may want to handle the case when redirectUrl.current is not properly set.
+                console.error("redirectUrl.current is not set");
+            }
         }
     }
   });
@@ -55,8 +62,6 @@ function Login() {
         let ascii = atob(data.client_id_base64);
         let utf8 = decodeURIComponent(escape(ascii));
         setClient_id(utf8);
-
-        setRedirect_uri(redirectUrl);
       } catch (error) {
         // Handle any errors that may occur during the fetch or decoding process
         console.error("Error fetching data:", error);
@@ -71,12 +76,12 @@ function Login() {
      * This function will be triggered if the URL has the google code as parameter
      */
     // Extract code from URL
-    const code = extractGoogleCodeFromURL(url);
+    const code = extractGoogleCodeFromURL(url.current);
 
     // Send POST api call to login endpoint to exchange code for token.
     let payload = {
       code: code,
-      redirectUrl: redirectUrl,
+      redirectUrl: redirectUrl.current,
     };
     fetch(`${process.env.REACT_APP_API_GATEWAY_BASE_URL}/auth/login`, {
       method: "POST",
@@ -124,7 +129,7 @@ function Login() {
 
   function googleLogin() {
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirect_uri}&response_type=code&client_id=${client_id}`;
-    console.log(redirect_uri);
+    console.log(redirectUrl.current);
     window.location = googleAuthUrl;
   }
 

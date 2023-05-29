@@ -15,6 +15,7 @@ class GoogleAuth:
         self.__access_token = None
         self.__refresh_token = None
         self.__user_name = None
+        self.__jwt_token = None
         self.__user_email = None
         self.__jwttoken_expiration_duration = 3   # JWT token will expire in 3 hours
 
@@ -101,6 +102,7 @@ class GoogleAuth:
 
             # Generate the JWT token
             token = jwt.encode(payload, secret_key, algorithm='HS256')
+            self.__jwt_token = token
 
             return token
         except Exception as e:
