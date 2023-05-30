@@ -92,15 +92,14 @@ def verifyUserLoginStatus(jwtToken):
         
         item = userTable.get_all_attributes(userEmail)
         if (item):
-            # Check if user has been logged out
-            if (item["last_logout"] == ""):
-                # User not logged out
+            # Check if user login Status is true
+            if (item["login_status"]):
                 return True
             else:
-                
-                
+                return False    
         else:
-            print("error")
+            # Item is empty means user not in our database
+            return False
 
     except jwt.ExpiredSignatureError:
         print("Token has expired.")

@@ -115,7 +115,9 @@ class GoogleAuth:
                 "jwt_token": self.generate_jwt_token(self.__jwttoken_expiration_duration), # Token will be valid for 3 hours
                 "access_token": self.__access_token,
                 "refresh_token": self.__refresh_token,
-                "last_logout": " "
+                "last_logout": " ",
+                "last_login": str(datetime.now()),
+                "login_status": True
             }
 
             # Add item in database
