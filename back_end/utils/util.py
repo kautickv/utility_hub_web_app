@@ -74,18 +74,11 @@ def verifyUserLoginStatus(jwtToken):
     # Get users table
     userTable = DynamoDBManager(os.getenv('USER_TABLE_NAME'))
 
-    # Get Secret Key
-    secret_key = getJWTSecretKey()
-
     # Verify JWT Token
     try:
         decoded_token = decode_jwt_token(jwtToken)
-        
-        print(decoded_token)
         #Access User Information
         userEmail = decoded_token["email"]
-        print(f"User being verified: {userEmail}")
-
         # Check if JWT token is valid. If not, return false
         if (not is_jwt_token_valid(decoded_token)):
             return False

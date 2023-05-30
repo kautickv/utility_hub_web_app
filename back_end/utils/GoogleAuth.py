@@ -4,7 +4,7 @@ import requests
 import os
 import jwt
 from datetime import datetime, timedelta
-from utils.util import getJWTSecretKey
+from utils.util import getJWTSecretKey, decode_jwt_token
 from utils.DynamoDBManager import DynamoDBManager
 from utils.CustomError import CustomError
 
@@ -132,6 +132,18 @@ class GoogleAuth:
             print(f"Error (add_user_info_in_db): ${str(e)}")
             return False
 
+    def logoutUser(self, token):
+        # This function will take in a user email and log user out.
+        # It will update the login_status field on dynamo to 0 and last_logout to current time.
+
+        try:
+            # Decode token
+            decoded_jwt_token = decode_jwt_token(token)
+            self.__signInTableDb.update_user_data(decoded_jwt_token["email"], login_status=0, last_logout=str(datetime.utcnow()))
+            return True
+        except Exception as e:
+            print(f"Could not update user data")
+            return False
 
     # Getter functions
     def get_user_name(self):
