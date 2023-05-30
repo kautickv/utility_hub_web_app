@@ -26,4 +26,4 @@ async function sendVerifyAPIToAuthenticationServer(jwtToken){
     
 }
 
-module.exports={sendVerifyAPIToAuthenticationServer};
+export {sendVerifyAPIToAuthenticationServer};

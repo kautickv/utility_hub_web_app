@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
-const util = require("../utils/util");
+import { sendVerifyAPIToAuthenticationServer } from '../utils/util';
+
 
 function Login() {
   const [client_id, setClient_id] = useState("");
@@ -43,7 +44,7 @@ function Login() {
      */
     // Check if user is already signed in
 
-    let verifyResponse = await util.sendVerifyAPIToAuthenticationServer(jwtToken);
+    let verifyResponse = await sendVerifyAPIToAuthenticationServer(jwtToken);
     if (verifyResponse === 200){
         // User is already logged in
         // Redirect user to main application

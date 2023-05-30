@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-const util = require("../utils/util");
+import { sendVerifyAPIToAuthenticationServer } from '../utils/util';
+
 
 
 function Home(){
@@ -14,7 +15,7 @@ function Home(){
             let jwtToken = checkLocalStorageForJWTToken()
             if (jwtToken){
                 // Check if JWT token is valid and if user is logged in
-                let verifyResponse = await util.sendVerifyAPIToAuthenticationServer(jwtToken);
+                let verifyResponse = await sendVerifyAPIToAuthenticationServer(jwtToken);
 
                 if (verifyResponse === 200){
                     // User is already logged in
