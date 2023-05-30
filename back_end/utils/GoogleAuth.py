@@ -3,7 +3,7 @@ import json
 import requests
 import os
 import jwt
-import datetime
+from datetime import datetime, timedelta
 from utils.util import getJWTSecretKey
 from utils.DynamoDBManager import DynamoDBManager
 from utils.CustomError import CustomError
@@ -87,7 +87,7 @@ class GoogleAuth:
         payload = {
             "email": self.__user_email,
             "username": self.__user_name,
-            "exp":datetime.datetime.utcnow() + datetime.timedelta(hours=expInHours)  # Expiration time
+            "exp":datetime.utcnow() + timedelta(hours=expInHours)  # Expiration time
         }
 
         # Get secret Key from SSM parameter store
@@ -116,7 +116,7 @@ class GoogleAuth:
                 "access_token": self.__access_token,
                 "refresh_token": self.__refresh_token,
                 "last_logout": " ",
-                "last_login": str(datetime.now()),
+                "last_login": str(datetime.utcnow()),
                 "login_status": 1
             }
 

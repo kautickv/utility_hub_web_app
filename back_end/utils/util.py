@@ -35,7 +35,7 @@ def getJWTSecretKey():
     
     except Exception as e:
         print("Failed to get JWT Secret key")
-        return ""
+        raise Exception ("Error reading JWT Secret key from SSM Parameter Store")
     
 def is_jwt_token_valid(decoded_token):
     # This function checks if a jwt Token is still valid and has not expired.
@@ -93,7 +93,7 @@ def verifyUserLoginStatus(jwtToken):
         item = userTable.get_all_attributes(userEmail)
         if (item):
             # Check if user login Status is true
-            if (item["login_status"]):
+            if (item["login_status"] == 1):
                 return True
             else:
                 return False    
