@@ -1,4 +1,8 @@
 import json
+from utils.DynamoDBManager import DynamoDBManager
+import os
+import jwt
+import boto3
 
 
 def buildResponse(code, message, jwt_token=""):
@@ -14,3 +18,50 @@ def buildResponse(code, message, jwt_token=""):
         'body': json.dumps(message)
 
     }
+
+def getJWTSecretKey():
+
+    ssm_client = boto3.client('ssm')
+    try:
+            with open('config.json') as f:
+                configs = json.load(f)
+            response = ssm_client.get_parameter(
+                    Name=configs['ssm_parameter_path_jwt_token_secret']['secret_key'],
+                    WithDecryption=True
+                )
+            secret_key = response['Parameter']['Value']
+            return secret_key
+    
+    except Exception as e:
+        print("Failed to get JWT Secret key")
+        return ""
+
+def verifyUserLoginStatus(jwtToken):
+    # This function returns true if user is authenticated.
+    # Returns false if not.
+
+    # Get users table
+    userTable = DynamoDBManager(os.getenv('USER_TABLE_NAME'))
+
+    # Get Secret Key
+    secret_key = getJWTSecretKey()
+
+    # Verify JWT Token
+    try:
+        decoded_token = jwt.decode(jwtToken, secret_key, algorithms=["HS256"])
+        
+        #Access User Information
+        userEmail = decoded_token["email"]
+        print(f"User being verified: {userEmail}")
+    except jwt.ExpiredSignatureError:
+        print("Token has expired.")
+        return False
+    except jwt.InvalidTokenError:
+        print("Token is invalid.")
+        return False
+    except Exception as e:
+        raise Exception("An error occurred during token verification.")
+    
+
+
+    return True

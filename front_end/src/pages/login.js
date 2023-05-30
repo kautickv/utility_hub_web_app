@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
+const util = require("../utils/util");
 
 function Login() {
   const [client_id, setClient_id] = useState("");
@@ -19,28 +20,51 @@ function Login() {
     if (hasCode) {
       handleURLHasCode();
     } else {
-        let jwtToken = localStorage.getItem("JWT_Token");
-        if (jwtToken !== null && jwtToken !== 'undefined') {
-            console.log("JWTToken called")
-            handleVerifyJWTToken(jwtToken);
-        }else{
-            if (redirectUrl.current !== null && redirectUrl.current !== undefined) {
-                handleURLHasNoCode();
-            } else {
-                // You may want to handle the case when redirectUrl.current is not properly set.
-                console.error("redirectUrl.current is not set");
-            }
+      let jwtToken = localStorage.getItem("JWT_Token");
+      if (jwtToken !== null && jwtToken !== "undefined") {
+        handleVerifyJWTToken(jwtToken);
+      } else {
+        if (redirectUrl.current !== null && redirectUrl.current !== undefined) {
+          handleURLHasNoCode();
+        } else {
+          // You may want to handle the case when redirectUrl.current is not properly set.
+          console.error("redirectUrl.current is not set");
         }
+      }
     }
   });
 
-  function handleVerifyJWTToken(jwtToken){
+  async function handleVerifyJWTToken(jwtToken) {
     /**
      * This function will be triggered if a JWTToken is already stored on localStorage.
      * This function will send an api call to verify endpoint to check if the jwtToken is valid
      * If Valid, it redirects user to /home page
      * if not, asks user to sign in again.
      */
+    // Check if user is already signed in
+
+    let verifyResponse = await util.sendVerifyAPIToAuthenticationServer(jwtToken);
+    if (verifyResponse === 200){
+        // User is already logged in
+        // Redirect user to main application
+        navigate("/home");
+    }
+    else if (verifyResponse === 401){
+        // User JWT token is not valid
+        localStorage.removeItem('JWT_Token');
+        navigate("/login");
+    }else{
+        // An error occurred while verifying
+        console.log("An error occurred while verifying user credentials");
+        alert("An error occurred while verifying your login credentials. Please login again.")
+        // User JWT token is not valid
+        localStorage.removeItem('JWT_Token');
+        navigate("/login");
+    }
+    
+    
+
+    console.log("Has JWT Token");
   }
 
   function handleURLHasNoCode() {
@@ -92,7 +116,8 @@ function Login() {
         if (response.status === 200) {
           // Authentication success. Save JWT token.
           response.json().then((data) => {
-            localStorage.setItem("JWT_Token", data.jwtToken);
+            console.log(data);
+            localStorage.setItem("JWT_Token", data.JWT_Token);
           });
           // Redirect user to main application
           navigate("/home");

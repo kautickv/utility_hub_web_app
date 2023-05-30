@@ -4,7 +4,7 @@ import requests
 import os
 import jwt
 import datetime
-from utils.util import buildResponse
+from utils.util import getJWTSecretKey
 from utils.DynamoDBManager import DynamoDBManager
 from utils.CustomError import CustomError
 
@@ -92,13 +92,8 @@ class GoogleAuth:
 
         # Get secret Key from SSM parameter store
         try:
-            with open('config.json') as f:
-                configs = json.load(f)
-            response = self.__ssm_client.get_parameter(
-                    Name=configs['ssm_parameter_path_jwt_token_secret']['secret_key'],
-                    WithDecryption=True
-                )
-            secret_key = response['Parameter']['Value']
+            
+            secret_key = getJWTSecretKey()
 
             # Generate the JWT token
             token = jwt.encode(payload, secret_key, algorithm='HS256')

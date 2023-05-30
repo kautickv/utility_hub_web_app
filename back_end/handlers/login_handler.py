@@ -1,5 +1,4 @@
 from utils.util import buildResponse
-from utils.DynamoDBManager import DynamoDBManager
 from utils.GoogleAuth import GoogleAuth
 
 
@@ -21,4 +20,4 @@ def login_handler(body):
         return buildResponse(500, {"message":"Internal server error adding in DB"})
     
     # Generate a jwt token and set it as the response header/or return in http body.
-    return buildResponse(200, {"message": "OK", "JWTToken": auth.get_jwt_token()})
+    return buildResponse(200, {"message": "OK", "JWT_Token": auth.get_jwt_token()})

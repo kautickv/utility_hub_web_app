@@ -88,3 +88,5 @@ For any questions or inquiries, please contact the SOC team.
 1. Every time the Terraform script is applied, a new layer is created irrespective of whether changes have been made to the layer. This can consume a lot of storage and cost money.
 
 2. If the bucket name is changed in the terraform.tfvars file, the Terraform script fails as it tries to look for a bucket with the previous name. Find a way to solve this.
+
+3. Github actions should run on self-hosted servers instead of github provided servers. We need to change the github action script.
