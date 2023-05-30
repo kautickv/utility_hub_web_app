@@ -39,6 +39,7 @@ def getJWTSecretKey():
 def verifyUserLoginStatus(jwtToken):
     # This function returns true if user is authenticated.
     # Returns false if not.
+    # Raises an Exception if an error occurred.
 
     # Get users table
     userTable = DynamoDBManager(os.getenv('USER_TABLE_NAME'))
@@ -50,9 +51,17 @@ def verifyUserLoginStatus(jwtToken):
     try:
         decoded_token = jwt.decode(jwtToken, secret_key, algorithms=["HS256"])
         
+        print(decoded_token)
         #Access User Information
         userEmail = decoded_token["email"]
         print(f"User being verified: {userEmail}")
+
+        item = userTable.get_all_attributes(userEmail)
+        if (item):
+            print(item)
+        else:
+            print("error")
+
     except jwt.ExpiredSignatureError:
         print("Token has expired.")
         return False
@@ -62,6 +71,3 @@ def verifyUserLoginStatus(jwtToken):
     except Exception as e:
         raise Exception("An error occurred during token verification.")
     
-
-
-    return True

@@ -33,3 +33,15 @@ class DynamoDBManager:
         except Exception as e:
             print(f"Error checking item existence in DynamoDB: {e}")
             return False
+        
+    def get_all_attributes(self, key):
+
+        try:
+            response = self.table.get_item(Key={'email': key})
+            item = response.get('Item')
+            print(item)
+            return item
+        
+        except Exception as e:
+            print(f"Error retrieving all fields from dynamo table")
+            raise Exception("Error: " + str(e))
