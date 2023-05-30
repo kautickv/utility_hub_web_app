@@ -37,7 +37,7 @@ resource "aws_dynamodb_table" "sign_in_user_table" {
   }
   attribute {
     name = "login_status"
-    type = "BOOL"
+    type = "N"
   }
   global_secondary_index {
     name               = "FirstNameIndex"

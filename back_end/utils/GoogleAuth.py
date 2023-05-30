@@ -117,7 +117,7 @@ class GoogleAuth:
                 "refresh_token": self.__refresh_token,
                 "last_logout": " ",
                 "last_login": str(datetime.now()),
-                "login_status": True
+                "login_status": 1
             }
 
             # Add item in database
