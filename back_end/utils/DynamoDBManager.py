@@ -39,9 +39,10 @@ class DynamoDBManager:
         try:
             response = self.table.get_item(Key={'email': key})
             item = response.get('Item')
-            print(item)
-            return item
-        
+            if (item):
+                return item
+            else:
+                return None
         except Exception as e:
             print(f"Error retrieving all fields from dynamo table")
             raise Exception("Error: " + str(e))

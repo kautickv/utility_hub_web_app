@@ -3,6 +3,7 @@ from utils.DynamoDBManager import DynamoDBManager
 import os
 import jwt
 import boto3
+from datetime import datetime
 
 
 def buildResponse(code, message, jwt_token=""):
@@ -35,6 +36,35 @@ def getJWTSecretKey():
     except Exception as e:
         print("Failed to get JWT Secret key")
         return ""
+    
+def is_jwt_token_valid(decoded_token):
+    # This function checks if a jwt Token is still valid and has not expired.
+    # Assuming the token is already decoded.
+
+    try:
+        exp = decoded_token['exp']
+        if (exp):
+            expiration_time = datetime.fromtimestamp(exp)
+            current_time = datetime.now()
+            if current_time < expiration_time:
+                return True
+        return False
+    except Exception as e:
+        print(f"Error checking if JWT token is valid: {e}")
+        raise Exception ("Error checking if JWT token are valid")
+
+def decode_jwt_token(token):
+    # This function takes in an encoded function and decodes it.
+
+    try:
+        # Get Secret Key
+        secret_key = getJWTSecretKey()
+        decoded_token = jwt.decode(token, secret_key, algorithms=["HS256"])
+
+        return decoded_token
+    except Exception as e:
+        print(f"Error Decoding token: {e}")
+        raise Exception ("Error decoding JWT token")
 
 def verifyUserLoginStatus(jwtToken):
     # This function returns true if user is authenticated.
@@ -49,16 +79,26 @@ def verifyUserLoginStatus(jwtToken):
 
     # Verify JWT Token
     try:
-        decoded_token = jwt.decode(jwtToken, secret_key, algorithms=["HS256"])
+        decoded_token = decode_jwt_token(jwtToken)
         
         print(decoded_token)
         #Access User Information
         userEmail = decoded_token["email"]
         print(f"User being verified: {userEmail}")
 
+        # Check if JWT token is valid. If not, return false
+        if (not is_jwt_token_valid(decoded_token)):
+            return False
+        
         item = userTable.get_all_attributes(userEmail)
         if (item):
-            print(item)
+            # Check if user has been logged out
+            if (item["last_logout"] == ""):
+                # User not logged out
+                return True
+            else:
+                
+                
         else:
             print("error")
 

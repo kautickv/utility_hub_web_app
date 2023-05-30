@@ -6,8 +6,10 @@ def verify_handler(event, context):
     # Returns 200 if valid, 401 if invalid and 500 if an error occurred.
     print(event)
 
+    # Extract token from headers
+    token = event["headers"]["Authorization"].split()[1].strip()
     try:
-        if (verifyUserLoginStatus("")):
+        if (verifyUserLoginStatus(token)):
             return buildResponse(200, {"message": "OK"})
         else:
             return buildResponse(401, {"message": "Unauthorized"})

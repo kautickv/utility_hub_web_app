@@ -31,6 +31,14 @@ resource "aws_dynamodb_table" "sign_in_user_table" {
     name = "last_logout"
     type = "S"
   }
+  attribute {
+    name = "last_login"
+    type = "S"
+  }
+  attribute {
+    name = "login_status"
+    type = "BOOL"
+  }
   global_secondary_index {
     name               = "FirstNameIndex"
     hash_key           = "first_name"
@@ -74,6 +82,20 @@ resource "aws_dynamodb_table" "sign_in_user_table" {
   global_secondary_index {
     name               = "LastLogoutIndex"
     hash_key           = "last_logout"
+    projection_type    = "ALL"
+    write_capacity     = 1
+    read_capacity      = 1
+  }
+  global_secondary_index {
+    name               = "LastLoginIndex"
+    hash_key           = "last_login"
+    projection_type    = "ALL"
+    write_capacity     = 1
+    read_capacity      = 1
+  }
+  global_secondary_index {
+    name               = "LoginStatus"
+    hash_key           = "login_status"
     projection_type    = "ALL"
     write_capacity     = 1
     read_capacity      = 1
