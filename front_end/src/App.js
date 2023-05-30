@@ -11,7 +11,7 @@ function App() {
     <div className="App" style={{backgroundColor: "#f2f2f2"}}>
       <BrowserRouter>
         <Routes>
-          <Route exact path='/' element={<Login/>}/>
+          <Route exact path='/' element={<Home/>}/>
           <Route exact path='/login' element={<Login/>}/>
           <Route path='/home' element={<Home/>}/>
         </Routes>

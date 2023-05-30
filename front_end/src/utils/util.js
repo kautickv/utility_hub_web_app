@@ -1,3 +1,5 @@
+
+
 async function sendVerifyAPIToAuthenticationServer(jwtToken){
 
     /*
