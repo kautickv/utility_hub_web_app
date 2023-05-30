@@ -51,41 +51,42 @@ class DynamoDBManager:
         try:
             update_expression = "SET"
             expression_attribute_values = {}
-            
+            expression_attribute_names = {}
+        
             if first_name is not None:
                 update_expression += " #F = :f,"
                 expression_attribute_values[":f"] = first_name
-                expression_attribute_names = {"#F": "first_name"}
-            
+                expression_attribute_names["#F"] = "first_name"
+        
             if last_name is not None:
                 update_expression += " #L = :l,"
                 expression_attribute_values[":l"] = last_name
-                expression_attribute_names = {"#L": "last_name"}
-            
+                expression_attribute_names["#L"] = "last_name"
+        
             if jwt_token is not None:
                 update_expression += " #T = :t,"
                 expression_attribute_values[":t"] = jwt_token
-                expression_attribute_names = {"#T": "jwt_token"}
-            
+                expression_attribute_names["#T"] = "jwt_token"
+        
             if last_login is not None:
                 update_expression += " #L1 = :l1,"
                 expression_attribute_values[":l1"] = last_login
-                expression_attribute_names = {"#L1": "last_login"}
+                expression_attribute_names["#L1"] = "last_login"
 
             if last_logout is not None:
                 update_expression += " #L2 = :l2,"
                 expression_attribute_values[":l2"] = last_logout
-                expression_attribute_names = {"#L2": "last_logout"}
+                expression_attribute_names["#L2"] = "last_logout"
 
             if login_status is not None:
                 update_expression += " #S = :s,"
                 expression_attribute_values[":s"] = login_status
-                expression_attribute_names = {"#S": "login_status"}
+                expression_attribute_names["#S"] = "login_status"
 
             if refresh_token is not None:
                 update_expression += " #R = :r,"
                 expression_attribute_values[":r"] = refresh_token
-                expression_attribute_names = {"#R": "refresh_token"}
+                expression_attribute_names["#R"] = "refresh_token"
             
             if update_expression == "SET":
                 # No fields provided for update
