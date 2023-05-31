@@ -10,15 +10,16 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
     }
 
-    # To enable React routing with CloudFront and S3, add a custom error response for the 
-    # 404 "page not found" error. By redirecting the error to the index.html file, React 
-    # Router can handle the routing appropriately.
-    custom_error_response {
-      error_code      = 404
-      response_code   = 200
-      response_page_path = "/index.html"
-      error_caching_min_ttl = 300
-    }
+  }
+
+  # To enable React routing with CloudFront and S3, add a custom error response for the 
+  # 404 "page not found" error. By redirecting the error to the index.html file, React 
+  # Router can handle the routing appropriately.
+  custom_error_response {
+    error_code      = 404
+    response_code   = 200
+    response_page_path = "/index.html"
+    error_caching_min_ttl = 300
   }
 
   enabled             = true
