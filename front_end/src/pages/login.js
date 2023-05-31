@@ -152,7 +152,7 @@ function Login() {
   }
 
   function googleLogin() {
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirectUrl.current}&response_type=code&client_id=${client_id}`;
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&prompt=consent&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirectUrl.current}&response_type=code&client_id=${client_id}`;
     console.log(redirectUrl.current);
     window.location = googleAuthUrl;
   }
