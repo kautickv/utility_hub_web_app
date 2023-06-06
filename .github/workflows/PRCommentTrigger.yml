@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: hashicorp/setup-terraform@v2
 
       # Checkout the branch in the PR to run changes
       - name: Checkout PR Branch
