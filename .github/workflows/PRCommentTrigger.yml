@@ -11,12 +11,21 @@ jobs:
 
     steps:
 
+      - name: Get PR details
+        id: get_pr
+        run: |
+          PR=$(curl \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "${{ github.event.issue.pull_request.url }}")
+          echo "::set-output name=branch::$(echo "$PR" | jq -r .head.ref)"
+
+
       # Checkout the branch in the PR to run changes
       - name: Checkout PR Branch
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Print file structure
         run: |
