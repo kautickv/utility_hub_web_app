@@ -10,12 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Initialze git repo
+      - name: Checkout
+        uses: actions/checkout@v2
 
       # Checkout the branch in the PR to run changes
       - name: Checkout PR Branch
-        uses: actions/checkout@v3
-        with:
-          ref: ${{github.event.pull_request.head.sha}}
+        run: hub pr checkout ${{github.event.issue.number}}
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Print file structure
         run: |
