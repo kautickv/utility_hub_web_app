@@ -17,14 +17,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # Checkout the branch in the PR to run changes
-      - name: Checkout PR Branch
+      - name: Get pull request information
+        uses: github-actions/pipelines/actions/get-pull-request@v1
+        id: get-pr
+        with:
+          owner: ${{ github.event.repository.owner.login }}
+          repo: ${{ github.event.repository.name }}
+          number: ${{ github.event.issue.number }}
+
+      - name: Print info
         run: |
-          git branch
-          git branch -r
-          git status
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          echo ${{steps.get-pr.outputs.base-owner}}
+          echo ${{steps.get-pr.outputs.head-owner}}
+
+      - name: Checkout code repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+          repository: ${{ steps.get-pr.outputs.base-owner }}/${{ github.event.repository.name }}
+          ref: ${{ steps.get-pr.outputs.head-ref }}
 
       - name: Print file structure
         run: |
