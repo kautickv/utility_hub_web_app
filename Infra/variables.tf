@@ -1,5 +1,4 @@
 #variables
-
 variable "app_name"{
     type = string
     description = "The name of the app. This will prepend all aws resource names. This name cannot contain _ or uppercase letters or symbols"
@@ -9,6 +8,10 @@ variable "common_tags"{
     description = "Common tags you want to apply to all components"
 }
 
+variable "region"{
+    type= string
+    description = "The aws region in which all resources will be deployed"
+}
 
 
 # All variables related to S3 bucket static hosting
@@ -32,4 +35,17 @@ variable "SSL_certificate_arn" {
 variable "hosted_zone_id" {
     type = string
     description = "The hosted zone ID into which record will be created."
+}
+
+
+# All variables related to SSM Parameter Store
+variable "account_id"{
+    type = string
+    description = "The account id from which all resources will be deployed"
+    default = "324277551001"
+}
+
+variable "parameter_store_path"{
+    type=string
+    description = "Path to top level parameter store"
 }

@@ -38,7 +38,7 @@ resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
          "Service" : "lambda.amazonaws.com"
        },
        "Action" : "sts:AssumeRole"
-     }
+     },
    ]
   })
 }
@@ -50,7 +50,7 @@ resource "aws_iam_role_policy_attachment" "hello_lambda_policy" {
 }
 
 # Attach another policy to lambda assume role to give dynamoDb access
-resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
+resource "aws_iam_role_policy" "dynamodb_ssm-lambda-policy" {
    name = "password_generator_dynamodb_lambda_policy"
    role = aws_iam_role.password-generator-backend-lambda-function_exec.id
    policy = jsonencode({
@@ -58,8 +58,28 @@ resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
       "Statement" : [
         {
            "Effect" : "Allow",
-           "Action" : ["dynamodb:*"],
-           "Resource" : "${aws_dynamodb_table.sign_in_user_table.arn}"
+           "Action" : [
+             "dynamodb:*"
+            ],
+           "Resource" : [
+             "${aws_dynamodb_table.sign_in_user_table.arn}"
+           ]
+        },
+        {
+          "Effect" : "Allow",
+          "Action" : [
+             "ssm:Describe*",
+              "ssm:Get*",
+              "ssm:List*"
+            ],
+          "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action" : [
+            "kms:Decrypt"
+          ],
+          "Resource":"*"
         }
       ]
    })
@@ -80,7 +100,7 @@ resource "aws_lambda_function" "password-generator-backend-lambda-function" {
   environment {
     variables = {
       "MESSAGE" = "Terraform sends its regards",
-      "DYNAMO_TABLE_NAME" = aws_dynamodb_table.sign_in_user_table.name
+      "USER_TABLE_NAME" = aws_dynamodb_table.sign_in_user_table.name
     }
   }
 

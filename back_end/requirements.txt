@@ -2,3 +2,5 @@ requests==2.28.2
 jira==3.5.0
 pdpyras==4.5.2
 slack_sdk==3.21.3
+boto3==1.26.138
+pyjwt==2.6.0
