@@ -20,6 +20,8 @@ jobs:
       # Checkout the branch in the PR to run changes
       - name: Checkout PR Branch
         run: hub pr checkout ${{github.event.issue.number}}
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Print file structure
         run: |
