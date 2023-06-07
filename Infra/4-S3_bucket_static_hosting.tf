@@ -23,7 +23,7 @@ resource "aws_s3_bucket_website_configuration" "static_hosting_bucket_config" {
     }
 
   error_document {
-    key = "error.html"
+    key = "index.html"
   }
 }
 

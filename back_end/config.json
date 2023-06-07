@@ -1,0 +1,11 @@
+{
+    "ssm_parameter_paths_google_login": {
+      "client_id": "/password-generator/google-client/client-id",
+      "client_secret": "/password-generator/google-client/client-secret"
+      
+    },
+    "ssm_parameter_path_jwt_token_secret": {
+      "secret_key": "/password-generator/jwt-secret-key"
+    }
+  }
+  

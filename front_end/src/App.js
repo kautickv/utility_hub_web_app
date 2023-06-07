@@ -1,37 +1,21 @@
-import React, {useState} from 'react';
-import './App.css';
+import React from "react";
+import Home from "./pages/home";
+import Login from "./pages/login"
+import { BrowserRouter, Routes, Route} from 'react-router-dom';
 
 function App() {
 
-  const [password, setPassword] = useState('');
-  const [length, setLength] = useState(8);
-
-  function generatePassword(){
-
-    setPassword('wedbvjkswvjkewbvbjdfskwvsdvsdvdsvdsavsdavdsavvkdfsvbsfjkdvbjksfdabv');
-    console.log("Password has been generated");
-  }
-
-  async function copytoClipboard(){
-    console.log(process.env.REACT_APP_API_GATEWAY_BASE_URL + "/home")
-    try {
-      const response = await fetch(process.env.REACT_APP_API_GATEWAY_BASE_URL + "/home");
-      const jsonData = await response.json();
-      console.log(jsonData);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }
   return (
-    <div className='App'>
-      <label>Length:</label>
-      <input type="number" min="1" max="100" value={length} onChange={e => setLength(e.target.value)} />
-      <br />
-      <button onClick={generatePassword}>Generate</button>
-      <br />
-      <label>Generated Password: </label>
-      <label style={{ fontWeight: 'bold' }}>{password}  </label>
-      <button onClick={copytoClipboard}>Copy</button>
+
+
+    <div className="App" style={{backgroundColor: "#f2f2f2"}}>
+      <BrowserRouter>
+        <Routes>
+          <Route exact path='/' element={<Home/>}/>
+          <Route exact path='/login' element={<Login/>}/>
+          <Route path='/home' element={<Home/>}/>
+        </Routes>
+     </BrowserRouter>
     </div>
   );
 }
