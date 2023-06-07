@@ -1,5 +1,3 @@
-## Checkout https://dev.to/zirkelc/trigger-github-workflow-for-comment-on-pull-request-45l2
-
 on: issue_comment
 
 jobs:
@@ -8,6 +6,11 @@ jobs:
     name: PR comment
     if: ${{ github.event.issue.pull_request && github.event.comment.body == 'Deploy' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+      statuses: write
 
     steps:
       # Initialze git repo
