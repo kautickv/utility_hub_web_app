@@ -1,6 +1,6 @@
 # Create a new SSL certificate
 resource "aws_acm_certificate" "ssl_certificate" {
-  domain_name               = "pass.example.com"
+  domain_name               = var.domain_name
   validation_method         = "DNS"
 }
 
