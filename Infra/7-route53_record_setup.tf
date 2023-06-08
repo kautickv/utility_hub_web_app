@@ -1,8 +1,7 @@
-# Create a new route53 zone
+# Create a new route53 zone. Defaults to public zone
 resource "aws_route53_zone" "hosted_zone" {
   name         = var.domain_name
   comment      = "This is my public hosted zone for pass.example.com"
-  private_zone = false
 }
 
 # Add cloudfront distribution domain name as a record.
