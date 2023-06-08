@@ -6,18 +6,12 @@ resource "aws_acm_certificate" "ssl_certificate" {
 
 # Create new record in route53
 resource "aws_route53_record" "cert_records" {
-  for_each = {
-    for dvo in aws_acm_certificate.ssl_certificate.domain_validation_options : dvo.domain_name => {
-      name  = dvo.resource_record_name
-      type  = dvo.resource_record_type
-      value = dvo.resource_record_value
-    }
-  }
+  for_each = toset([for dvo in aws_acm_certificate.ssl_certificate.domain_validation_options : dvo.resource_record_name])
 
-  name    = each.value.name
-  type    = each.value.type
+  name    = aws_acm_certificate.ssl_certificate.domain_validation_options[each.key].resource_record_name
+  type    = aws_acm_certificate.ssl_certificate.domain_validation_options[each.key].resource_record_type
   zone_id = aws_route53_zone.hosted_zone.zone_id
-  records = [each.value.resource_record_value]
+  records = [aws_acm_certificate.ssl_certificate.domain_validation_options[each.key].resource_record_value]
   ttl     = 60
 }
 
