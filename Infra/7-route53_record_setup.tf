@@ -1,6 +1,13 @@
+# Create a new route53 zone
+resource "aws_route53_zone" "hosted_zone" {
+  name         = var.domain_name
+  comment      = "This is my public hosted zone for pass.example.com"
+  private_zone = false
+}
+
 # Add cloudfront distribution domain name as a record.
 resource "aws_route53_record" "root-a" {
-  zone_id = var.hosted_zone_id
+  zone_id = aws_route53_zone.hosted_zone.zone_id
   name    = var.domain_name
   type    = "A"
 
