@@ -16,7 +16,8 @@ resource "aws_route53_record" "cert_records" {
 
   name    = each.value.name
   type    = each.value.type
-  zone_id = aws_route53_zone.hosted_zone.zone_id 
+  zone_id = aws_route53_zone.hosted_zone.zone_id
+  records = [each.value.resource_record_value]
   ttl     = 60
 }
 
