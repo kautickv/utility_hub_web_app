@@ -22,3 +22,8 @@ terraform {
 provider "aws" {
   region = "us-east-1" # Set your desired AWS region
 }
+
+provider "aws" {
+  alias = "acm"
+  region = "us-east-1"
+}
