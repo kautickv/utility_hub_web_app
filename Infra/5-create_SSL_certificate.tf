@@ -12,9 +12,10 @@ resource "aws_acm_certificate" "ssl_certificate" {
 # Store the DNS Entries
 resource "aws_route53_record" "validation" {
   zone_id = aws_route53_zone.hosted_zone.zone_id
-  name = aws_acm_certificate.ssl_certificate.domain_validation_options.0.resource_record_name
-  type = aws_acm_certificate.ssl_certificate.domain_validation_options.0.resource_record_type
-  records = [aws_acm_certificate.ssl_certificate.domain_validation_options.0.resource_record_value]
+  name    = tolist(aws_acm_certificate.ssl_certificate.domain_validation_options)[0].resource_record_name
+  type    = tolist(aws_acm_certificate.ssl_certificate.domain_validation_options)[0].resource_record_type
+  records = [tolist(aws_acm_certificate.ssl_certificate.domain_validation_options)[0].resource_record_value]
+
   ttl = "300"
 }
 
