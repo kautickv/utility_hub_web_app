@@ -21,7 +21,7 @@ resource "aws_route53_record" "validation" {
 
 # Connects DNS Records with our certificate
 resource "aws_acm_certificate_validation" "default" {
-  provider = "aws.acm"
+  provider = aws.acm
   certificate_arn = aws_acm_certificate.ssl_certificate.arn
   validation_record_fqdns = [
     aws_route53_record.validation.fqdn,
