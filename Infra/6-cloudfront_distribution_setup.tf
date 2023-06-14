@@ -62,3 +62,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     minimum_protocol_version = "TLSv1.2_2021"
   }
 }
+
+# Print the CloudFront distribution domain name
+output "cloudfront_distribution_domain_name" {
+  value = aws_cloudfront_distribution.s3_distribution.domain_name
+}
