@@ -2,7 +2,6 @@
 resource "aws_s3_bucket" "static_hosting_bucket_name" {
   bucket = "${var.bucket_name}"
   force_destroy = true
-  acl = "private"
 }
 
 # Configure s3 bucket for static hosting
