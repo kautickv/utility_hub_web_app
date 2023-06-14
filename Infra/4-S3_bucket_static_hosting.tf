@@ -29,7 +29,7 @@ data "aws_iam_policy_document" "s3_allow_cloudfront_access" {
     effect = "Allow"
     principals {
       type = "CanonicalUser"
-      identifiers = [aws_cloudfront_origin_access_identity.static_hosting_oai.iam_arn]
+      identifiers = [aws_cloudfront_origin_access_identity.static_hosting_oai.s3_canonical_user_id]
     }
     actions = [
       "s3:GetObject"
