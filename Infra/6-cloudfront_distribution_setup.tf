@@ -10,6 +10,10 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
     }
 
+     s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.static_hosting_oai.cloudfront_access_identity_path
+    }
+
   }
 
   # To enable React routing with CloudFront and S3, add a custom error response for the 
