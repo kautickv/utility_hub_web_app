@@ -2,16 +2,19 @@
 resource "aws_s3_bucket" "static_hosting_bucket_name" {
   bucket = "${var.bucket_name}"
   force_destroy = true
-
-  website {
-    index_document = "index.html"
-    error_document = "index.html"
-  }
 }
 
 # Configure s3 bucket for static hosting
 resource "aws_s3_bucket_website_configuration" "static_hosting_bucket_config" {
     bucket = aws_s3_bucket.static_hosting_bucket_name.id
+
+    index_document {
+        suffix = "index.html"
+    }
+
+  error_document {
+    key = "index.html"
+  }
 }
 
 # Create a Cloudfront origin access identity
