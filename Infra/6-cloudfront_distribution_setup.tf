@@ -54,14 +54,6 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   price_class = "PriceClass_200"
 
-  restrictions {
-    # Only allow North America and Europe
-    geo_restriction {
-      restriction_type = "none"
-    
-    }
-  }
-
   viewer_certificate {
     acm_certificate_arn      = aws_acm_certificate_validation.default.certificate_arn
     ssl_support_method       = "sni-only"
