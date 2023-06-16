@@ -67,6 +67,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
+
+  web_acl_id = aws_wafv2_web_acl.waf_web_acl.arn
 }
 
 # Print the CloudFront distribution domain name
