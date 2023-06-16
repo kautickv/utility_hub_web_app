@@ -6,8 +6,7 @@ resource "aws_wafv2_ip_set" "allow_specific_ips" {
   ip_address_version = "IPV4"
 
   addresses = [
-    "192.0.2.0/32", # replace this with the actual IPs you want to allow
-    "203.0.113.0/32"
+    "165.225.211.56/32"
   ]
 }
 
