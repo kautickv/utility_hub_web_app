@@ -18,8 +18,9 @@ resource "aws_wafv2_web_acl" "waf_web_acl" {
 
   default_action {
     block {
-      custom_response = {
-        response_code="403"
+      custom_response {
+        response_code = 403
+        custom_response_body_key = aws_wafv2_custom_response_body.custom_response_body.name
       }
     }
   }
