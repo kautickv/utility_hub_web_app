@@ -25,7 +25,7 @@ resource "aws_wafv2_web_acl" "waf_web_acl" {
   }
 
   rule {
-    name     = "Allow Traffic to IPs"
+    name     = "Allow-Traffic-to-IPs"
     priority = 1
 
     action {
