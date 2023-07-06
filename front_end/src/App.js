@@ -2,13 +2,26 @@ import React from "react";
 import Home from "./pages/home";
 import Login from "./pages/login"
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+// Create the theme
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#ef6c00',
+    },
+    secondary: {
+      main: '#ffe0b2',
+    },
+  },
+});
 
 function App() {
 
   return (
 
 
-    <div className="App" style={{backgroundColor: "#f2f2f2"}}>
+    <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
           <Route exact path='/' element={<Home/>}/>
@@ -16,7 +29,7 @@ function App() {
           <Route path='/home' element={<Home/>}/>
         </Routes>
      </BrowserRouter>
-    </div>
+    </ThemeProvider>
   );
 }
 
