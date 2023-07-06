@@ -1,13 +1,10 @@
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name              = aws_s3_bucket_website_configuration.static_hosting_bucket_config.website_endpoint
+    domain_name              = aws_s3_bucket.static_hosting_bucket_name.bucket_regional_domain_name
     origin_id                = "S3-.${var.bucket_name}"
 
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+     s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.static_hosting_oai.cloudfront_access_identity_path
     }
 
   }
@@ -17,6 +14,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   # Router can handle the routing appropriately.
   custom_error_response {
     error_code      = 404
+    response_code   = 200
+    response_page_path = "/index.html"
+    error_caching_min_ttl = 300
+  }
+  custom_error_response {
+    error_code      = 403
     response_code   = 200
     response_page_path = "/index.html"
     error_caching_min_ttl = 300
@@ -54,8 +57,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   restrictions {
     # Only allow North America and Europe
     geo_restriction {
-      restriction_type = "whitelist"
-      locations        = ["US", "CA", "GB", "DE"]
+      restriction_type = "none"
+      locations = []
     }
   }
 
@@ -64,4 +67,11 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
+
+  web_acl_id = aws_wafv2_web_acl.waf_web_acl.arn
+}
+
+# Print the CloudFront distribution domain name
+output "cloudfront_distribution_domain_name" {
+  value = aws_cloudfront_distribution.s3_distribution.domain_name
 }

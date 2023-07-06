@@ -4,14 +4,14 @@ resource "aws_s3_bucket" "static_hosting_bucket_name" {
   force_destroy = true
 }
 
-# Create and assign a bucket policy to unblock all public access to s3 bucket
-resource "aws_s3_bucket_public_access_block" "static_hosting_bucket_name" {
+# Block all public access to s3 bucket
+resource "aws_s3_bucket_public_access_block" "static_hosting_bucket" {
   bucket = aws_s3_bucket.static_hosting_bucket_name.id
 
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
 # Configure s3 bucket for static hosting
@@ -27,20 +27,25 @@ resource "aws_s3_bucket_website_configuration" "static_hosting_bucket_config" {
   }
 }
 
+# Create a Cloudfront origin access identity
+resource "aws_cloudfront_origin_access_identity" "static_hosting_oai" {
+  comment = "Access identity for static hosting"
+}
+
 #Create a json object for s3 bucket policy to make bucket public
-data "aws_iam_policy_document" "s3_read_permissions" {
+data "aws_iam_policy_document" "s3_allow_cloudfront_access" {
   statement {
-    sid = "AllowPublicReadAccess"
+    sid = "AllowCloudfrontAccess"
     effect = "Allow"
     principals {
-      type        = "*"
-      identifiers = ["*"]
+      type = "CanonicalUser"
+      identifiers = [aws_cloudfront_origin_access_identity.static_hosting_oai.s3_canonical_user_id]
     }
     actions = [
       "s3:GetObject"
     ]
 
-    resources = ["${aws_s3_bucket.static_hosting_bucket_name.arn}",
+    resources = [
                  "${aws_s3_bucket.static_hosting_bucket_name.arn}/*"
     ]
   }
@@ -49,7 +54,7 @@ data "aws_iam_policy_document" "s3_read_permissions" {
 # Assign the above policy to s3 static hosting bucket
 resource "aws_s3_bucket_policy" "s3_allow_public_access" {
   bucket = aws_s3_bucket.static_hosting_bucket_name.id
-  policy = data.aws_iam_policy_document.s3_read_permissions.json
+  policy = data.aws_iam_policy_document.s3_allow_cloudfront_access.json
 }
 
 # Print the bucket id
