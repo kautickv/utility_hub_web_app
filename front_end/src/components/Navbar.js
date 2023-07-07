@@ -32,7 +32,7 @@ const Navbar = () => {
     navigate(path);
   };
 
-  const handleLogout = () =>{
+  const handleLogout = async () =>{
     // When logout is clicked, navigate to settings page
 
     // Read JWTToken
@@ -41,7 +41,8 @@ const Navbar = () => {
     if ((jwtToken === '') || (jwtToken === undefined)){
         navigate('/login')
     }else{
-        let response = logout(jwtToken);
+        let response = await logout(jwtToken);
+        console.log(response);
         if(response !== 200){
             localStorage.setItem("JWT_Token", '');
             alert("An internal server error occurred. Please try again later.");
