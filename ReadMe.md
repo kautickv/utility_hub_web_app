@@ -5,29 +5,25 @@ This project is a simple web application for generating secure passwords, design
 
 ## Features
 
-- **User Registration and Authentication:** Users can create individual accounts with unique login credentials. User authentication ensures secure access to the web tool.
-- **Newsfeed:** The primary interface for users to view and share updates. Updates are displayed in reverse chronological order, with the most recent at the top. Users can filter updates by date or specific topics.
-- **Text Updates:** Users can compose and post text updates to share information, announcements, or progress reports. Updates can be formatted using basic styling options (e.g., bold, italic, bullet points). Users can comment on and react to text updates to foster discussions and provide feedback.
-- **Image Updates:** Users can upload images to accompany their updates, enhancing visual communication. The web tool should support popular image formats and provide basic image editing capabilities (e.g., cropping, resizing).
-- **Search and Filtering:** Users can search for specific updates using keywords, authors, or dates. Advanced filtering options allow users to narrow down updates based on various criteria (e.g., team, tags, importance).
-- **Tags and Categorization:** Users can assign tags to updates to categorize them based on topics, projects, or other relevant classifications. Tags help users quickly find updates related to specific subjects.
+- Generate random, secure passwords.
+- Store generated passwords securely in DynamoDB.
+- Interface to retrieve and manage stored passwords.
 
-## Architecture
+## Technologies Used
+- Frontend: React.js, hosted on AWS S3 and served using AWS CloudFront.
+- Backend: AWS Lambda, AWS DynamoDB.
+- Infrastructure: AWS API Gateway, Route53, WAF, SSM Parameter Store, Certificate Manager.
+- CI/CD: GitHub Actions.
+- Infrastructure As Code (IAC): Terraform.
 
-The project utilizes the following AWS services for its infrastructure:
+## Architecture Diagram
+![Architecture Diagram](documentation/images/architecture_diagram.jpeg)
 
-- **AWS Lambda:** The backend logic of the web tool is implemented using AWS Lambda functions. These serverless functions handle user authentication, newsfeed retrieval, text and image update posting, and other necessary functionalities.
-- **API Gateway:** AWS API Gateway creates RESTful APIs for the frontend application to interact with the Lambda functions. It handles request routing, authentication, and rate limiting.
-- **DynamoDB:** The NoSQL database provided by AWS, DynamoDB, stores user account information, updates, comments, reactions, and other relevant data. It offers fast and scalable performance for handling large volumes of data.
-- **S3:** Amazon S3 is used to host the React application and store the uploaded images. It provides high availability and durability, ensuring that the web tool remains accessible and the images are securely stored.
+## Usage
+As this is a web application hosted on AWS, there is no installation necessary for the end user. Developers looking to run a local version of the app will need to install Node.js and React.js, and configure AWS CLI with the appropriate permissions.
 
 ## Deployment
-
-The project follows a continuous integration and deployment approach. The source code is stored in this GitHub repository, and the deployment pipeline is set up using GitHub Actions. When a pull request is merged into the master branch, GitHub Actions triggers the necessary steps to deploy the updated application and infrastructure.
-
-Infrastructure provisioning is managed using Terraform. The Terraform configuration files define and provision all the required AWS resources, including Lambda functions, API Gateway, DynamoDB tables, and S3 buckets.
-
-
+This project uses GitHub Actions for Continuous Integration/Continuous Deployment (CI/CD) and Terraform for Infrastructure as Code (IaC). New changes can be deployed by creating a new Pull request to the main branch, and commenting "Deploy" in the comment section of the PR
 ## Getting Started
 
 To set up the project locally, follow these steps:
