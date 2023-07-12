@@ -25,26 +25,22 @@ resource "aws_lambda_layer_version" "layer" {
 
 }
 
-
-
 # Create an IAM role to assign to lambda function
 resource "aws_iam_role" "password-generator-backend-lambda-function_exec" {
-  name = "password-generator-backend-lambda-function_exec"
+  name = "${var.app_name}-backend-lambda-function_exec"
 
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-POLICY
+  assume_role_policy = jsonencode({
+   "Version" : "2012-10-17",
+   "Statement" : [
+     {
+       "Effect" : "Allow",
+       "Principal" : {
+         "Service" : "lambda.amazonaws.com"
+       },
+       "Action" : "sts:AssumeRole"
+     },
+   ]
+  })
 }
 
 # Attach basic execution policy to the above role
@@ -53,24 +49,63 @@ resource "aws_iam_role_policy_attachment" "hello_lambda_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+# Attach another policy to lambda assume role to give dynamoDb access
+resource "aws_iam_role_policy" "dynamodb_ssm-lambda-policy" {
+   name = "password_generator_dynamodb_lambda_policy"
+   role = aws_iam_role.password-generator-backend-lambda-function_exec.id
+   policy = jsonencode({
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+           "Effect" : "Allow",
+           "Action" : [
+             "dynamodb:*"
+            ],
+           "Resource" : [
+             "${aws_dynamodb_table.sign_in_user_table.arn}"
+           ]
+        },
+        {
+          "Effect" : "Allow",
+          "Action" : [
+             "ssm:Describe*",
+              "ssm:Get*",
+              "ssm:List*"
+            ],
+          "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action" : [
+            "kms:Decrypt"
+          ],
+          "Resource":"*"
+        }
+      ]
+   })
+}
 
 # Create the lambda fucntion which will handle backend requests
 resource "aws_lambda_function" "password-generator-backend-lambda-function" {
-  function_name = "password-generator-backend-lambda-function"
+  function_name = "${var.app_name}-backend-lambda-function"
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.password-generator-backend-lambda-function-object.key
 
   runtime = "python3.9"
-  handler = "hello_world.lambda_handler"
+  handler = "index.lambda_handler"
   source_code_hash = data.archive_file.password-generator-backend-lambda-function-zip.output_base64sha256
   role = aws_iam_role.password-generator-backend-lambda-function_exec.arn
   layers = [aws_lambda_layer_version.layer.arn]
   environment {
     variables = {
-      "MESSAGE" = "Terraform sends its regards"
+      "MESSAGE" = "Terraform sends its regards",
+      "USER_TABLE_NAME" = aws_dynamodb_table.sign_in_user_table.name
     }
   }
+
+  timeout = "15"
+  memory_size = "128"
 }
 
 # Create a cloudwatch log group for lambda execution logs
