@@ -20,13 +20,12 @@ resource "aws_wafv2_web_acl" "waf_web_acl" {
   description = "AWS WAF WebACL for ${var.app_name}"
   scope       = "CLOUDFRONT"
 
-  default_action {
-    block {
-      custom_response {
-        response_code = 403
-      }
-    }
-  }
+  #default_action {
+    #block {
+    #  custom_response {
+    #    response_code = 403
+    #  }
+  #}
 
   rule {
     name     = "Allow-Traffic-to-IPs"
