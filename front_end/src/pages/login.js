@@ -160,8 +160,8 @@ function Login() {
   return (
     <div className="App" style={{ backgroundColor: "#f2f2f2" }}>
       <header className="App-header orange-header text-white text-center p-5">
-        <h1>SOC Team</h1>
-        <p>Welcome to our landing page!</p>
+        <h1>Password Generator</h1>
+        <p>Welcome to your password generator App!</p>
       </header>
       <div
         className="d-flex justify-content-center align-items-center"
