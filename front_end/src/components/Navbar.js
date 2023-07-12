@@ -63,7 +63,7 @@ const Navbar = () => {
           sx={{ flexGrow: 1 }}
           style={{ color: theme.palette.primary.contrastText }}
         >
-          SOC Portal
+          Password Generator
         </Typography>
         <Box
           sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}
