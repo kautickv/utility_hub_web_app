@@ -1,7 +1,7 @@
+>:construction: **STATUS: This project is currently under development.** :construction:
+# AWS Serverless Password Generator
 
-# Team Communication Web Tool
-
-The Team Communication Web Tool is a platform designed to facilitate effective and efficient communication among team members. It allows users to share text and image updates with their entire team, enabling collaboration, knowledge sharing, and transparency. The tool aims to streamline communication processes, ensuring that important information reaches the right people at the right time.
+This project is a simple web application for generating secure passwords, designed to demonstrate a complete web app development process including front-end, back-end, architecture, and deployment pipeline. It leverages a serverless architecture on AWS and includes features like password generation and storage.
 
 ## Features
 
