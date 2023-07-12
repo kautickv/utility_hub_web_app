@@ -17,7 +17,7 @@ This project is a simple web application for generating secure passwords, design
 - Infrastructure As Code (IAC): Terraform.
 
 ## Architecture Diagram
-![Architecture Diagram](documentation/images/architecture_diagram.jpeg)
+![Architecture Diagram](docs/images/Architecture_diagram.jpeg)
 
 ## Usage
 As this is a web application hosted on AWS, there is no installation necessary for the end user. Developers looking to run a local version of the app will need to install Node.js and React.js, and configure AWS CLI with the appropriate permissions.
