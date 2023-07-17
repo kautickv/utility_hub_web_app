@@ -87,7 +87,7 @@ resource "aws_iam_role_policy" "dynamodb_ssm-lambda-policy" {
 
 # Create the lambda fucntion which will handle backend requests
 resource "aws_lambda_function" "password-generator-backend-lambda-function" {
-  function_name = "${var.app_name}-backend-lambda-function"
+  function_name = "${var.app_name}-backend-lambda-auth-service"
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.password-generator-backend-lambda-function-object.key
@@ -119,15 +119,15 @@ resource "aws_cloudwatch_log_group" "password-generator-backend-lambda-function-
 data "archive_file" "password-generator-backend-lambda-function-zip" {
   type = "zip"
 
-  source_dir  = "../${path.module}/back_end"
-  output_path = "../${path.module}/back_end.zip"
+  source_dir  = "../${path.module}/back_end/auth_service"
+  output_path = "../${path.module}/auth_service.zip"
 }
 
 # Upload zip file to s3 bucket created earlier
 resource "aws_s3_object" "password-generator-backend-lambda-function-object" {
   bucket = aws_s3_bucket.lambda_bucket.id
 
-  key    = "back_end.zip"
+  key    = "auth_service.zip"
   source = data.archive_file.password-generator-backend-lambda-function-zip.output_path
 
   etag = filemd5(data.archive_file.password-generator-backend-lambda-function-zip.output_path)
