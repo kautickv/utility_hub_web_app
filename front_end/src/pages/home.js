@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { sendVerifyAPIToAuthenticationServer } from '../utils/util';
 import "./home.css"
 
+// Import components
+import Navbar from "../components/Navbar"
 
 
 function Home(){
@@ -59,7 +61,7 @@ function Home(){
 
     return (
         <>
-            Hello From Home Page
+            <Navbar/>
         </>
     );
 }
