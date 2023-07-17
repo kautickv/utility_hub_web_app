@@ -89,4 +89,4 @@ For any questions or inquiries, please contact the SOC team.
 
 2. If the bucket name is changed in the terraform.tfvars file, the Terraform script fails as it tries to look for a bucket with the previous name. Find a way to solve this.
 
-3. Github actions should run on self-hosted servers instead of github provided servers. We need to change the github action script.
+3. Github actions should run on self-hosted servers instead of github provided servers. We need to change the github action script..
