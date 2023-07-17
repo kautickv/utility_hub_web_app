@@ -48,5 +48,5 @@ For any questions or inquiries, please reach out at kautickv29@gmail.com
 
 ## Current Issues
 
-1. Every time the Terraform script is applied, a new layer is created irrespective of whether changes have been made to the layer. This can consume a lot of storage and cost money.
+1. Every time the Terraform script is applied, a new layer is created irrespective of whether changes have been made to the layer. This can consume a lot of storage and cost money..
 
