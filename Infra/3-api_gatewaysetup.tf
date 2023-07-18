@@ -287,7 +287,10 @@ resource "aws_api_gateway_integration_response" "post_verify_integration_respons
     "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
-  depends_on = [aws_api_gateway_method_response.post_verify_method_response_200]
+  depends_on = [
+      aws_api_gateway_integration.post_verify_integration,
+      aws_api_gateway_method_response.post_verify_method_response_200
+    ]
 }
 
 # Add Options method for verify resource
@@ -390,7 +393,10 @@ resource "aws_api_gateway_integration_response" "post_login_integration_response
     "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
-  depends_on = [aws_api_gateway_method_response.post_login_method_response_200]
+  depends_on = [
+      aws_api_gateway_integration.post_login_integration,
+      aws_api_gateway_method_response.post_login_method_response_200
+    ]
 }
 
 # Add Options method for login resource
@@ -493,7 +499,10 @@ resource "aws_api_gateway_integration_response" "post_logout_integration_respons
     "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
-  depends_on = [aws_api_gateway_method_response.post_logout_method_response_200]
+  depends_on = [
+      aws_api_gateway_integration.post_logout_integration,
+      aws_api_gateway_method_response.post_logout_method_response_200
+    ]
 }
 
 
