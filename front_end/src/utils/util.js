@@ -34,7 +34,7 @@ async function logout(jwtToken) {
   console.log(`JWTToken is ${jwtToken}`);
   try {
     let response = await fetch(
-      `https://kitxa58kv4.execute-api.us-east-1.amazonaws.com/dev/auth/logout`,
+      `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/auth/logout`,
       {
         method: "POST",
         headers: {
