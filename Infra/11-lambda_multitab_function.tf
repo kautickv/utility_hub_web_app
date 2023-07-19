@@ -27,25 +27,46 @@ resource "aws_iam_role_policy_attachment" "lambda_a_basic_execution" {
 resource "aws_iam_policy" "lambda_multitab_invoke_lambda_auth" {
   name        = "lambdaAInvokeLambdaB"
   description = "Allows Lambda multitab to invoke Lambda auth"
-  policy      = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "lambda:InvokeFunction"
-      ],
-      "Effect": "Allow",
-      "Resource": "${aws_lambda_function.password-generator-backend-lambda-function.arn}"
-    }
-  ]
-}
-EOF
+  policy      = jsonencode({
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+           "Effect" : "Allow",
+           "Action" : [
+             "dynamodb:*"
+            ],
+           "Resource" : [
+             "${aws_dynamodb_table.sign_in_user_table.arn}"
+           ]
+        },
+        {
+          "Effect" : "Allow",
+          "Action" : [
+             "ssm:Describe*",
+              "ssm:Get*",
+              "ssm:List*"
+            ],
+          "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action" : [
+            "kms:Decrypt"
+          ],
+          "Resource":"*"
+        },
+        {
+          "Effect": "Allow",
+          "Action":"lambda:InvokeFunction",
+          "Resource": "${aws_lambda_function.password-generator-backend-lambda-function.arn}"
+        }
+      ]
+   })
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_multitab_invoke_lambda_auth_attachment" {
   role       = aws_iam_role.lambda_multitab_exec_role.name
-  policy_arn = aws_iam_policy.lambda_multitab_invoke_lambda_auth
+  policy_arn = aws_iam_policy.lambda_multitab_invoke_lambda_auth.arn
 }
 
 # Create the lambda fucntion which will handle backend requests
