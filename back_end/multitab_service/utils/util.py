@@ -32,13 +32,15 @@ def verifyAuthStatus(jwtToken):
                 'Authorization': 'Bearer ' + jwtToken
                 })
         )
+
+        response_payload = json.loads(response['Payload'].read().decode('utf-8'))
         if 'FunctionError' in response:
             error_response = json.load(response['Payload'])
             print(f"Error type: {error_response['errorType']}")
             print(f"Error message: {error_response['errorMessage']}")
             raise Exception("Auth lambda encountered an error.")
         
-        elif response['statusCode'] == 200:
+        elif response_payload['statusCode'] == 200:
             return True
         else:
             return False
