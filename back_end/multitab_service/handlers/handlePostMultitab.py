@@ -1,7 +1,11 @@
 from utils.util import buildResponse
-import json
+from utils.util import verifyAuthStatus
+from utils.util import getAuthorizationCode
+import json 
 
 def handlePostMultitab(event):
+
+    # This function will first check if the user is authenticated. Returns 401 error
     # This function will only return a JSON with all the default tiles and links for now.
     payload = [
     {

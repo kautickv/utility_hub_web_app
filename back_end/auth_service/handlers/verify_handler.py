@@ -7,6 +7,7 @@ def verify_handler(event, context):
     print(event)
 
     # Extract token from headers
+    token = None
     try:
         if "headers" in event and "Authorization" in event["headers"]:
             authorization_header = event["headers"]["Authorization"]

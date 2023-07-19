@@ -46,3 +46,30 @@ def verifyAuthStatus(jwtToken):
     except Exception as e:
         print("Failed to get auth status of user")
         raise Exception ("verifyAuthStatus(): " + str(e))
+    
+
+def getAuthorizationCode(event):
+    # This function will check if the header has an authorization code.
+    # If code is present, it returns the code. Otherwise returns None.
+
+    # Extract token from headers
+    token = None
+    try:
+        if "headers" in event and "Authorization" in event["headers"]:
+            authorization_header = event["headers"]["Authorization"]
+            if authorization_header.startswith("Bearer "):
+                split_header = authorization_header.split()
+                if len(split_header) > 1:
+                    token = split_header[1].strip()
+                else:
+                    token = None
+            else:
+                token = None
+        else:
+            token = None
+    
+        return token
+        
+    except Exception as e:
+        print("An error occurred while extracting authorization code from header" + str(e))
+        raise Exception("getAuthorizationCode(): " + str(e))
