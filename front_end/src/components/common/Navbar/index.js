@@ -73,17 +73,17 @@ const Navbar = () => {
             variant="body1"
             component="div"
             style={{ cursor: "pointer", margin: "0 20px" }}
-            onClick={() => handleNavigation("/option1")}
+            onClick={() => handleNavigation("/home")}
           >
-            Option 1
+            Home
           </Typography>
           <Typography
             variant="body1"
             component="div"
             style={{ cursor: "pointer", margin: "0 20px" }}
-            onClick={() => handleNavigation("/option2")}
+            onClick={() => handleNavigation("/multitab-opener")}
           >
-            Option 2
+            MultiTab Opener
           </Typography>
           <Typography
             variant="body1"
