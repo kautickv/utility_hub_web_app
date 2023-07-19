@@ -8,6 +8,6 @@ def lambda_handler(event, context):
     path = event['path']
 
     if http_method == 'POST' and path =='/multitab':
-        return handlePostMultitab(event, context)
+        return handlePostMultitab(event)
     else:
         return buildResponse(404, "Resource not found")

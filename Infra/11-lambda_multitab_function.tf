@@ -1,3 +1,53 @@
+# Create an IAM role for Multitab lambda
+# Create an IAM role for Lambda A
+resource "aws_iam_role" "lambda_multitab_exec_role" {
+  name = "${var.app_name}-lambda-multitab-exec-role"
+
+  assume_role_policy = jsonencode({
+   "Version" : "2012-10-17",
+   "Statement" : [
+     {
+       "Effect" : "Allow",
+       "Principal" : {
+         "Service" : "lambda.amazonaws.com"
+       },
+       "Action" : "sts:AssumeRole"
+     }
+   ]
+  })
+}
+
+# Attach the basic AWSLambdaBasicExecutionRole policy to multitab lambda role
+resource "aws_iam_role_policy_attachment" "lambda_a_basic_execution" {
+  role       = aws_iam_role.lambda_multitab_exec_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+# Create a custom IAM policy that gives multitab lambda function to invoke auth lambda function.
+resource "aws_iam_policy" "lambda_multitab_invoke_lambda_auth" {
+  name        = "lambdaAInvokeLambdaB"
+  description = "Allows Lambda multitab to invoke Lambda auth"
+  policy      = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "lambda:InvokeFunction"
+      ],
+      "Effect": "Allow",
+      "Resource": "${aws_lambda_function.password-generator-backend-lambda-function.arn}"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_multitab_invoke_lambda_auth_attachment" {
+  role       = aws_iam_role.lambda_multitab_exec_role.name
+  policy_arn = aws_iam_policy.lambda_multitab_invoke_lambda_auth
+}
+
 # Create the lambda fucntion which will handle backend requests
 resource "aws_lambda_function" "multitab-backend-lambda-function" {
   function_name = "${var.app_name}-backend-lambda-multitab-service"
@@ -8,7 +58,7 @@ resource "aws_lambda_function" "multitab-backend-lambda-function" {
   runtime = "python3.9"
   handler = "index.lambda_handler"
   source_code_hash = data.archive_file.multitab-backend-lambda-function-zip.output_base64sha256
-  role = aws_iam_role.password-generator-backend-lambda-function_exec.arn
+  role = aws_iam_role.lambda_multitab_exec_role.arn
   layers = [aws_lambda_layer_version.layer.arn]
   environment {
     variables = {
@@ -19,6 +69,7 @@ resource "aws_lambda_function" "multitab-backend-lambda-function" {
   timeout = "15"
   memory_size = "128"
 }
+
 
 # Create a cloudwatch log group for lambda execution logs
 resource "aws_cloudwatch_log_group" "password-generator-multitab-lambda-function-logs" {

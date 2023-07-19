@@ -38,7 +38,7 @@ def verifyAuthStatus(jwtToken):
             print(f"Error message: {error_response['errorMessage']}")
             raise Exception("Auth lambda encountered an error.")
         
-        elif response['statusCode'] is 200:
+        elif response['statusCode'] == 200:
             return True
         else:
             return False
