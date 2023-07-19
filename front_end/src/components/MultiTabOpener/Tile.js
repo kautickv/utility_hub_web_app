@@ -100,7 +100,7 @@ function Tile(props) {
       </Dialog>
 
       <Dialog open={deleteOpen} onClose={handleDeleteClose}>
-        <DialogTitle>{"Delete"}</DialogTitle>
+        <DialogTitle>{'Delete "' + props.title + '"'}</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Are you sure you want to delete this tile?
