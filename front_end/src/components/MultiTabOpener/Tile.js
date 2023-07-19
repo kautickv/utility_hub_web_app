@@ -80,7 +80,7 @@ function Tile(props) {
       </CardActions>
 
       <Dialog open={configureOpen} onClose={handleConfigureClose}>
-        <DialogTitle>{"Links"}</DialogTitle>
+        <DialogTitle>{props.title}</DialogTitle>
         <DialogContent>
           <List>
             {props.urls.map((item, index) => (
