@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
-import { sendVerifyAPIToAuthenticationServer } from '../../utils/util';
-
+import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 
 function Login() {
   const [client_id, setClient_id] = useState("");
@@ -45,25 +44,24 @@ function Login() {
     // Check if user is already signed in
 
     let verifyResponse = await sendVerifyAPIToAuthenticationServer(jwtToken);
-    if (verifyResponse === 200){
-        // User is already logged in
-        // Redirect user to main application
-        navigate("/home");
+    if (verifyResponse === 200) {
+      // User is already logged in
+      // Redirect user to main application
+      navigate("/home");
+    } else if (verifyResponse === 401) {
+      // User JWT token is not valid
+      localStorage.removeItem("JWT_Token");
+      navigate("/login");
+    } else {
+      // An error occurred while verifying
+      console.log("An error occurred while verifying user credentials");
+      alert(
+        "An error occurred while verifying your login credentials. Please login again."
+      );
+      // User JWT token is not valid
+      localStorage.removeItem("JWT_Token");
+      navigate("/login");
     }
-    else if (verifyResponse === 401){
-        // User JWT token is not valid
-        localStorage.removeItem('JWT_Token');
-        navigate("/login");
-    }else{
-        // An error occurred while verifying
-        console.log("An error occurred while verifying user credentials");
-        alert("An error occurred while verifying your login credentials. Please login again.")
-        // User JWT token is not valid
-        localStorage.removeItem('JWT_Token');
-        navigate("/login");
-    }
-    
-    
 
     console.log("Has JWT Token");
   }

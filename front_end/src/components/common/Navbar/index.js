@@ -11,7 +11,7 @@ import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { logout } from '../../../utils/util';
+import { logout } from "../../../utils/util";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -32,24 +32,24 @@ const Navbar = () => {
     navigate(path);
   };
 
-  const handleLogout = async () =>{
+  const handleLogout = async () => {
     // When logout is clicked, navigate to settings page
 
     // Read JWTToken
     let jwtToken = localStorage.getItem("JWT_Token");
 
-    if ((jwtToken === '') || (jwtToken === undefined)){
-        navigate('/login')
-    }else{
-        let response = await logout(jwtToken);
-        console.log(response);
-        if(response !== 200){
-            localStorage.setItem("JWT_Token", '');
-            alert("An internal server error occurred. Please try again later.");
-        }
-        navigate('/login');
+    if (jwtToken === "" || jwtToken === undefined) {
+      navigate("/login");
+    } else {
+      let response = await logout(jwtToken);
+      console.log(response);
+      if (response !== 200) {
+        localStorage.setItem("JWT_Token", "");
+        alert("An internal server error occurred. Please try again later.");
+      }
+      navigate("/login");
     }
-  }
+  };
 
   return (
     <AppBar

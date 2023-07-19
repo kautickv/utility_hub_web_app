@@ -51,4 +51,4 @@ async function logout(jwtToken) {
   }
 }
 
-export { sendVerifyAPIToAuthenticationServer, logout};
+export { sendVerifyAPIToAuthenticationServer, logout };
