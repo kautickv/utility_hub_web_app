@@ -160,7 +160,7 @@ resource "aws_api_gateway_method" "post_multitab_method" {
 resource "aws_api_gateway_method_response" "get_multitab_method_response_200" {
   rest_api_id   = aws_api_gateway_rest_api.password_generator_api_gateway.id
   resource_id   = aws_api_gateway_resource.password_generator_api_gateway_multitab_resource.id
-  http_method   = aws_api_gateway_method.post_multitab_method.http_method
+  http_method   = aws_api_gateway_method.get_multitab_method.http_method
   status_code   = "200"
   response_models = {
     "application/json" = "Empty"
@@ -168,10 +168,10 @@ resource "aws_api_gateway_method_response" "get_multitab_method_response_200" {
   response_parameters = {
     "method.response.header.Access-Control-Allow-Origin" = true
   }
-  depends_on = [aws_api_gateway_method.post_multitab_method]
+  depends_on = [aws_api_gateway_method.get_multitab_method]
 }
 
-# Add permissions for API Gateway to invoke multitab lambda lambda
+# Add permissions for API Gateway to invoke multitab lambda
 resource "aws_lambda_permission" "multitab_lambda_permission" {
   statement_id    = "AllowBackendLambdaInvoke"
   action          = "lambda:InvokeFunction"
@@ -181,8 +181,8 @@ resource "aws_lambda_permission" "multitab_lambda_permission" {
 }
 
 # Integrate the above POST method with our multitab backend lambda function created earlier
-resource "aws_api_gateway_integration" "get_home_integration" {
-  http_method             = aws_api_gateway_method.post_multitab_method.http_method
+resource "aws_api_gateway_integration" "post_multitab_integration" {
+  http_method             = aws_api_gateway_method.get_multitab_method.http_method
   resource_id             = aws_api_gateway_resource.password_generator_api_gateway_multitab_resource.id
   rest_api_id             = aws_api_gateway_rest_api.password_generator_api_gateway.id
   type                    = "AWS_PROXY"
@@ -196,7 +196,6 @@ resource "aws_api_gateway_resource" "password_generator_api_gateway_auth_resourc
   path_part   = "auth"
   rest_api_id = aws_api_gateway_rest_api.password_generator_api_gateway.id
 }
-
 # Add Options method for auth resource
 resource "aws_api_gateway_method" "options_auth_method" {
   rest_api_id   = aws_api_gateway_rest_api.password_generator_api_gateway.id
@@ -662,7 +661,7 @@ resource "aws_api_gateway_deployment" "password_generator_api_gateway_deployment
       aws_api_gateway_integration_response.options_home_integration_response.id,
       aws_api_gateway_resource.password_generator_api_gateway_multitab_resource.id,
       aws_api_gateway_method.post_multitab_method.id,
-      aws_api_gateway_integration.get_multitab_integration.id,
+      aws_api_gateway_integration.post_multitab_integration.id,
       aws_api_gateway_method.options_multitab_method.id,
       aws_api_gateway_method_response.options_multitab_method_response_200.id,
       aws_api_gateway_integration.options_multitab_integration.id,

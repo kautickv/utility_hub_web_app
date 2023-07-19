@@ -23,7 +23,7 @@ resource "aws_lambda_function" "multitab-backend-lambda-function" {
 }
 
 # Create a cloudwatch log group for lambda execution logs
-resource "aws_cloudwatch_log_group" "password-generator-backend-lambda-function-logs" {
+resource "aws_cloudwatch_log_group" "password-generator-multitab-lambda-function-logs" {
   name = "/aws/lambda/${aws_lambda_function.multitab-backend-lambda-function.function_name}"
 
   retention_in_days = 14
