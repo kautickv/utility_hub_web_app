@@ -60,6 +60,7 @@ function Home() {
   return (
     <>
       <Navbar />
+      Welcome to the Home Page
     </>
   );
 }
