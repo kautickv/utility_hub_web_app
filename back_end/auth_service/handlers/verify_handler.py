@@ -8,7 +8,7 @@ def verify_handler(event, context):
 
     # Extract token from headers
     try:
-        if "Authorization" in event["headers"]:
+        if "headers" in event and "Authorization" in event["headers"]:
             authorization_header = event["headers"]["Authorization"]
             if authorization_header.startswith("Bearer "):
                 split_header = authorization_header.split()
@@ -18,6 +18,18 @@ def verify_handler(event, context):
                     token = None
             else:
                 token = None
+        # Authorization can also be in body
+        elif "body" in event and "Authorization" in event["body"]:
+            authorization_header = event["body"]["Authorization"]
+            if authorization_header.startswith("Bearer "):
+                split_header = authorization_header.split()
+                if len(split_header) > 1:
+                    token = split_header[1].strip()
+                else:
+                    token = None
+            else:
+                token = None
+
         else:
             token = None
         
