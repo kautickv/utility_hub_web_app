@@ -157,10 +157,10 @@ resource "aws_api_gateway_method" "post_multitab_method" {
   rest_api_id   = aws_api_gateway_rest_api.password_generator_api_gateway.id
 }
 
-resource "aws_api_gateway_method_response" "get_multitab_method_response_200" {
+resource "aws_api_gateway_method_response" "post_multitab_method_response_200" {
   rest_api_id   = aws_api_gateway_rest_api.password_generator_api_gateway.id
   resource_id   = aws_api_gateway_resource.password_generator_api_gateway_multitab_resource.id
-  http_method   = aws_api_gateway_method.get_multitab_method.http_method
+  http_method   = aws_api_gateway_method.post_multitab_method.http_method
   status_code   = "200"
   response_models = {
     "application/json" = "Empty"
