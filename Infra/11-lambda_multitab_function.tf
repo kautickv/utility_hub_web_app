@@ -13,8 +13,7 @@ resource "aws_lambda_function" "multitab-backend-lambda-function" {
   environment {
     variables = {
       "MESSAGE" = "Terraform sends its regards",
-      "USER_TABLE_NAME" = aws_dynamodb_table.sign_in_user_table.name,
-      "VERIFY_AUTH_ENDPOINT" = aws_api_gateway_stage.password_generator_api_gateway_stage.invoke_url
+      "USER_TABLE_NAME" = aws_dynamodb_table.sign_in_user_table.name
     }
   }
 
