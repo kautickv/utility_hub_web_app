@@ -1,10 +1,10 @@
 import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import { sendVerifyAPIToAuthenticationServer } from '../utils/util';
+import { sendVerifyAPIToAuthenticationServer } from '../../utils/util';
 import "./home.css"
 
 // Import components
-import Navbar from "../components/Navbar"
+import Navbar from "../common/Navbar"
 
 
 function Home(){

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
-import { sendVerifyAPIToAuthenticationServer } from '../utils/util';
+import { sendVerifyAPIToAuthenticationServer } from '../../utils/util';
 
 
 function Login() {

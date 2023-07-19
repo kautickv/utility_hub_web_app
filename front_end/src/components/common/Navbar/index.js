@@ -11,7 +11,7 @@ import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { logout } from '../utils/util';
+import { logout } from '../../../utils/util';
 
 const Navbar = () => {
   const navigate = useNavigate();
