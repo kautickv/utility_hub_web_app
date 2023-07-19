@@ -12,8 +12,7 @@ resource "aws_lambda_function" "multitab-backend-lambda-function" {
   layers = [aws_lambda_layer_version.layer.arn]
   environment {
     variables = {
-      "MESSAGE" = "Terraform sends its regards",
-      "USER_TABLE_NAME" = aws_dynamodb_table.sign_in_user_table.name
+      "MESSAGE" = "Terraform sends its regards"
     }
   }
 
