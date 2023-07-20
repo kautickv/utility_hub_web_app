@@ -49,5 +49,5 @@ def handlePostMultitab(event):
     
     except Exception as e:
         print('handlePostMultitab(): ' + str(e))
-        traceback.print_exc()  # This will print the whole stack trace
+        traceback.print_exc()  
         return buildResponse(500, 'Internal Server error. Please try again')

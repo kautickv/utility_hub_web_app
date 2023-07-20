@@ -20,18 +20,6 @@ class BookmarksTableManager:
             print(f"Error removing item from DynamoDB: {e}")
             return False
         
-    def get_all_attributes(self, key):
-
-        try:
-            response = self.table.get_item(Key={'email': key})
-            item = response.get('Item')
-            if (item):
-                return item
-            else:
-                return None
-        except Exception as e:
-            print(f"Error retrieving all fields from dynamo table")
-            raise Exception("Error: " + str(e))
     
     def update_user_data(self, email, config_json=None, last_modified=None):
         ## If email does not exists, this function will create a new record.
@@ -41,13 +29,10 @@ class BookmarksTableManager:
             expression_attribute_names = {}
 
             if config_json is not None:
-                for i, config_item in enumerate(config_json):
-                    # Use the index to create a unique attribute name for each config item
-                    attr_name = f"#F{i}"
-                    attr_value = f":f{i}"
-                    update_expression += f" {attr_name} = {attr_value},"
-                    expression_attribute_values[attr_value] = json.dumps(config_item)
-                    expression_attribute_names[attr_name] = f"tile_{i}"
+                # No need to enumerate over each config item, as the compressed json is a single string
+                update_expression += " #F = :f,"
+                expression_attribute_values[":f"] = config_json
+                expression_attribute_names["#F"] = "config_json"
 
             if last_modified is not None:
                 update_expression += " #L1 = :l1,"
@@ -73,3 +58,22 @@ class BookmarksTableManager:
             print(f"Error updating user data in DynamoDB: {e}")
             raise Exception("Error: " + str(e))
 
+    def get_user_data(self, email):
+        try:
+            response = self.table.get_item(
+                Key={'email': email},
+                AttributesToGet=[
+                    'config_json',
+                ]
+            )
+
+            if 'Item' in response:
+                return response['Item']['config_json']
+            else:
+                print(f"No data found for email: {email}")
+                return None
+
+        except Exception as e:
+            print(f"Error getting user data from DynamoDB: {e}")
+            raise Exception("Error: " + str(e))
+        
