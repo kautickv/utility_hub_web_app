@@ -17,8 +17,8 @@ def buildResponse(code, message, jwt_token=""):
 
 def verifyAuthStatus(jwtToken):
     # This function will invoke the auth lambda and verify the user auth status,
-    # If user is authenticated, returns true.
-    # If user is not authenticated, return false.
+    # If user is authenticated, returns user details.
+    # If user is not authenticated, return None.
     # throws an error to calling function if error occurred.
 
     client = boto3.client('lambda')
@@ -41,9 +41,9 @@ def verifyAuthStatus(jwtToken):
             raise Exception("Auth lambda encountered an error.")
         
         elif response_payload['statusCode'] == 200:
-            return True
+            return response_payload
         else:
-            return False
+            return None
         
     except Exception as e:
         print("Failed to get auth status of user")

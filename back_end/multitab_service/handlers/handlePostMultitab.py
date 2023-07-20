@@ -1,6 +1,10 @@
 from utils.util import buildResponse
 from utils.util import verifyAuthStatus
 from utils.util import getAuthorizationCode
+from utils.util import decode_jwt_token
+from utils.BookmarksTableManager import BookmarksTableManager
+
+import os
 import json 
 
 def handlePostMultitab(event):
@@ -16,10 +20,16 @@ def handlePostMultitab(event):
         if code is None:
             return buildResponse(401, "Unauthorized")
         else:
-            if not verifyAuthStatus(code):
+            user_details = verifyAuthStatus(code)
+            if user_details == None:
                 return buildResponse(401, "Unauthorized")
 
         ## User verified to be authenticated. Now, update the config in database.
+        configTableManager = BookmarksTableManager(os.getenv('BOOKMARKS_TABLE_NAME'))
+        print(user_details)
+        ## Extract user email from jwt Token
+        userEmail = decode_jwt_token(code)
+        ## Update the config for user.
         return buildResponse(200, "OK")
     
     except Exception as e:

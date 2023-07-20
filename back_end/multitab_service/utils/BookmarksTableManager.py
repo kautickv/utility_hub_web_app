@@ -1,6 +1,6 @@
 import boto3
 
-class BookmarksTableHandler:
+class BookmarksTableManager:
     def __init__(self, table_name):
         self.dynamodb = boto3.resource('dynamodb')
         self.table_name = table_name

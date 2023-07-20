@@ -1,5 +1,6 @@
 from utils.util import buildResponse
 from utils.util import verifyUserLoginStatus
+from utils.util import decode_jwt_token
 
 def verify_handler(event, context):
     # This function will receive a request with JWT Token in HTTP header and verify if it's valid.
@@ -38,7 +39,7 @@ def verify_handler(event, context):
             return buildResponse(401, {"message": "Missing JWT token"})
         else:
             if (verifyUserLoginStatus(token)):
-                return buildResponse(200, {"message": "OK"})
+                return buildResponse(200, {"token_details": decode_jwt_token(token)})
             else:
                 return buildResponse(401, {"message": "Unauthorized"})
     except Exception as e:
