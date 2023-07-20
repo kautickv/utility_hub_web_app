@@ -1,6 +1,8 @@
 from utils.util import buildResponse
 from utils.util import verifyAuthStatus
 from utils.util import getAuthorizationCode
+from utils.util import compress_json
+from utils.util import decompress_json
 from datetime import datetime
 from utils.BookmarksTableManager import BookmarksTableManager
 import traceback
@@ -30,9 +32,14 @@ def handlePostMultitab(event):
         configTableManager = BookmarksTableManager(os.getenv('BOOKMARKS_TABLE_NAME'))
         # Parse the body content into a dictionary
         body_content = json.loads(event['body'])
+         # Compress the config_json before storing
+        compressed_config_json = compress_json(body_content['config_json'])
+        print(compressed_config_json)
+        print("Decompressing")
+        print(decompress_json(compressed_config_json))
         config_data = {
             'email': user_details['email'],
-            'config_json': json.dumps(body_content['config_json'])
+            'config_json': compressed_config_json
         }
         ## Update the config for user.
         if (configTableManager.update_user_data(email=config_data['email'], config_json=config_data['config_json'], last_modified=str(datetime.utcnow()))):
