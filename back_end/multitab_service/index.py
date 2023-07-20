@@ -9,5 +9,9 @@ def lambda_handler(event, context):
 
     if http_method == 'POST' and path =='/multitab':
         return handlePostMultitab(event)
+    
+    elif http_method == 'GET' and path =='/auth/login':
+
+        return buildResponse(200, "OK")
     else:
         return buildResponse(404, "Resource not found")
