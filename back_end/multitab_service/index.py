@@ -10,7 +10,7 @@ def lambda_handler(event, context):
     if http_method == 'POST' and path =='/multitab':
         return handlePostMultitab(event)
     
-    elif http_method == 'GET' and path =='/auth/login':
+    elif http_method == 'GET' and path =='/multitab':
 
         return buildResponse(200, "OK")
     else:
