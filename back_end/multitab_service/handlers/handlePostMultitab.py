@@ -6,7 +6,8 @@ import json
 def handlePostMultitab(event):
 
     # This function will first check if the user is authenticated. Returns 401 error
-    # This function will only return a JSON with all the default tiles and links for now.
+    # This function is called when user wants to modify their bookmarks. 
+    # It will save the configuration in the multitab table.
     
     
     try:
