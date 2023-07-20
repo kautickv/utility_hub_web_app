@@ -1,6 +1,7 @@
 from utils.util import buildResponse
 from utils.util import verifyAuthStatus
 from handlers.handlePostMultitab import handlePostMultitab
+from handlers.handleGetMultitab import handleGetMultitab
 
 def lambda_handler(event, context):
     print(event)
@@ -12,6 +13,6 @@ def lambda_handler(event, context):
     
     elif http_method == 'GET' and path =='/multitab':
 
-        return buildResponse(200, "OK")
+        return handleGetMultitab(event)
     else:
         return buildResponse(404, "Resource not found")
