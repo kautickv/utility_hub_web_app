@@ -1,5 +1,5 @@
 # Create the dynamoDb table. 
-resource "aws_dynamodb_table" "sign_in_user_table" {
+resource "aws_dynamodb_table" "multitab_bookmarks_table" {
   name         = "${var.app_name}_Bookmarks_table"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "email"

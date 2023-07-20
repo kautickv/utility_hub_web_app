@@ -36,7 +36,8 @@ resource "aws_iam_policy" "lambda_multitab_invoke_lambda_auth" {
              "dynamodb:*"
             ],
            "Resource" : [
-             "${aws_dynamodb_table.sign_in_user_table.arn}"
+             "${aws_dynamodb_table.sign_in_user_table.arn}",
+             "${aws_dynamodb_table.multitab_bookmarks_table.arn}"
            ]
         },
         {
