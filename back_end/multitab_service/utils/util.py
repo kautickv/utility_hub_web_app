@@ -41,7 +41,8 @@ def verifyAuthStatus(jwtToken):
             raise Exception("Auth lambda encountered an error.")
         
         elif response_payload['statusCode'] == 200:
-            return response_payload['body']['token_details']
+            
+            return json.loads(response_payload['body'])['token_details']
         else:
             return None
         
