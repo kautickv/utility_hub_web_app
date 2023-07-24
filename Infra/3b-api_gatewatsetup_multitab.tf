@@ -74,13 +74,13 @@ resource "aws_api_gateway_method_response" "post_multitab_method_response_200" {
   depends_on = [aws_api_gateway_method.post_multitab_method]
 }
 
-# Add permissions for API Gateway to invoke multitab lambda
+# Add permissions for API Gateway to invoke multitab lambda POST request
 resource "aws_lambda_permission" "multitab_lambda_permission" {
   statement_id    = "AllowBackendLambdaInvoke"
   action          = "lambda:InvokeFunction"
   function_name   = aws_lambda_function.multitab-backend-lambda-function.function_name
   principal       = "apigateway.amazonaws.com"
-  source_arn      = "${aws_api_gateway_rest_api.password_generator_api_gateway.execution_arn}/*"
+  source_arn      = "${aws_api_gateway_rest_api.password_generator_api_gateway.execution_arn}/${aws_api_gateway_method.post_multitab_method.http_method}/multitab"
 }
 
 # Integrate the above POST method with our multitab backend lambda function created earlier
@@ -115,6 +115,15 @@ resource "aws_api_gateway_method_response" "get_multitab_method_response_200" {
     "method.response.header.Access-Control-Allow-Methods" = true
   }
   depends_on = [aws_api_gateway_method.get_multitab_method]
+}
+
+# Add permissions for API Gateway to invoke multitab lambda POST request
+resource "aws_lambda_permission" "multitab_lambda_permission" {
+  statement_id    = "AllowBackendLambdaInvoke"
+  action          = "lambda:InvokeFunction"
+  function_name   = aws_lambda_function.multitab-backend-lambda-function.function_name
+  principal       = "apigateway.amazonaws.com"
+  source_arn      = "${aws_api_gateway_rest_api.password_generator_api_gateway.execution_arn}/${aws_api_gateway_method.get_multitab_method.http_method}/multitab"
 }
 
 # Integrate the above GET method with our multitab backend lambda function created earlier
