@@ -7,12 +7,12 @@ import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
+import {sendGETToMultitabBackend} from "../../utils/multitabUtil";
 
 // Import components
 import Navbar from "../common/Navbar";
 import Tile from "./Tile.js";
 
-// Define tiles
 const tilesData = [
   {
     title: "Delco Operations",
@@ -111,7 +111,9 @@ function MultiTabOpener() {
 
         if (verifyResponse === 200) {
           // User is already logged in
-          // Do nothing
+          // Fetch config data from backend
+          let response = await sendGETToMultitabBackend(jwtToken)
+          console.log(response);
         } else if (verifyResponse === 401) {
           // User JWT token is not valid or expired
           localStorage.removeItem("JWT_Token");

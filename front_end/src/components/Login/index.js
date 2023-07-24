@@ -72,7 +72,6 @@ function Login() {
      * locally. Will ask user to login again.
      */
 
-    console.log("Code not found in URL");
     const fetchCreds = async () => {
       try {
         const response = await fetch(

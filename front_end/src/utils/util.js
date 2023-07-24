@@ -12,7 +12,7 @@ async function sendVerifyAPIToAuthenticationServer(jwtToken) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + jwtToken?.trim() ?? "",
+          "Authorization": "Bearer " + jwtToken?.trim() ?? "",
         },
       }
     );
@@ -39,7 +39,7 @@ async function logout(jwtToken) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + jwtToken?.trim() ?? "",
+          "Authorization": "Bearer " + jwtToken?.trim() ?? "",
         },
       }
     );
