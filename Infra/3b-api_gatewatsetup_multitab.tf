@@ -80,7 +80,7 @@ resource "aws_lambda_permission" "post_multitab_lambda_permission" {
   action          = "lambda:InvokeFunction"
   function_name   = aws_lambda_function.multitab-backend-lambda-function.function_name
   principal       = "apigateway.amazonaws.com"
-  source_arn      = "${aws_api_gateway_rest_api.password_generator_api_gateway.execution_arn}/${aws_api_gateway_method.post_multitab_method.http_method}/multitab"
+  source_arn      = "${aws_api_gateway_rest_api.password_generator_api_gateway.execution_arn}/*/${aws_api_gateway_method.post_multitab_method.http_method}/multitab"
 }
 
 # Integrate the above POST method with our multitab backend lambda function created earlier
@@ -123,7 +123,7 @@ resource "aws_lambda_permission" "get_multitab_lambda_permission" {
   action          = "lambda:InvokeFunction"
   function_name   = aws_lambda_function.multitab-backend-lambda-function.function_name
   principal       = "apigateway.amazonaws.com"
-  source_arn      = "${aws_api_gateway_rest_api.password_generator_api_gateway.execution_arn}/${aws_api_gateway_method.get_multitab_method.http_method}/multitab"
+  source_arn      = "${aws_api_gateway_rest_api.password_generator_api_gateway.execution_arn}/*/${aws_api_gateway_method.get_multitab_method.http_method}/multitab"
 }
 
 # Integrate the above GET method with our multitab backend lambda function created earlier
