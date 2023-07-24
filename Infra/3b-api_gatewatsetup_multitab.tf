@@ -67,7 +67,9 @@ resource "aws_api_gateway_method_response" "post_multitab_method_response_200" {
     "application/json" = "Empty"
   }
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Origin" = true,
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
   }
   depends_on = [aws_api_gateway_method.post_multitab_method]
 }
@@ -108,18 +110,11 @@ resource "aws_api_gateway_method_response" "get_multitab_method_response_200" {
     "application/json" = "Empty"
   }
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Origin" = true,
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
   }
   depends_on = [aws_api_gateway_method.get_multitab_method]
-}
-
-# Add permissions for API Gateway to invoke multitab lambda
-resource "aws_lambda_permission" "multitab_lambda_permission_get" {
-  statement_id    = "AllowBackendLambdaInvokeGet"
-  action          = "lambda:InvokeFunction"
-  function_name   = aws_lambda_function.multitab-backend-lambda-function.function_name
-  principal       = "apigateway.amazonaws.com"
-  source_arn      = "${aws_api_gateway_rest_api.password_generator_api_gateway.execution_arn}/*"
 }
 
 # Integrate the above GET method with our multitab backend lambda function created earlier
@@ -128,6 +123,8 @@ resource "aws_api_gateway_integration" "get_multitab_integration" {
   resource_id             = aws_api_gateway_resource.password_generator_api_gateway_multitab_resource.id
   rest_api_id             = aws_api_gateway_rest_api.password_generator_api_gateway.id
   type                    = "AWS_PROXY"
-  integration_http_method = "GET"
+  integration_http_method = "POST"
   uri                     = aws_lambda_function.multitab-backend-lambda-function.invoke_arn
 }
+
+
