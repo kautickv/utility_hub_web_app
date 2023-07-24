@@ -76,7 +76,7 @@ resource "aws_api_gateway_method_response" "post_multitab_method_response_200" {
 
 # Add permissions for API Gateway to invoke multitab lambda POST request
 resource "aws_lambda_permission" "post_multitab_lambda_permission" {
-  statement_id    = "AllowBackendLambdaInvoke"
+  statement_id    = "AllowPostMultitabLambdaInvoke"
   action          = "lambda:InvokeFunction"
   function_name   = aws_lambda_function.multitab-backend-lambda-function.function_name
   principal       = "apigateway.amazonaws.com"
@@ -117,9 +117,9 @@ resource "aws_api_gateway_method_response" "get_multitab_method_response_200" {
   depends_on = [aws_api_gateway_method.get_multitab_method]
 }
 
-# Add permissions for API Gateway to invoke multitab lambda POST request
+# Add permissions for API Gateway to invoke multitab lambda GET request
 resource "aws_lambda_permission" "get_multitab_lambda_permission" {
-  statement_id    = "AllowBackendLambdaInvoke"
+  statement_id    = "AllowGetMultitabLambdaInvoke"
   action          = "lambda:InvokeFunction"
   function_name   = aws_lambda_function.multitab-backend-lambda-function.function_name
   principal       = "apigateway.amazonaws.com"
