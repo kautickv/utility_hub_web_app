@@ -34,6 +34,10 @@ resource "aws_api_gateway_integration" "options_multitab_integration" {
   resource_id   = aws_api_gateway_resource.password_generator_api_gateway_multitab_resource.id
   http_method   = aws_api_gateway_method.options_multitab_method.http_method
   type          = "MOCK"
+  request_templates = {
+    "application/json" = "{\n  \"statusCode\": 200\n}"
+  }
+
   depends_on    = [aws_api_gateway_method.options_multitab_method]
 }
 

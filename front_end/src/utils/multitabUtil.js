@@ -6,9 +6,10 @@ async function sendGETToMultitabBackend(jwtToken) {
       OUTPUT: returns the response. If error, returns 500 error
       */
   
+    console.log("Bearer " + jwtToken?.trim() ?? "")
     try {
       let response = await fetch(
-        `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/multitab`,
+        `https://fk3nbb78g5.execute-api.us-east-1.amazonaws.com/dev/multitab`,
         {
           method: "GET",
           headers: {
