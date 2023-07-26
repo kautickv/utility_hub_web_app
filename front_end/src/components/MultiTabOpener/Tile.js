@@ -34,6 +34,8 @@ const StyledCard = styled(Card)({
   },
 });
 
+
+
 function Tile(props) {
   const [configureOpen, setConfigureOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
