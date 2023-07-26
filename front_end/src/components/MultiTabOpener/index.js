@@ -7,132 +7,108 @@ import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
-import {sendGETToMultitabBackend} from "../../utils/multitabUtil";
+import {sendGETToMultitabBackend, sendPostToMultitabBackend} from "../../utils/multitabUtil";
 
 // Import components
 import Navbar from "../common/Navbar";
 import Tile from "./Tile.js";
-
-const tilesData = [
-  {
-    title: "Delco Operations",
-    description: "Grafana Dashboard to monitor during Delco Ops",
-    urls: [
-      {
-        urlTitle: "SOC :: Delco :: Business Metrics",
-        url: "https://grafana.je-labs.com/d/NA80nq-Zk/soc-delco-business-metrics?orgId=1&refresh=1m",
-      },
-      {
-        urlTitle: "SOC :: Delco :: Message Queues",
-        url: "https://grafana.je-labs.com/d/ODEHK4EZz/soc-delco-message-queues?orgId=1&refresh=30s",
-      },
-      {
-        urlTitle: "SOC :: Delco :: Payments",
-        url: "https://grafana.je-labs.com/d/DtA1pkOGk/ca-payments-and-fraud-business-metrics?orgId=1&from=now-1h&to=now&refresh=30s",
-      },
-      {
-        urlTitle: "SOC :: Delco :: RabbitMQ Metrics",
-        url: "https://grafana.je-labs.com/d/b-fXG-PZz/rabbitmq-metrics?orgId=1&refresh=1m&from=now-1h&to=now",
-      },
-    ],
-  },
-  {
-    title: "Marketplace Operations",
-    description: "Grafana dashboard to monitor during marketplace ops",
-    urls: [
-      {
-        urlTitle: "Escalations-UK",
-        url: "https://grafana.je-labs.com/d/000000651/escalations-uk?orgId=1&refresh=30s",
-      },
-      {
-        urlTitle: "Escalations-INT",
-        url: "https://grafana.je-labs.com/d/000001527/escalations-int?orgId=1&refresh=1m",
-      },
-      {
-        urlTitle: "SOC - Deployments, Errors & Alerts",
-        url: "https://grafana.je-labs.com/d/000001550/soc-deployments-errors-and-alerts?refresh=1m&orgId=1&var-Filters=JobFeature%7C%3D%7Cpublicweb&var-Filters=JobFeatureVersion%7C!%3D%7C1.0.0.554&from=now-1h&to=now&set_by_plugin=true",
-      },
-      {
-        urlTitle: "SOC :: UK Highlevel",
-        url: "https://grafana.je-labs.com/d/ZwvDCFgWz/soc-uk-highlevel?refresh=1m&orgId=1",
-      },
-      {
-        urlTitle: "SOC-Order Rate Dashboard",
-        url: "https://grafana.je-labs.com/d/000001951/soc-order-rate-dashboard?orgId=1&refresh=1m",
-      },
-      {
-        urlTitle: "Authentication-Combined",
-        url: "https://grafana.je-labs.com/d/LLf1LNi4z/authentication-combined?orgId=1&refresh=10s",
-      },
-    ]
-  },
-  {
-    title: "UK, INT, ANZ - Toggle CDN Provider- Web / Apps (INT/ANZ Only) CDN Failover test Instructions",
-    description: "Links to open when performing test to toggle CDN Provider",
-    urls: [
-        {
-            urlTitle: "Confluence Test instruction",
-            url: "https://justeattakeaway.atlassian.net/wiki/spaces/SOC/pages/52742683/UK+INT+ANZ+-+Toggle+CDN+Provider-+Web+Apps+INT+ANZ+Only+CDN+Failover+test+Instructions",
-        },
-        {
-            urlTitle: "AWS Account",
-            url: "https://aws.just-eat.com/",
-        },
-        {
-            urlTitle: "Global Watch Tower",
-            url: "https://watchtower.eu-west-1.production.jet-internal.com/#/templates?template.name__icontains=toggle",
-        },
-        {
-            urlTitle: "CDN check - Blackbox Exporter",
-            url: "https://grafana.je-labs.com/d/pS6ZuGV7z34/cdn-check-blackbox-exporter?orgId=1&refresh=30s",
-        },
-        {
-            urlTitle: "Operational Tech Tests Dashboard",
-            url: "https://grafana.je-labs.com/d/JS4KpK3Zz/soc-operational-tech-tests?orgId=1&refresh=10s",
-        },
-    ]
-  },
-];
-
+ 
 function MultiTabOpener() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const [tilesData, setTilesData] = useState([])
 
   useEffect(() => {
     // Check if JWT token exists
 
     const verifyIfUserLoggedIn = async () => {
-      let jwtToken = checkLocalStorageForJWTToken();
-      if (jwtToken) {
-        // Check if JWT token is valid and if user is logged in
-        let verifyResponse = await sendVerifyAPIToAuthenticationServer(
-          jwtToken
-        );
 
-        if (verifyResponse === 200) {
-          // User is already logged in
-          // Fetch config data from backend
-          let response = await sendGETToMultitabBackend(jwtToken)
-          console.log(response);
-        } else if (verifyResponse === 401) {
-          // User JWT token is not valid or expired
+      try{
+        let jwtToken = checkLocalStorageForJWTToken();
+        if (jwtToken) {
+          // Check if JWT token is valid and if user is logged in
+          let verifyResponse = await sendVerifyAPIToAuthenticationServer(
+            jwtToken
+          );
+
+          if (verifyResponse === 200) {
+            // User is already logged in
+            // Fetch config data from backend
+            let response = await sendGETToMultitabBackend(jwtToken)
+            setTilesData(JSON.parse(JSON.parse(response)));
+          } else if (verifyResponse === 401) {
+            // User JWT token is not valid or expired
+            localStorage.removeItem("JWT_Token");
+            navigate("/login");
+          } else {
+            console(
+              `An error has occurred. Verify Path returns ${verifyResponse}`
+            );
+            alert("An error has occurred. Please try again later");
+          }
+        } else {
+          //Token not found.
           localStorage.removeItem("JWT_Token");
           navigate("/login");
-        } else {
-          console(
-            `An error has occurred. Verify Path returns ${verifyResponse}`
-          );
-          alert("An error has occurred. Please try again later");
         }
-      } else {
-        //Token not found.
-        localStorage.removeItem("JWT_Token");
-        navigate("/login");
+      }catch(err){
+        console.log(`An error occurred: ${err}`)
+        alert("An unexpected error occurred. Please try again later")
       }
     };
 
     verifyIfUserLoggedIn();
-  });
+  }, [navigate]);
+
+  useEffect(() => {
+    console.log(tilesData)
+  }, [tilesData])
+
+  async function handleConfigureSave(index, newUrls){
+    /**
+     * PURPOSE: This function will add/delete URLs in the respective tile
+     *          and make http request to save configuration in backend
+     * INPUT: The index of the tile to update.
+     * OUTPUT: None
+     */
+
+    // Change the url array for the given tile
+    let copy = JSON.parse(JSON.stringify(tilesData));
+    copy[index]["urls"] = newUrls;
+    setTilesData(copy)
+
+    // Save configuration
+    postNewConfigToBackend(copy)
+  }
+  async function postNewConfigToBackend(newTileData) {
+    // This function will perform an API call to backend to save current config
+    try{
+      // Get the JWTToken
+      let jwtToken = checkLocalStorageForJWTToken();
+      if (jwtToken !== null && jwtToken !== "undefined") {
+        
+        let httpCode = await sendPostToMultitabBackend(jwtToken, newTileData);
+        if (httpCode === 200){
+          //Pass
+        }else if(httpCode === 401){
+          alert('Credentials Expired. Please login again')
+          navigate('/login')
+        }else if(httpCode === 500){
+          alert("AN error occurred while saving. Please try again later")
+        }else{
+          alert("An unknown error occurred. Please try again later.")
+        }
+      }else{
+        // User JWT token is not valid or expired
+        localStorage.removeItem("JWT_Token");
+        navigate("/login");
+      }
+    }
+    catch(err){
+      console.log(err);
+      alert('An error ocurred saving urls. Please try again later')
+    }
+  }
 
   function checkLocalStorageForJWTToken() {
     /**
@@ -185,6 +161,7 @@ function MultiTabOpener() {
                   title={tile.title}
                   description={tile.description}
                   urls={tile.urls}
+                  onSave={(newUrls) => handleConfigureSave(index, newUrls)}
                 />
               </Grid>
             ))}

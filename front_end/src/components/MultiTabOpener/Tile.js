@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -22,8 +22,6 @@ import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
 import { styled } from "@mui/system";
 
-import {sendPostToMultitabBackend } from "../../utils/multitabUtil";
-
 const StyledCard = styled(Card)({
   maxWidth: 345,
   "& .MuiCardContent-root": {
@@ -41,7 +39,10 @@ function Tile(props) {
   const [urls, setUrls] = useState(props.urls);
   const [newUrl, setNewUrl] = useState({ urlTitle: "", url: "" });
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    console.log("Use effect fired");
+    //console.log(urls)
+  }, [urls])
 
   function handleConfigureOpen() {
     setConfigureOpen(true);
@@ -59,12 +60,6 @@ function Tile(props) {
     setDeleteOpen(false);
   }
 
-  function handleConfigureSave() {
-    console.log("Configuration saved");
-
-    handleConfigureClose();
-  }
-
   function handleDelete() {
     console.log("Tile has been deleted.");
 
@@ -72,8 +67,7 @@ function Tile(props) {
   }
 
   function handleOpenAll() {
-    console.log(props.urls);
-    props.urls.forEach((urlObj) => {
+    urls.forEach((urlObj) => {
       window.open(urlObj.url, "_blank");
     });
   }
@@ -81,53 +75,27 @@ function Tile(props) {
     setNewUrl({ ...newUrl, [e.target.name]: e.target.value });
   }
 
-  async function handleAddUrl() {
-    setUrls([...urls, newUrl]);
-    setNewUrl({ urlTitle: "", url: "" });
+  function handleAddUrl() {
 
-    // Send API call to backend to save config
-    await postNewConfigToBackend()
+    
+    // Only add new URL if newURL is not empty is not empty
+    if(newUrl.urlTitle.trim() !== "" && newUrl.url.trim() !== ""){
+      setUrls([...urls, newUrl]);
+      setNewUrl({ urlTitle: "", url: "" });
+    }
   }
 
-  async function handleDeleteUrl(index) {
+  function handleDeleteUrl(index) {
     // This function gets triggered when a URL gets deleted.
     const newUrls = [...urls];
     newUrls.splice(index, 1);
     setUrls(newUrls);
-
-    // Send API call to backend to save config
-    await postNewConfigToBackend()
   }
 
-  async function postNewConfigToBackend() {
-    // This function will perform an API call to backend to save current config
+  function handleConfigureSave(){
+    props.onSave(urls);
 
-    try{
-      // Get the JWTToken
-      let jwtToken = localStorage.getItem("JWT_Token");
-      if (jwtToken !== null && jwtToken !== "undefined") {
-        let httpCode = await sendPostToMultitabBackend(jwtToken, urls);
-
-        if (httpCode === 200){
-          //Pass
-        }else if(httpCode === 401){
-          alert('Credentials Expired. Please login again')
-          navigate('/login')
-        }else if(httpCode === 500){
-          alert("AN error occurred while saving. Please try again later")
-        }else{
-          alert("An unknown error occurred. Please try again later.")
-        }
-      }else{
-        // User JWT token is not valid or expired
-        localStorage.removeItem("JWT_Token");
-        navigate("/login");
-      }
-    }
-    catch(err){
-      console.log(err);
-      alert('An error ocurred saving urls. Please try again later')
-    }
+    handleConfigureClose();
   }
 
   return (

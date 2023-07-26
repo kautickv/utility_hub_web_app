@@ -9,7 +9,7 @@ async function sendGETToMultitabBackend(jwtToken) {
     console.log("Bearer " + jwtToken?.trim() ?? "")
     try {
       let response = await fetch(
-        `https://fk3nbb78g5.execute-api.us-east-1.amazonaws.com/dev/multitab`,
+        `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/multitab`,
         {
           method: "GET",
           headers: {
@@ -18,11 +18,16 @@ async function sendGETToMultitabBackend(jwtToken) {
           },
         }
       );
-  
-      return response;
+    
+      if (!response.ok) {
+        console.log('Response was not OK');
+        throw new Error('Error fetching config from backend');
+      }
+      const responseBody = await response.json();
+      return responseBody;
     } catch (err) {
       console.log(`An error occurred sending GET to multitab. ${err}`);
-      return 500;
+      throw new Error(err);
     }
   }
 
@@ -36,6 +41,7 @@ async function sendPostToMultitabBackend(jwtToken, config) {
     OUTPUT: returns the status code of the response. If error, returns 500 error
     */
 
+  console.log(JSON.stringify(config))
   try {
     let response = await fetch(
       `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/multitab`,
@@ -52,7 +58,7 @@ async function sendPostToMultitabBackend(jwtToken, config) {
     return response.status;
   } catch (err) {
     console.log(`An error occurred sending POST to multitab. ${err}`);
-    return 500;
+    throw new Error(`Error saving config to backend: ${err}`);
   }
 }
 
