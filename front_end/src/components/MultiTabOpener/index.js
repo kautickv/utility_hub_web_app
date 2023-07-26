@@ -229,7 +229,7 @@ function MultiTabOpener() {
     handleCloseDialog()
 
     // Save configuration
-     postNewConfigToBackend(copy)
+    // postNewConfigToBackend(copy)
   }
 
   return (

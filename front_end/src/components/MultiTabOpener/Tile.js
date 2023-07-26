@@ -17,8 +17,11 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
+import Badge from "@mui/material/Badge";
+import Tooltip from "@mui/material/Tooltip";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import { styled } from "@mui/system";
 
 const StyledCard = styled(Card)({
@@ -41,7 +44,7 @@ function Tile(props) {
   useEffect(() => {
     console.log("Use effect fired");
     //console.log(urls)
-  }, [urls])
+  }, [urls]);
 
   function handleConfigureOpen() {
     setConfigureOpen(true);
@@ -75,10 +78,8 @@ function Tile(props) {
   }
 
   function handleAddUrl() {
-
-    
     // Only add new URL if newURL is not empty is not empty
-    if(newUrl.urlTitle.trim() !== "" && newUrl.url.trim() !== ""){
+    if (newUrl.urlTitle.trim() !== "" && newUrl.url.trim() !== "") {
       setUrls([...urls, newUrl]);
       setNewUrl({ urlTitle: "", url: "" });
     }
@@ -91,7 +92,7 @@ function Tile(props) {
     setUrls(newUrls);
   }
 
-  function handleConfigureSave(){
+  function handleConfigureSave() {
     props.onSave(urls);
 
     handleConfigureClose();
@@ -101,7 +102,36 @@ function Tile(props) {
     <StyledCard>
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {props.title}
+          <Box
+            component="span"
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            {props.title}
+            <Tooltip title={`${urls.length} link(s) in this card`} arrow>
+              <Badge
+                badgeContent={urls.length}
+                color="primary"
+                overlap="circular"
+                max={999}
+                style={{ marginLeft: "15px" }}
+              >
+                <Box
+                  component="span"
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    borderRadius: "50%",
+                    backgroundColor: "#f50057",
+                    color: "white",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    fontSize: "0.8em",
+                  }}
+                />
+              </Badge>
+            </Tooltip>
+          </Box>
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {props.description}
