@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
@@ -61,9 +60,9 @@ function Tile(props) {
   }
 
   function handleDelete() {
-    console.log("Tile has been deleted.");
+    props.onDelete();
 
-    handleDeleteClose();
+    handleConfigureClose();
   }
 
   function handleOpenAll() {
