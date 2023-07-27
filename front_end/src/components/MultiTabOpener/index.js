@@ -23,6 +23,7 @@ import {
 
 // Import components
 import Navbar from "../common/Navbar";
+import LoadingSpinner from "../common/LoadingSpinner"
 import Tile from "./Tile.js";
 
 function MultiTabOpener() {
@@ -30,6 +31,7 @@ function MultiTabOpener() {
   const [searchTerm, setSearchTerm] = useState("");
   const [tilesData, setTilesData] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true)  // Set to loading initially
   const [newTile, setNewTile] = useState({
     title: "",
     description: "",
@@ -53,24 +55,29 @@ function MultiTabOpener() {
             // Fetch config data from backend
             let response = await sendGETToMultitabBackend(jwtToken);
             setTilesData(JSON.parse(JSON.parse(response)));
+            setIsLoading(false);
           } else if (verifyResponse === 401) {
             // User JWT token is not valid or expired
             localStorage.removeItem("JWT_Token");
+            setIsLoading(false);
             navigate("/login");
           } else {
             console(
               `An error has occurred. Verify Path returns ${verifyResponse}`
             );
             alert("An error has occurred. Please try again later");
+            setIsLoading(false);
           }
         } else {
           //Token not found.
           localStorage.removeItem("JWT_Token");
+          setIsLoading(false);
           navigate("/login");
         }
       } catch (err) {
         console.log(`An error occurred: ${err}`);
         alert("An unexpected error occurred. Please try again later");
+        setIsLoading(false);
       }
     };
 
@@ -81,7 +88,7 @@ function MultiTabOpener() {
     console.log(tilesData);
   }, [tilesData]);
 
-  async function handleDeleteTile(index){
+  async function handleDeleteTile(index) {
     /**
      * PURPOSE: This function will a specific tile in the global configuration
      *          and make http request to save configuration in backend
@@ -94,8 +101,8 @@ function MultiTabOpener() {
     copy.splice(index, 1);
     setTilesData(copy);
 
-     // Save configuration
-     postNewConfigToBackend(copy);
+    // Save configuration
+    postNewConfigToBackend(copy);
 
   }
   async function handleConfigureSave(index, newUrls) {
@@ -200,21 +207,21 @@ function MultiTabOpener() {
   }
 
   async function handleAddTile() {
-    
+
     if (!newTile.title.trim() || !newTile.description.trim()) {
       alert("Title and description cannot be empty.");
       return;
     }
-  
+
     const validUrls = newTile.urls.filter(
       (url) => url.urlTitle.trim() && url.url.trim()
     );
-  
+
     if (validUrls.length === 0) {
       alert("At least one URL with a title is required.");
       return;
     }
-  
+
     let copy = JSON.parse(JSON.stringify(tilesData));
     const newTileCopy = { ...newTile, urls: validUrls };
     copy.push(newTileCopy);
@@ -234,129 +241,133 @@ function MultiTabOpener() {
 
   return (
     <>
-      <Navbar />
-      <Fab
-        color="primary"
-        aria-label="add"
-        style={{ position: "fixed", bottom: 16, right: 16 }}
-        onClick={handleOpenDialog}
-      >
-        <AddIcon />
-      </Fab>
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        style={{ marginBottom: "20px", marginTop: "20px" }}
-      >
-        <TextField
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          variant="outlined"
-          size="large" // You can adjust this to 'medium' if 'large' is too big.
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-          style={{ width: "50%" }} // Adjust the width of the search bar.
-        />
-      </Box>
-      <Container style={{ marginTop: "10px", marginBottom: "10px" }}>
-        <Grid container spacing={1}>
-          {tilesData
-            .filter((tile) =>
-              tile.title.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .map((tile, index) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                <Tile
-                  title={tile.title}
-                  description={tile.description}
-                  urls={tile.urls}
-                  onSave={(newUrls) => handleConfigureSave(index, newUrls)}
-                  onDelete={() => handleDeleteTile(index)}
-                />
-              </Grid>
-            ))}
-        </Grid>
-      </Container>
-      <Dialog
-        open={dialogOpen}
-        onClose={handleCloseDialog}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">Add New Card</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please fill in the details below:
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="title"
-            label="Title"
-            type="text"
-            fullWidth
-            value={newTile.title}
-            onChange={handleTitleChange}
-          />
-          <TextField
-            margin="dense"
-            id="description"
-            label="Description"
-            type="text"
-            fullWidth
-            value={newTile.description}
-            onChange={handleDescriptionChange}
-          />
-          <Divider style={{ marginTop: "10px", marginBottom: "10px" }} />{"Input URL below:"}
-          {newTile.urls.map((url, index) => (
-            <Grid container spacing={2} key={index}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  margin="dense"
-                  id={"urlTitle" + index}
-                  label="URL Title"
-                  type="text"
-                  fullWidth
-                  value={url.urlTitle}
-                  onChange={(event) => handleUrlTitleChange(index, event)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  margin="dense"
-                  id={"url" + index}
-                  label="URL"
-                  type="text"
-                  fullWidth
-                  value={url.url}
-                  onChange={(event) => handleUrlChange(index, event)}
-                />
-              </Grid>
-            </Grid>
-          ))}
-          <Button
-            onClick={addNewUrl}
+      {isLoading ? (<LoadingSpinner />) : (
+        <>
+          <Navbar />
+          <Fab
             color="primary"
-            style={{ marginTop: "10px" }}
+            aria-label="add"
+            style={{ position: "fixed", bottom: 16, right: 16 }}
+            onClick={handleOpenDialog}
           >
-            Add More URL
-          </Button>
-        </DialogContent>
+            <AddIcon />
+          </Fab>
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            style={{ marginBottom: "20px", marginTop: "20px" }}
+          >
+            <TextField
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              variant="outlined"
+              size="large" // You can adjust this to 'medium' if 'large' is too big.
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              style={{ width: "50%" }} // Adjust the width of the search bar.
+            />
+          </Box>
+          <Container style={{ marginTop: "10px", marginBottom: "10px" }}>
+            <Grid container spacing={1}>
+              {tilesData
+                .filter((tile) =>
+                  tile.title.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .map((tile, index) => (
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                    <Tile
+                      title={tile.title}
+                      description={tile.description}
+                      urls={tile.urls}
+                      onSave={(newUrls) => handleConfigureSave(index, newUrls)}
+                      onDelete={() => handleDeleteTile(index)}
+                    />
+                  </Grid>
+                ))}
+            </Grid>
+          </Container>
+          <Dialog
+            open={dialogOpen}
+            onClose={handleCloseDialog}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogTitle id="form-dialog-title">Add New Card</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Please fill in the details below:
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="title"
+                label="Title"
+                type="text"
+                fullWidth
+                value={newTile.title}
+                onChange={handleTitleChange}
+              />
+              <TextField
+                margin="dense"
+                id="description"
+                label="Description"
+                type="text"
+                fullWidth
+                value={newTile.description}
+                onChange={handleDescriptionChange}
+              />
+              <Divider style={{ marginTop: "10px", marginBottom: "10px" }} />{"Input URL below:"}
+              {newTile.urls.map((url, index) => (
+                <Grid container spacing={2} key={index}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      margin="dense"
+                      id={"urlTitle" + index}
+                      label="URL Title"
+                      type="text"
+                      fullWidth
+                      value={url.urlTitle}
+                      onChange={(event) => handleUrlTitleChange(index, event)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      margin="dense"
+                      id={"url" + index}
+                      label="URL"
+                      type="text"
+                      fullWidth
+                      value={url.url}
+                      onChange={(event) => handleUrlChange(index, event)}
+                    />
+                  </Grid>
+                </Grid>
+              ))}
+              <Button
+                onClick={addNewUrl}
+                color="primary"
+                style={{ marginTop: "10px" }}
+              >
+                Add More URL
+              </Button>
+            </DialogContent>
 
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleAddTile} color="primary">
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
+            <DialogActions>
+              <Button onClick={handleCloseDialog} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleAddTile} color="primary">
+                Create
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      )}
     </>
   );
 }
