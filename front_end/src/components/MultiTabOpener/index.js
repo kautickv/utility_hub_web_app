@@ -241,9 +241,9 @@ function MultiTabOpener() {
 
   return (
     <>
+      <Navbar />
       {isLoading ? (<LoadingSpinner />) : (
         <>
-          <Navbar />
           <Fab
             color="primary"
             aria-label="add"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -6,19 +6,24 @@ import IconButton from "@mui/material/IconButton";
 import SettingsIcon from "@mui/icons-material/Settings";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { Box } from "@mui/system";
+import { Box, Hidden, Drawer, List, ListItem, ListItemText } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import MenuIcon from '@mui/icons-material/Menu';
 import { logout } from "../../../utils/util";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const open = Boolean(anchorEl);
-  // Import theme
   const theme = useTheme();
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -30,12 +35,10 @@ const Navbar = () => {
 
   const handleNavigation = (path) => {
     navigate(path);
+    setMobileOpen(false);
   };
 
   const handleLogout = async () => {
-    // When logout is clicked, navigate to settings page
-
-    // Read JWTToken
     let jwtToken = localStorage.getItem("JWT_Token");
 
     if (jwtToken === "" || jwtToken === undefined) {
@@ -51,58 +54,66 @@ const Navbar = () => {
     }
   };
 
+  const drawer = (
+    <div>
+      <List>
+        {["Home", "MultiTab Opener", "Option 3", "Option 4"].map((text, index) => (
+          <ListItem button key={text} onClick={() => handleNavigation(`/${text.toLowerCase().replace(" ", "-")}`)}>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+    </div>
+  );
+
   return (
-    <AppBar
-      position="static"
-      style={{ backgroundColor: theme.palette.primary.main }}
-    >
+    <AppBar position="static" style={{ backgroundColor: theme.palette.primary.main }}>
       <Toolbar>
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ flexGrow: 1 }}
-          style={{ color: theme.palette.primary.contrastText }}
-        >
+        <Hidden lgUp implementation="css">
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Hidden>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} style={{ color: theme.palette.primary.contrastText }}>
           Password Generator
         </Typography>
-        <Box
-          sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}
-          style={{ color: theme.palette.primary.contrastText }}
-        >
-          <Typography
-            variant="body1"
-            component="div"
-            style={{ cursor: "pointer", margin: "0 20px" }}
-            onClick={() => handleNavigation("/home")}
+        <Hidden mdUp implementation="css">
+          <Drawer
+            container={window !== undefined ? () => window.document.body : undefined}
+            variant="temporary"
+            anchor={theme.direction === "rtl" ? "right" : "left"}
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
           >
-            Home
-          </Typography>
-          <Typography
-            variant="body1"
-            component="div"
-            style={{ cursor: "pointer", margin: "0 20px" }}
-            onClick={() => handleNavigation("/multitab-opener")}
+            {drawer}
+          </Drawer>
+        </Hidden>
+        <Hidden smDown implementation="css">
+          <Box
+            sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}
+            style={{ color: theme.palette.primary.contrastText }}
           >
-            MultiTab Opener
-          </Typography>
-          <Typography
-            variant="body1"
-            component="div"
-            style={{ cursor: "pointer", margin: "0 20px" }}
-            onClick={() => handleNavigation("/option3")}
-          >
-            Option 3
-          </Typography>
-          <Typography
-            variant="body1"
-            component="div"
-            style={{ cursor: "pointer", margin: "0 20px" }}
-            onClick={() => handleNavigation("/option4")}
-          >
-            Option 4
-          </Typography>
-        </Box>
-
+            {["Home", "MultiTab Opener", "Option 3", "Option 4"].map((text, index) => (
+              <Typography
+                variant="body1"
+                component="div"
+                style={{ cursor: "pointer", margin: "0 20px" }}
+                onClick={() => handleNavigation(`/${text.toLowerCase().replace(" ", "-")}`)}
+              >
+                {text}
+              </Typography>
+            ))}
+          </Box>
+        </Hidden>
         <IconButton
           edge="end"
           color="inherit"
