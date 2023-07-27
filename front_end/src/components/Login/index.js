@@ -3,7 +3,7 @@ import { Button, Box, Container, Typography, Paper } from '@mui/material';
 import { styled, keyframes } from '@mui/system';
 import { useNavigate } from "react-router-dom";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
-
+import LoadingSpinner from "../common/LoadingSpinner"; 
 
 // Styled components
 // Define keyframes for background animation
@@ -31,6 +31,7 @@ function Login() {
   const navigate = useNavigate();
   let url = useRef(null);
   let redirectUrl = useRef(null);
+  const [loading, setLoading] = useState(false)
 
   // Run this function once every time loads
   useEffect(() => {
@@ -65,6 +66,7 @@ function Login() {
      */
     // Check if user is already signed in
 
+    setLoading(true);
     let verifyResponse = await sendVerifyAPIToAuthenticationServer(jwtToken);
     if (verifyResponse === 200) {
       // User is already logged in
@@ -85,7 +87,7 @@ function Login() {
       navigate("/login");
     }
 
-    console.log("Has JWT Token");
+    setLoading(false)
   }
 
   function handleURLHasNoCode() {
@@ -110,7 +112,9 @@ function Login() {
       }
     };
 
+    setLoading(true)
     fetchCreds();
+    setLoading(false)
   }
 
   function handleURLHasCode() {
@@ -118,8 +122,8 @@ function Login() {
      * This function will be triggered if the URL has the google code as parameter
      */
     // Extract code from URL
+    setLoading(true)
     const code = extractGoogleCodeFromURL(url.current);
-
     // Send POST api call to login endpoint to exchange code for token.
     let payload = {
       code: code,
@@ -146,8 +150,13 @@ function Login() {
             console.log("Server error. Please try again later");
           }
         }
+
+        setLoading(false)
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => {
+        setLoading(false)
+        console.error("Error:", error)
+      });
   }
 
   function extractGoogleCodeFromURL(newURL) {
@@ -174,6 +183,10 @@ function Login() {
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&prompt=consent&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirectUrl.current}&response_type=code&client_id=${client_id}`;
     console.log(redirectUrl.current);
     window.location = googleAuthUrl;
+  }
+
+  if (loading){
+    return <LoadingSpinner description="Please wait ..."/>
   }
 
   return (

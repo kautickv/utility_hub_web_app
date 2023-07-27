@@ -242,7 +242,7 @@ function MultiTabOpener() {
   return (
     <>
       <Navbar />
-      {isLoading ? (<LoadingSpinner />) : (
+      {isLoading ? (<LoadingSpinner description="Loading, please wait..."/>) : (
         <>
           <Fab
             color="primary"
