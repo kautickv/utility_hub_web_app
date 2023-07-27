@@ -67,9 +67,9 @@ const Navbar = () => {
   );
 
   return (
-    <AppBar position="static" style={{ backgroundColor: theme.palette.primary.main }}>
+    <AppBar position="static" sx={{ backgroundColor: theme.palette.primary.main, marginLeft: 0, marginRight: 0, marginTop: 0 }}>
       <Toolbar>
-        <Hidden lgUp implementation="css">
+        <Hidden mdUp implementation="css">
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -83,6 +83,24 @@ const Navbar = () => {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} style={{ color: theme.palette.primary.contrastText }}>
           Password Generator
         </Typography>
+        <Hidden mdDown implementation="css">
+          <Box
+            sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}
+            style={{ color: theme.palette.primary.contrastText }}
+          >
+            {["Home", "MultiTab Opener", "Option 3", "Option 4"].map((text, index) => (
+              <Typography
+                key={index}
+                variant="body1"
+                component="div"
+                style={{ cursor: "pointer", margin: "0 20px" }}
+                onClick={() => handleNavigation(`/${text.toLowerCase().replace(" ", "-")}`)}
+              >
+                {text}
+              </Typography>
+            ))}
+          </Box>
+        </Hidden>
         <Hidden mdUp implementation="css">
           <Drawer
             container={window !== undefined ? () => window.document.body : undefined}
@@ -96,23 +114,6 @@ const Navbar = () => {
           >
             {drawer}
           </Drawer>
-        </Hidden>
-        <Hidden smDown implementation="css">
-          <Box
-            sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}
-            style={{ color: theme.palette.primary.contrastText }}
-          >
-            {["Home", "MultiTab Opener", "Option 3", "Option 4"].map((text, index) => (
-              <Typography
-                variant="body1"
-                component="div"
-                style={{ cursor: "pointer", margin: "0 20px" }}
-                onClick={() => handleNavigation(`/${text.toLowerCase().replace(" ", "-")}`)}
-              >
-                {text}
-              </Typography>
-            ))}
-          </Box>
         </Hidden>
         <IconButton
           edge="end"
