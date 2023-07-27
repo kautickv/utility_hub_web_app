@@ -31,6 +31,7 @@ def handleGetMultitab(event):
         compressed_config_json = configTableManager.get_user_data(user_details['email'])
         if compressed_config_json == None:
             return buildResponse(404, "No configuration found")
+        
         config = decompress_json(compressed_config_json)
 
         return buildResponse(200, json.dumps(config))

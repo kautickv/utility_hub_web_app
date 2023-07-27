@@ -28,7 +28,6 @@ const StyledCard = styled(Card)({
   maxWidth: 345,
   "& .MuiCardContent-root": {
     "& .MuiTypography-root": {
-      // ⚠️ object-fit is not supported by IE11.
       objectFit: "cover",
     },
   },
@@ -44,9 +43,8 @@ function Tile(props) {
   const [newUrl, setNewUrl] = useState({ urlTitle: "", url: "" });
 
   useEffect(() => {
-    console.log("Use effect fired");
-    //console.log(urls)
-  }, [urls]);
+    setUrls(props.urls);
+  }, [props.urls]);
 
   function handleConfigureOpen() {
     setConfigureOpen(true);
