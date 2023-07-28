@@ -5,8 +5,6 @@ async function sendGETToMultitabBackend(jwtToken) {
           1. JWT Token as string
       OUTPUT: returns the response. If error, returns 500 error
       */
-  
-    console.log("Bearer " + jwtToken?.trim() ?? "")
     try {
       let response = await fetch(
         `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/multitab`,
@@ -20,7 +18,6 @@ async function sendGETToMultitabBackend(jwtToken) {
       );
     
       if (!response.ok) {
-        console.log('Response was not OK');
         throw new Error('Error fetching config from backend');
       }
       const responseBody = await response.json();
@@ -40,8 +37,6 @@ async function sendPostToMultitabBackend(jwtToken, config) {
         2. The configuration as a JSON Obj
     OUTPUT: returns the status code of the response. If error, returns 500 error
     */
-
-  console.log(JSON.stringify(config))
   try {
     let response = await fetch(
       `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/multitab`,

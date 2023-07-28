@@ -84,10 +84,6 @@ function MultiTabOpener() {
     verifyIfUserLoggedIn();
   }, [navigate]);
 
-  useEffect(() => {
-    console.log(tilesData);
-  }, [tilesData]);
-
   async function handleDeleteTile(index) {
     /**
      * PURPOSE: This function will a specific tile in the global configuration
@@ -236,7 +232,7 @@ function MultiTabOpener() {
     handleCloseDialog()
 
     // Save configuration
-    // postNewConfigToBackend(copy)
+     postNewConfigToBackend(copy)
   }
 
   return (
