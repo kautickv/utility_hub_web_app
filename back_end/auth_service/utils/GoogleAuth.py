@@ -139,6 +139,8 @@ class GoogleAuth:
         try:
             # Decode token
             decoded_jwt_token = decode_jwt_token(token)
+            if (decode_jwt_token == 401):
+                return False  # Already logged out
             self.__signInTableDb.update_user_data(decoded_jwt_token["email"], login_status=0, last_logout=str(datetime.utcnow()))
             return True
         except Exception as e:
