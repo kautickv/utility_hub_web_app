@@ -13,7 +13,9 @@ resource "aws_api_gateway_deployment" "password_generator_api_gateway_deployment
       aws_api_gateway_integration_response.options_home_integration_response.id,
       aws_api_gateway_resource.password_generator_api_gateway_multitab_resource.id,
       aws_api_gateway_method.post_multitab_method.id,
+      aws_api_gateway_method_response.post_multitab_method_response_200,id,
       aws_api_gateway_integration.post_multitab_integration.id,
+      aws_api_gateway_integration_response.post_multitab_integration_response.id,
       aws_lambda_permission.post_multitab_lambda_permission.id,
       aws_api_gateway_method.options_multitab_method.id,
       aws_api_gateway_method_response.options_multitab_method_response_200.id,
@@ -36,7 +38,7 @@ resource "aws_api_gateway_deployment" "password_generator_api_gateway_deployment
       aws_api_gateway_resource.password_generator_api_gateway_logout_resource.id,
       aws_api_gateway_method.post_logout_method.id,
       aws_api_gateway_integration.post_logout_integration.id,
-      aws_api_gateway_rest_api.password_generator_api_gateway.root_resource_id,  # Include root resource ID
+      aws_api_gateway_rest_api.password_generator_api_gateway.root_resource_id,
       aws_api_gateway_method.options_auth_method.id,
       aws_api_gateway_method_response.options_auth_method_response_200.id,
       aws_api_gateway_integration.options_auth_integration.id,
