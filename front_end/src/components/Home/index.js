@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 import "./home.css";
@@ -8,6 +8,7 @@ import Navbar from "../common/Navbar";
 
 function Home() {
   const navigate = useNavigate();
+  const [userFirstName, setUserFirstName] = useState("")
 
   useEffect(() => {
     // Check if JWT token exists
@@ -19,10 +20,13 @@ function Home() {
           jwtToken
         );
 
-        if (verifyResponse === 200) {
+        if (verifyResponse.status === 200) {
           // User is already logged in
+          let userInfo = await verifyResponse.json();
+          let userName = userInfo["token_details"]["username"];
+          setUserFirstName(userName.split(" ")[0]) // Get the first Name
           // Do nothing
-        } else if (verifyResponse === 401) {
+        } else if (verifyResponse.status === 401) {
           // User JWT token is not valid or expired
           localStorage.removeItem("JWT_Token");
           navigate("/login");
@@ -60,7 +64,7 @@ function Home() {
   return (
     <>
       <Navbar />
-      Welcome to the Home Page
+      Hello {userFirstName}, Welcome to the Home Page
     </>
   );
 }

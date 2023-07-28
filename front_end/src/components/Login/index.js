@@ -68,11 +68,11 @@ function Login() {
 
     setLoading(true);
     let verifyResponse = await sendVerifyAPIToAuthenticationServer(jwtToken);
-    if (verifyResponse === 200) {
+    if (verifyResponse.status === 200) {
       // User is already logged in
       // Redirect user to main application
       navigate("/home");
-    } else if (verifyResponse === 401) {
+    } else if (verifyResponse.status === 401) {
       // User JWT token is not valid
       localStorage.removeItem("JWT_Token");
       navigate("/login");

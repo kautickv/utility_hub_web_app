@@ -17,7 +17,7 @@ async function sendVerifyAPIToAuthenticationServer(jwtToken) {
       }
     );
 
-    return response.status;
+    return response;
   } catch (err) {
     console.log(`An error occurred sending verify API. ${err}`);
     return 500;

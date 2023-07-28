@@ -50,13 +50,13 @@ function MultiTabOpener() {
             jwtToken
           );
 
-          if (verifyResponse === 200) {
+          if (verifyResponse.status === 200) {
             // User is already logged in
             // Fetch config data from backend
             let response = await sendGETToMultitabBackend(jwtToken);
             setTilesData(JSON.parse(JSON.parse(response)));
             setIsLoading(false);
-          } else if (verifyResponse === 401) {
+          } else if (verifyResponse.status === 401) {
             // User JWT token is not valid or expired
             localStorage.removeItem("JWT_Token");
             setIsLoading(false);
