@@ -1,6 +1,7 @@
 import React, { useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
+import LoadingSpinner from "../common/LoadingSpinner"; 
 import "./home.css";
 
 // Import components
@@ -9,6 +10,7 @@ import Navbar from "../common/Navbar";
 function Home() {
   const navigate = useNavigate();
   const [userFirstName, setUserFirstName] = useState("")
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Check if JWT token exists
@@ -25,7 +27,9 @@ function Home() {
           let userInfo = await verifyResponse.json();
           let userName = userInfo["token_details"]["username"];
           setUserFirstName(userName.split(" ")[0]) // Get the first Name
-          // Do nothing
+
+          setIsLoading(false)
+
         } else if (verifyResponse.status === 401) {
           // User JWT token is not valid or expired
           localStorage.removeItem("JWT_Token");
@@ -43,8 +47,9 @@ function Home() {
       }
     };
 
+    setIsLoading(true)
     verifyIfUserLoggedIn();
-  });
+  }, [navigate]);
 
   function checkLocalStorageForJWTToken() {
     /**
@@ -59,6 +64,9 @@ function Home() {
       // No token found, return empty string
       return "";
     }
+  }
+  if (isLoading){
+    return <LoadingSpinner description="Please wait ..."/>
   }
 
   return (
