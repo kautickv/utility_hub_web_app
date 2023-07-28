@@ -30,7 +30,7 @@ def handleGetMultitab(event):
         configTableManager = BookmarksTableManager(os.getenv('BOOKMARKS_TABLE_NAME'))
         compressed_config_json = configTableManager.get_user_data(user_details['email'])
         if compressed_config_json == None:
-            return buildResponse(404, "No configuration found")
+            return buildResponse(404, json.dumps({"config_json": []})) # return empty array
         
         config = decompress_json(compressed_config_json)
 
