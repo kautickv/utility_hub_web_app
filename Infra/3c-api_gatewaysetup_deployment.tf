@@ -13,7 +13,7 @@ resource "aws_api_gateway_deployment" "password_generator_api_gateway_deployment
       aws_api_gateway_integration_response.options_home_integration_response.id,
       aws_api_gateway_resource.password_generator_api_gateway_multitab_resource.id,
       aws_api_gateway_method.post_multitab_method.id,
-      aws_api_gateway_method_response.post_multitab_method_response_200,id,
+      aws_api_gateway_method_response.post_multitab_method_response_200.id,
       aws_api_gateway_integration.post_multitab_integration.id,
       aws_api_gateway_integration_response.post_multitab_integration_response.id,
       aws_lambda_permission.post_multitab_lambda_permission.id,
