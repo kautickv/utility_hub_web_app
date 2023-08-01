@@ -347,7 +347,10 @@ resource "aws_api_gateway_integration_response" "options_verify_integration_resp
     "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
-  depends_on = [aws_api_gateway_method_response.options_verify_method_response_200]
+  depends_on = [
+    aws_api_gateway_method_response.options_verify_method_response_200,
+    aws_api_gateway_integration.options_verify_integration
+    ]
 }
 
 # Add a resource called "login" inside the "auth" resource
@@ -453,7 +456,10 @@ resource "aws_api_gateway_integration_response" "options_login_integration_respo
     "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
-  depends_on = [aws_api_gateway_method_response.options_login_method_response_200]
+  depends_on = [
+    aws_api_gateway_method_response.options_login_method_response_200,
+    aws_api_gateway_integration.options_login_integration
+    ]
 }
 
 # Add a resource called "logout" inside the "auth" resource
@@ -560,5 +566,8 @@ resource "aws_api_gateway_integration_response" "options_logout_integration_resp
     "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
-  depends_on = [aws_api_gateway_method_response.options_logout_method_response_200]
+  depends_on = [
+    aws_api_gateway_method_response.options_logout_method_response_200,
+    aws_api_gateway_integration.options_logout_integration
+    ]
 }
