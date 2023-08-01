@@ -5,6 +5,7 @@
 # Create .env and store in front_end folder. Contains API gateway invoke url, s3 website endpoint.
 resource "local_file" "react_env_file" {
 
+  depends_on = [aws_api_gateway_stage.password_generator_api_gateway_stage]
   filename = "../${path.module}/front_end/.env"
   content  = <<-EOF
     REACT_APP_API_GATEWAY_BASE_URL=${aws_api_gateway_stage.password_generator_api_gateway_stage.invoke_url}
@@ -17,6 +18,7 @@ resource "local_file" "react_env_file" {
 #build the react project and create the /build folder
 resource "null_resource" "install_and_build_react_dependencies" {
   
+  depends_on = [local_file.react_env_file]
   #Force this block to run every time
   triggers = {
     always_run = timestamp()
@@ -29,6 +31,7 @@ resource "null_resource" "install_and_build_react_dependencies" {
 
 resource "null_resource" "list_directory" {
   
+  depends_on = [local_file.react_env_file]
   #Force this block to run every time
   triggers = {
     always_run = timestamp()

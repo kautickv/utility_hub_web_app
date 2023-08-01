@@ -26,7 +26,7 @@ def verifyAuthStatus(jwtToken):
     client = boto3.client('lambda')
     try:
         response = client.invoke(
-            FunctionName='password-generator-backend-lambda-auth-service',
+            FunctionName='soc-portal-backend-lambda-auth-service', # This should be in environment variable
             InvocationType='RequestResponse',
             Payload=json.dumps({
                 'httpMethod': 'POST',
