@@ -50,7 +50,11 @@ resource "aws_api_gateway_integration_response" "options_multitab_integration_re
     "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
-  depends_on = [aws_api_gateway_method_response.options_multitab_method_response_200]
+  depends_on = [
+    aws_api_gateway_method_response.options_multitab_method_response_200,
+    aws_api_gateway_integration.options_multitab_integration
+
+    ]
 }
 
 # Add a POST method to "multitab" resource created above

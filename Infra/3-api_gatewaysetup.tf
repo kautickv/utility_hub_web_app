@@ -56,7 +56,10 @@ resource "aws_api_gateway_integration_response" "options_home_integration_respon
     "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
-  depends_on = [aws_api_gateway_method_response.options_home_method_response_200]
+  depends_on = [
+    aws_api_gateway_method_response.options_home_method_response_200,
+    aws_api_gateway_integration.options_home_integration
+    ]
 }
 
 # Add a GET method to "home" resource created above
@@ -152,7 +155,11 @@ resource "aws_api_gateway_integration_response" "options_auth_integration_respon
     "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
-  depends_on = [aws_api_gateway_method_response.options_auth_method_response_200]
+  depends_on = [
+    aws_api_gateway_method_response.options_auth_method_response_200,
+    aws_api_gateway_integration.options_auth_integration
+
+    ]
 }
 
 # Create a resource called "creds" inside the "auth" resource
@@ -241,7 +248,11 @@ resource "aws_api_gateway_integration_response" "options_creds_integration_respo
     "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
-  depends_on = [aws_api_gateway_method_response.options_creds_method_response_200]
+  depends_on = [
+    aws_api_gateway_method_response.options_creds_method_response_200,
+    aws_api_gateway_integration.options_creds_integration
+
+    ]
 }
 
 # Add a resource called "verify" inside the "auth" resource
