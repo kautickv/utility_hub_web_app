@@ -81,3 +81,17 @@ class SlackManager:
         except Exception as e:
             print("Failed to get Slack Bot token")
             raise Exception ("Error reading Slack Bot token from SSM Parameter Store")
+
+
+    def getChannelName (self, channelId):
+        # This function will return the channel name given the channel id
+
+        try:
+            # Get the channel information
+            response = self.client.conversations_info(
+                channel=channelId
+            )
+
+            return response['channel']['name']
+        except Exception as e:
+            raise Exception(f"Error getting channel name for ${channelId}: ${e}")

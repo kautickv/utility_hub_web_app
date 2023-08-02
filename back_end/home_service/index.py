@@ -8,7 +8,7 @@ def lambda_handler(event, context):
     http_method = event['httpMethod']
     path = event['path']
     # Getting data from [slack, jira]
-    getDataFrom = event['queryStringParameters']['from'].trim()
+    getDataFrom = event['queryStringParameters']['from'].strip()
     try:
         # Extract auth code
         code = getAuthorizationCode(event)
