@@ -85,7 +85,8 @@ resource "aws_lambda_function" "multitab-backend-lambda-function" {
   environment {
     variables = {
       "MESSAGE" = "Terraform sends its regards",
-      "BOOKMARKS_TABLE_NAME" = aws_dynamodb_table.multitab_bookmarks_table.name
+      "BOOKMARKS_TABLE_NAME" = aws_dynamodb_table.multitab_bookmarks_table.name,
+      "AUTH_SERVICE_LAMBDA_NAME" = aws_lambda_function.multitab-backend-lambda-function.function_name
     }
   }
 

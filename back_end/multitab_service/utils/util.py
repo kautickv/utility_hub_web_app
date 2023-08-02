@@ -2,6 +2,7 @@ import json
 import boto3
 import gzip
 import base64
+import os
 
 def buildResponse(code, message, jwt_token=""):
     
@@ -26,7 +27,7 @@ def verifyAuthStatus(jwtToken):
     client = boto3.client('lambda')
     try:
         response = client.invoke(
-            FunctionName='soc-portal-backend-lambda-auth-service', # This should be in environment variable
+            FunctionName=os.environ['AUTH_SERVICE_LAMBDA_NAME'],
             InvocationType='RequestResponse',
             Payload=json.dumps({
                 'httpMethod': 'POST',
