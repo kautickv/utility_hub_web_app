@@ -1,0 +1,6 @@
+{
+    "ssm_parameter_paths_slack_bot_token": {
+      "bot_user_oauth_token": "/password-generator/slack-bot-oauth-token"
+    }
+}
+  
