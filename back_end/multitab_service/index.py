@@ -1,5 +1,4 @@
 from utils.util import buildResponse
-from utils.util import verifyAuthStatus
 from handlers.handlePostMultitab import handlePostMultitab
 from handlers.handleGetMultitab import handleGetMultitab
 
