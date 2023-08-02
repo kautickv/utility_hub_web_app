@@ -101,6 +101,15 @@ resource "aws_api_gateway_method_response" "get_creds_method_response_200" {
   depends_on = [aws_api_gateway_method.get_creds_method]
 }
 
+# Add permissions for API Gateway to invoke lambda
+resource "aws_lambda_permission" "auth_lambda_permission" {
+  statement_id    = "AllowAuthBackendLambdaInvoke"
+  action          = "lambda:InvokeFunction"
+  function_name   = aws_lambda_function.password-generator-backend-lambda-function.function_name
+  principal       = "apigateway.amazonaws.com"
+  source_arn      = "${aws_api_gateway_rest_api.password_generator_api_gateway.execution_arn}/*"
+}
+
 # Integrate the GET method for "creds" with our backend lambda function created earlier
 resource "aws_api_gateway_integration" "get_creds_integration" {
   http_method             = aws_api_gateway_method.get_creds_method.http_method
