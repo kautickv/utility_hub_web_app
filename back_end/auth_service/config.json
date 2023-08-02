@@ -7,5 +7,5 @@
     "ssm_parameter_path_jwt_token_secret": {
       "secret_key": "/password-generator/jwt-secret-key"
     }
-  }
+}
   
