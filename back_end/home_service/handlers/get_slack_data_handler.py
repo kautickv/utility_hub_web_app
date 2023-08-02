@@ -25,7 +25,7 @@ def get_slack_data_handler(numberOfDays, user_details):
         for channel in channels:
             messages = slack_client.getMessageInChannelForTimeRange("C05KDHVA9E0",start_time,end_time)
             all_messages[slack_client.getChannelName(channel)] = messages
-            
+        
         return buildResponse(200, json.dumps(all_messages))
     
     except Exception as e:
