@@ -62,6 +62,12 @@ def decode_jwt_token(token):
         decoded_token = jwt.decode(token, secret_key, algorithms=["HS256"])
 
         return decoded_token
+    except jwt.ExpiredSignatureError:
+        print("Error: Token has expired")
+        return 401   # Return 401 to indicate that token expired.
+    except jwt.InvalidTokenError:
+        print("Token is invalid.")
+        return 401
     except Exception as e:
         print(f"Error Decoding token: {e}")
         raise Exception ("Error decoding JWT token")
@@ -77,6 +83,8 @@ def verifyUserLoginStatus(jwtToken):
     # Verify JWT Token
     try:
         decoded_token = decode_jwt_token(jwtToken)
+        if(decoded_token == 401):
+            return False
         #Access User Information
         userEmail = decoded_token["email"]
         # Check if JWT token is valid. If not, return false

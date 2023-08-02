@@ -1,8 +1,29 @@
 import React, { useState, useEffect, useRef } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./login.css";
+import { Button, Box, Container, Typography, Paper } from '@mui/material';
+import { styled, keyframes } from '@mui/system';
 import { useNavigate } from "react-router-dom";
-import { sendVerifyAPIToAuthenticationServer } from '../../utils/util';
+import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
+import LoadingSpinner from "../common/LoadingSpinner"; 
+
+// Styled components
+// Define keyframes for background animation
+const gradientAnimation = keyframes`
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+`;
+
+// Create a Styled Container component
+const StyledContainer = styled(Container)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '100vh',
+  // Add gradient background
+  background: `linear-gradient(45deg, ${theme.palette.primary.main} 10%, ${theme.palette.secondary.main} 90%)`,
+  backgroundSize: '200% 200%',
+  animation: `${gradientAnimation} 3s ease infinite`,
+}));
 
 
 function Login() {
@@ -10,6 +31,7 @@ function Login() {
   const navigate = useNavigate();
   let url = useRef(null);
   let redirectUrl = useRef(null);
+  const [loading, setLoading] = useState(false)
 
   // Run this function once every time loads
   useEffect(() => {
@@ -44,28 +66,28 @@ function Login() {
      */
     // Check if user is already signed in
 
+    setLoading(true);
     let verifyResponse = await sendVerifyAPIToAuthenticationServer(jwtToken);
-    if (verifyResponse === 200){
-        // User is already logged in
-        // Redirect user to main application
-        navigate("/home");
+    if (verifyResponse.status === 200) {
+      // User is already logged in
+      // Redirect user to main application
+      navigate("/home");
+    } else if (verifyResponse.status === 401) {
+      // User JWT token is not valid
+      localStorage.removeItem("JWT_Token");
+      navigate("/login");
+    } else {
+      // An error occurred while verifying
+      console.log("An error occurred while verifying user credentials");
+      alert(
+        "An error occurred while verifying your login credentials. Please login again."
+      );
+      // User JWT token is not valid
+      localStorage.removeItem("JWT_Token");
+      navigate("/login");
     }
-    else if (verifyResponse === 401){
-        // User JWT token is not valid
-        localStorage.removeItem('JWT_Token');
-        navigate("/login");
-    }else{
-        // An error occurred while verifying
-        console.log("An error occurred while verifying user credentials");
-        alert("An error occurred while verifying your login credentials. Please login again.")
-        // User JWT token is not valid
-        localStorage.removeItem('JWT_Token');
-        navigate("/login");
-    }
-    
-    
 
-    console.log("Has JWT Token");
+    setLoading(false)
   }
 
   function handleURLHasNoCode() {
@@ -74,7 +96,6 @@ function Login() {
      * locally. Will ask user to login again.
      */
 
-    console.log("Code not found in URL");
     const fetchCreds = async () => {
       try {
         const response = await fetch(
@@ -91,7 +112,9 @@ function Login() {
       }
     };
 
+    setLoading(true)
     fetchCreds();
+    setLoading(false)
   }
 
   function handleURLHasCode() {
@@ -99,8 +122,8 @@ function Login() {
      * This function will be triggered if the URL has the google code as parameter
      */
     // Extract code from URL
+    setLoading(true)
     const code = extractGoogleCodeFromURL(url.current);
-
     // Send POST api call to login endpoint to exchange code for token.
     let payload = {
       code: code,
@@ -127,8 +150,13 @@ function Login() {
             console.log("Server error. Please try again later");
           }
         }
+
+        setLoading(false)
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => {
+        setLoading(false)
+        console.error("Error:", error)
+      });
   }
 
   function extractGoogleCodeFromURL(newURL) {
@@ -157,21 +185,50 @@ function Login() {
     window.location = googleAuthUrl;
   }
 
+  if (loading){
+    return <LoadingSpinner description="Please wait ..."/>
+  }
+
   return (
-    <div className="App" style={{ backgroundColor: "#f2f2f2" }}>
-      <header className="App-header orange-header text-white text-center p-5">
-        <h1>Password Generator</h1>
-        <p>Welcome to your password generator App!</p>
-      </header>
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: "100vh" }}
+    <StyledContainer component="main" maxWidth="xl">
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        minHeight="100vh"
+        sx={{
+          '& .MuiPaper-root': {
+            padding: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          },
+          '& .MuiButton-root': {
+            margin: '24px 0 16px',
+            padding: '12px 24px',
+          },
+        }}
       >
-        <button onClick={googleLogin} className="btn btn-custom btn-xl">
-          Login
-        </button>
-      </div>
-    </div>
+        <Paper>
+          <Typography component="h1" variant="h5" align="center">
+            Password Generator
+          </Typography>
+          <Typography component="p" align="center">
+            Welcome to your password generator App!
+          </Typography>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={googleLogin}
+          >
+            Login
+          </Button>
+        </Paper>
+      </Box>
+    </StyledContainer>
   );
 }
 

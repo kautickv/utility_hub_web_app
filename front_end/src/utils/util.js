@@ -12,12 +12,12 @@ async function sendVerifyAPIToAuthenticationServer(jwtToken) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + jwtToken?.trim() ?? "",
+          "Authorization": "Bearer " + jwtToken?.trim() ?? "",
         },
       }
     );
 
-    return response.status;
+    return response;
   } catch (err) {
     console.log(`An error occurred sending verify API. ${err}`);
     return 500;
@@ -39,7 +39,7 @@ async function logout(jwtToken) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + jwtToken?.trim() ?? "",
+          "Authorization": "Bearer " + jwtToken?.trim() ?? "",
         },
       }
     );
@@ -51,4 +51,4 @@ async function logout(jwtToken) {
   }
 }
 
-export { sendVerifyAPIToAuthenticationServer, logout};
+export { sendVerifyAPIToAuthenticationServer, logout };
