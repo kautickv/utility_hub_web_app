@@ -82,7 +82,7 @@ resource "aws_api_gateway_method_response" "get_home_method_response_200" {
 resource "aws_lambda_permission" "lambda_permission" {
   statement_id    = "AllowBackendLambdaInvoke"
   action          = "lambda:InvokeFunction"
-  function_name   = aws_lambda_function.password-generator-backend-lambda-function.function_name
+  function_name   = aws_lambda_function.home-backend-lambda-function.function_name
   principal       = "apigateway.amazonaws.com"
   source_arn      = "${aws_api_gateway_rest_api.password_generator_api_gateway.execution_arn}/*"
 }
@@ -94,5 +94,5 @@ resource "aws_api_gateway_integration" "get_home_integration" {
   rest_api_id             = aws_api_gateway_rest_api.password_generator_api_gateway.id
   type                    = "AWS_PROXY"
   integration_http_method = "POST"
-  uri                     = aws_lambda_function.password-generator-backend-lambda-function.invoke_arn
+  uri                     = aws_lambda_function.home-backend-lambda-function.invoke_arn
 }

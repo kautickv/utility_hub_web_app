@@ -1,5 +1,4 @@
 # Create an IAM role for Multitab lambda
-# Create an IAM role for Lambda A
 resource "aws_iam_role" "lambda_multitab_exec_role" {
   name = "${var.app_name}-lambda-multitab-exec-role"
 
@@ -25,7 +24,7 @@ resource "aws_iam_role_policy_attachment" "lambda_a_basic_execution" {
 
 # Create a custom IAM policy that gives multitab lambda function to invoke auth lambda function.
 resource "aws_iam_policy" "lambda_multitab_invoke_lambda_auth" {
-  name        = "lambdaAInvokeLambdaB"
+  name        = "lambdaMultitabInvokeLambdaAuth"
   description = "Allows Lambda multitab to invoke Lambda auth"
   policy      = jsonencode({
       "Version" : "2012-10-17",
