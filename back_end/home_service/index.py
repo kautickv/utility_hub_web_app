@@ -1,4 +1,5 @@
 from utils.util import buildResponse
+from handlers.get_home_handler import get_home_handler
 
 def lambda_handler(event, context):
     print(event)
@@ -6,7 +7,7 @@ def lambda_handler(event, context):
     path = event['path']
 
     if http_method == 'GET' and path =='/home':
-        return buildResponse(200, "OK")
+        return get_home_handler(event)
     
     else:
         return buildResponse(404, "Resource not found")
