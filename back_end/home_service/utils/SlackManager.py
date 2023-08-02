@@ -31,9 +31,9 @@ class SlackManager:
             return response["message"]["text"] == message
         
         except SlackApiError as e:
-            raise(f"Slack error while sending slack message: ${e}")
+            raise Exception (f"Slack error while sending slack message: ${e}")
         except Exception as e:
-            raise(f"Unexpected error while sending slack message: ${e}")
+            raise Exception (f"Unexpected error while sending slack message: ${e}")
         
 
     def getMessageInChannelForTimeRange(self, channelId, startTime, endTime):

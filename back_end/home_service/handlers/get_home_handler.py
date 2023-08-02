@@ -2,6 +2,8 @@ from utils.util import buildResponse
 from utils.util import verifyAuthStatus
 from utils.util import getAuthorizationCode
 from utils.SlackManager import SlackManager
+import json
+from datetime import datetime, timedelta
 
 def get_home_handler(event):
 
@@ -20,9 +22,14 @@ def get_home_handler(event):
             
         ## At this point, user is authenticated. Initialise slack Manager
         slack_client = SlackManager()
-        slack_client.postMessageInChannel("C05KDHVA9E0", "Hello From lambda")
+        #slack_client.postMessageInChannel("C05KDHVA9E0", "Hello From lambda")
 
-        return buildResponse(200, "OK")
+        # Reading from channel
+        start_time = datetime.now() - timedelta(days=7)
+        end_time = datetime.now()
+        messages = slack_client.getMessageInChannelForTimeRange("C05KDHVA9E0",start_time,end_time)
+        print(messages)
+        return buildResponse(200, json.dumps(messages))
     
     except Exception as e:
         print(f"get_home_handler(): ${e}")
