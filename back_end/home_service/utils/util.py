@@ -2,8 +2,6 @@ import json
 import boto3
 import os
 
-
-
 def buildResponse(code, message, jwt_token=""):
     
     return{
