@@ -24,10 +24,24 @@ def get_slack_data_handler(numberOfDays, user_details):
         #Loop over channels and read messages
         for channel in channels:
             messages = slack_client.getMessageInChannelForTimeRange(channel,start_time,end_time)
-            all_messages[slack_client.getChannelName(channel)] = messages
+            message = extractInfoFromSlackResponse(messages)
+            all_messages[slack_client.getChannelName(channel)] = message
         
         return buildResponse(200, json.dumps(all_messages))
     
     except Exception as e:
         print(f"get_slack_data_handler(): ${e}")
         return buildResponse(500,"An error occurred. Please try again later")
+
+
+def extractInfoFromSlackResponse(message):
+    ##
+    # PURPOSE: This function will take in the response from slack and extract
+    #          only the useful information to return.
+    # INPUT: The json returned from slack
+    # OUTPUT: A streamline JSON object
+    newArray = []
+
+    for msg in message:
+        print(msg)
+    print (message)
