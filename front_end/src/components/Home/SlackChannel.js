@@ -12,35 +12,48 @@ function SlackChannel({ channel, messages }) {
 
     const getDayHour = (timestamp) => {
         const date = new Date(timestamp * 1000);
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-        const hour = date.getHours();
-        return `${year}-${month}-${day} ${hour}:00`;
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        return date.getTime();
+    }
+
+    const getInitialData = () => {
+        const now = Date.now();
+        const data = [];
+        for (let i = 0; i < 48; i++) {
+            data.unshift({
+                name: new Date(now - i * 60 * 60 * 1000).toLocaleString('en-US', { timeZone: 'America/Chicago' }),
+                count: 0
+            });
+        }
+        return data;
     }
 
     const aggregateData = (messages) => {
-        let hourlyData = {};
+        const data = getInitialData();
         messages.forEach(message => {
             const dayHour = getDayHour(message.ts);
-            if (!hourlyData[dayHour]) {
-                hourlyData[dayHour] = 1;
-            } else {
-                hourlyData[dayHour]++;
-            }
+            data.forEach(item => {
+                const start = new Date(item.name).getTime();
+                const end = start + 60 * 60 * 1000; // Add one hour to the start time
+                if (dayHour >= start && dayHour < end) {
+                    item.count++;
+                }
+            });
         });
-        return Object.keys(hourlyData).map(dayHour => ({
-            name: dayHour,
-            count: hourlyData[dayHour]
-        }));
+        console.log(data)
+        return data;
     };
 
-    const data = aggregateData(messages);
+    const twoDaysAgo = Date.now() - 2 * 24 * 60 * 60 * 1000;
+    const recentMessages = messages.filter(({ ts }) => ts * 1000 >= twoDaysAgo);
+    const data = aggregateData(recentMessages);
 
     return (
         <Box sx={{ mt: 2, mb: 2 }} onClick={handleClick}>
             <Typography variant="h6">{channel}</Typography>
-            <Typography variant="body1">Number of messages: {messages.length}</Typography>
+            <Typography variant="body1">Number of messages: {recentMessages.length}</Typography>
             {showGraph && (
                 <BarChart width={500} height={300} data={data}>
                     <Bar dataKey="count" fill="#8884d8" activeOpacity={0} />

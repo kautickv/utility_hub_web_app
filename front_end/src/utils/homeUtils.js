@@ -6,10 +6,11 @@ async function getSlackData(jwtToken){
      * INPUT: JWT token for authentication
      * OUTPUT: A json object containing all the slack information for each channels.
      */
-
+    let numberOfDays = 2;
+    let fromApp = "slack"
     try {
         let response = await fetch(
-          `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/home?from=slack&number_days=7`,
+          `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/home?from=${fromApp}&number_days=${numberOfDays}`,
           {
             method: "GET",
             headers: {
