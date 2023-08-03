@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import LinearProgress from "@mui/material/LinearProgress";
-import SlackChannel from './SlackChannel';
+import Divider from "@mui/material/Divider";
+
+// Import components
+import SlackChannel from "./SlackChannel";
 // Import scripts
 import {
   getSlackData,
-  checkLocalStorageForJWTToken
+  checkLocalStorageForJWTToken,
 } from "../../utils/homeUtils";
 
 function SlackMetrics() {
@@ -22,12 +25,12 @@ function SlackMetrics() {
         let jwtToken = checkLocalStorageForJWTToken();
         if (jwtToken !== "") {
           let response = await getSlackData(jwtToken);
-          response = JSON.parse(response)
-          for (let key in response) {
-            for (let msg in response[key]) {
-                console.log(response[key][msg]['text'])
-            }
-          }
+          response = JSON.parse(response);
+          //for (let key in response) {
+           // for (let msg in response[key]) {
+             // console.log(response[key][msg]["text"]);
+           // }
+          //}
           setSlackData(response);
         } else {
           // User credentials not valid
@@ -59,11 +62,12 @@ function SlackMetrics() {
       <Typography variant="h6" gutterBottom>
         Slack Metrics
       </Typography>
-      
-      {Object.entries(slackData).map(([channel, messages]) => (
-        <SlackChannel key={channel} channel={channel} messages={messages} />
+      {Object.entries(slackData).map(([channel, messages], index, arr) => (
+        <React.Fragment key={channel}>
+          <SlackChannel channel={channel} messages={messages} />
+          {index !== arr.length - 1 && <Divider sx={{ my: 2 }} />} 
+        </React.Fragment>
       ))}
-      
     </Box>
   );
 }
