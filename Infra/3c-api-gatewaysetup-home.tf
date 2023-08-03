@@ -79,7 +79,7 @@ resource "aws_api_gateway_method_response" "get_home_method_response_200" {
 }
 
 # Add permissions for API Gateway to invoke lambda
-resource "aws_lambda_permission" "lambda_permission" {
+resource "aws_lambda_permission" "home_lambda_permission" {
   statement_id    = "AllowBackendLambdaInvoke"
   action          = "lambda:InvokeFunction"
   function_name   = aws_lambda_function.home-backend-lambda-function.function_name
