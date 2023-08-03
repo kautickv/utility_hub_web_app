@@ -41,7 +41,10 @@ def extractInfoFromSlackResponse(message):
     # INPUT: The json returned from slack
     # OUTPUT: A streamline JSON object
     newArray = []
-
     for msg in message:
-        print(msg)
-    print (message)
+        msg_type = msg.get('type')
+        msg_text = msg.get('text')
+        msg_ts = msg.get('ts')
+        newArray.append({"type": msg_type, "text": msg_text, "ts": msg_ts})
+    
+    return newArray
