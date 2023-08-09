@@ -31,19 +31,4 @@ async function getSlackData(jwtToken){
       }
 }
 
-function checkLocalStorageForJWTToken() {
-    /**
-     * This function checks if a JWT token exists in local storage.
-     * If yes, it returns the token.
-     * If it does not exist, returns an empty string
-     */
-    const token = localStorage.getItem("JWT_Token");
-    if (token) {
-      return token;
-    } else {
-      // No token found, return empty string
-      return "";
-    }
-  }
-
-export {getSlackData, checkLocalStorageForJWTToken};
+export {getSlackData};
