@@ -97,7 +97,6 @@ resource "aws_api_gateway_integration" "get_trading_integration" {
   uri                     = aws_lambda_function.trading-backend-lambda-function.invoke_arn
 }
 
-//------------------------------------------------------------------------------
 # Add a POST method to "trading" resource created above
 resource "aws_api_gateway_method" "post_trading_method" {
   authorization = "NONE"
