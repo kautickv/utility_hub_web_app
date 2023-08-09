@@ -1,15 +1,14 @@
 >:construction: **STATUS: This project is currently under development.** :construction:
-# AWS Serverless Password Generator
+# AWS Serverless Utility Hub: My Tech Toolkit
 
-This project is a simple web application for generating secure passwords, designed to demonstrate a complete web app development process including front-end, back-end, architecture, and deployment pipeline. It leverages a serverless architecture on AWS and includes features like password generation and storage.
+Hey there! Welcome to the Utility Hub. I've put together some cool software tools that I find super useful. Made this for fun, and thought I'd share with friends and family. Feel free to check it out and let me know what you think. Enjoy!
 
 Access the live project [here](https://pass.vaisnavsingkautick.com)
 
 ## Features
 
-- Generate random, secure passwords.
-- Store generated passwords securely in DynamoDB.
-- Interface to retrieve and manage stored passwords.
+- Password generator
+- Dynamic Link Management tool
 
 ## Technologies Used
 - Frontend: React.js, hosted on AWS S3 and served using AWS CloudFront.

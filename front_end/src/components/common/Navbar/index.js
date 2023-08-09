@@ -57,7 +57,7 @@ const Navbar = () => {
   const drawer = (
     <div>
       <List>
-        {["Home", "MultiTab Opener", "Option 3", "Option 4"].map((text, index) => (
+        {["Home", "Link Manager", "Option 3", "Option 4"].map((text, index) => (
           <ListItem button key={text} onClick={() => handleNavigation(`/${text.toLowerCase().replace(" ", "-")}`)}>
             <ListItemText primary={text} />
           </ListItem>
@@ -81,14 +81,14 @@ const Navbar = () => {
           </IconButton>
         </Hidden>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} style={{ color: theme.palette.primary.contrastText }}>
-          Password Generator
+          Utility Hub
         </Typography>
         <Hidden mdDown implementation="css">
           <Box
             sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}
             style={{ color: theme.palette.primary.contrastText }}
           >
-            {["Home", "MultiTab Opener", "Option 3", "Option 4"].map((text, index) => (
+            {["Home", "Link Manager", "Option 3", "Option 4"].map((text, index) => (
               <Typography
                 key={index}
                 variant="body1"
