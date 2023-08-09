@@ -77,7 +77,7 @@ resource "aws_lambda_function" "trading-backend-lambda-function" {
 
   runtime = "python3.9"
   handler = "index.lambda_handler"
-  source_code_hash = data.archive_file.trading_lambda_permission-backend-lambda-function-zip.output_base64sha256
+  source_code_hash = data.archive_file.trading-backend-lambda-function-zip.output_base64sha256
   role = aws_iam_role.lambda_trading_exec_role.arn
   layers = [aws_lambda_layer_version.layer.arn]
   environment {
