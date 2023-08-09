@@ -1,15 +1,23 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import Stack from "@mui/material/Stack";
+// Import scripts
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
-import LoadingSpinner from "../common/LoadingSpinner"; 
-import "./home.css";
+import {checkLocalStorageForJWTToken} from "../../utils/homeUtils"
 
 // Import components
+import LoadingSpinner from "../common/LoadingSpinner";
 import Navbar from "../common/Navbar";
+import SlackMetrics from "./SlackMetrics";
 
 function Home() {
   const navigate = useNavigate();
-  const [userFirstName, setUserFirstName] = useState("")
+  const [userFirstName, setUserFirstName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -26,10 +34,9 @@ function Home() {
           // User is already logged in
           let userInfo = await verifyResponse.json();
           let userName = userInfo["token_details"]["username"];
-          setUserFirstName(userName.split(" ")[0]) // Get the first Name
+          setUserFirstName(userName.split(" ")[0]); // Get the first Name
 
-          setIsLoading(false)
-
+          setIsLoading(false);
         } else if (verifyResponse.status === 401) {
           // User JWT token is not valid or expired
           localStorage.removeItem("JWT_Token");
@@ -47,32 +54,48 @@ function Home() {
       }
     };
 
-    setIsLoading(true)
+    setIsLoading(true);
     verifyIfUserLoggedIn();
   }, [navigate]);
 
-  function checkLocalStorageForJWTToken() {
-    /**
-     * This function checks if a JWT token exists in local storage.
-     * If yes, it returns the token.
-     * If it does not exist, returns an empty string
-     */
-    const token = localStorage.getItem("JWT_Token");
-    if (token) {
-      return token;
-    } else {
-      // No token found, return empty string
-      return "";
-    }
-  }
-  if (isLoading){
-    return <LoadingSpinner description="Please wait ..."/>
+
+  if (isLoading) {
+    return <LoadingSpinner description="Please wait ..." />;
   }
 
   return (
     <>
       <Navbar />
-      Hello {userFirstName}, Welcome to the Home Page
+      <Box sx={{ flexGrow: 1, m: 2 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Paper elevation={2} sx={{ padding: 1, marginBottom: 2 }}>
+              <Stack
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                spacing={2}
+              >
+                <Avatar sx={{ width: 30, height: 30, fontSize: "1rem" }}>
+                  {userFirstName.charAt(0)}
+                </Avatar>
+                <Typography variant="h6" component="div">
+                  Hello, {userFirstName}
+                </Typography>
+              </Stack>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Paper>{/* Insert Jira tickets component here */}</Paper>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Paper>
+              <SlackMetrics />
+            </Paper>
+          </Grid>
+          {/* More grid items as needed */}
+        </Grid>
+      </Box>
     </>
   );
 }

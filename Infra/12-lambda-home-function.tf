@@ -1,6 +1,6 @@
-# Create an IAM role for Multitab lambda
-resource "aws_iam_role" "lambda_multitab_exec_role" {
-  name = "${var.app_name}-lambda-multitab-exec-role"
+# Create an IAM role for Home lambda
+resource "aws_iam_role" "lambda_home_exec_role" {
+  name = "${var.app_name}-lambda-home-exec-role"
 
   assume_role_policy = jsonencode({
    "Version" : "2012-10-17",
@@ -17,15 +17,15 @@ resource "aws_iam_role" "lambda_multitab_exec_role" {
 }
 
 # Attach the basic AWSLambdaBasicExecutionRole policy to multitab lambda role
-resource "aws_iam_role_policy_attachment" "lambda_a_basic_execution" {
-  role       = aws_iam_role.lambda_multitab_exec_role.name
+resource "aws_iam_role_policy_attachment" "lambda_home_basic_execution" {
+  role       = aws_iam_role.lambda_home_exec_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 # Create a custom IAM policy that gives multitab lambda function to invoke auth lambda function.
-resource "aws_iam_policy" "lambda_multitab_invoke_lambda_auth" {
-  name        = "lambdaMultitabInvokeLambdaAuth"
-  description = "Allows Lambda multitab to invoke Lambda auth"
+resource "aws_iam_policy" "lambda_home_invoke_lambda_auth" {
+  name        = "lambdaHomeInvokeLambdaAuth"
+  description = "Allows Lambda home to invoke Lambda auth"
   policy      = jsonencode({
       "Version" : "2012-10-17",
       "Statement" : [
@@ -35,7 +35,6 @@ resource "aws_iam_policy" "lambda_multitab_invoke_lambda_auth" {
              "dynamodb:*"
             ],
            "Resource" : [
-             "${aws_dynamodb_table.sign_in_user_table.arn}",
              "${aws_dynamodb_table.multitab_bookmarks_table.arn}"
            ]
         },
@@ -64,22 +63,22 @@ resource "aws_iam_policy" "lambda_multitab_invoke_lambda_auth" {
    })
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_multitab_invoke_lambda_auth_attachment" {
-  role       = aws_iam_role.lambda_multitab_exec_role.name
-  policy_arn = aws_iam_policy.lambda_multitab_invoke_lambda_auth.arn
+resource "aws_iam_role_policy_attachment" "lambda_home_invoke_lambda_auth_attachment" {
+  role       = aws_iam_role.lambda_home_exec_role.name
+  policy_arn = aws_iam_policy.lambda_home_invoke_lambda_auth.arn
 }
 
 # Create the lambda fucntion which will handle backend requests
-resource "aws_lambda_function" "multitab-backend-lambda-function" {
-  function_name = "${var.app_name}-backend-lambda-multitab-service"
+resource "aws_lambda_function" "home-backend-lambda-function" {
+  function_name = "${var.app_name}-backend-lambda-home-service"
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
-  s3_key    = aws_s3_object.multitab-backend-lambda-function-object.key
+  s3_key    = aws_s3_object.home-backend-lambda-function-object.key
 
   runtime = "python3.9"
   handler = "index.lambda_handler"
-  source_code_hash = data.archive_file.multitab-backend-lambda-function-zip.output_base64sha256
-  role = aws_iam_role.lambda_multitab_exec_role.arn
+  source_code_hash = data.archive_file.home-backend-lambda-function-zip.output_base64sha256
+  role = aws_iam_role.lambda_home_exec_role.arn
   layers = [aws_lambda_layer_version.layer.arn]
   environment {
     variables = {
@@ -95,26 +94,26 @@ resource "aws_lambda_function" "multitab-backend-lambda-function" {
 
 
 # Create a cloudwatch log group for lambda execution logs
-resource "aws_cloudwatch_log_group" "password-generator-multitab-lambda-function-logs" {
-  name = "/aws/lambda/${aws_lambda_function.multitab-backend-lambda-function.function_name}"
+resource "aws_cloudwatch_log_group" "home-lambda-function-logs" {
+  name = "/aws/lambda/${aws_lambda_function.home-backend-lambda-function.function_name}"
 
   retention_in_days = 14
 }
 
 # Zip the multitab backend python script
-data "archive_file" "multitab-backend-lambda-function-zip" {
+data "archive_file" "home-backend-lambda-function-zip" {
   type = "zip"
 
-  source_dir  = "../${path.module}/back_end/multitab_service"
-  output_path = "../${path.module}/multitab_service.zip"
+  source_dir  = "../${path.module}/back_end/home_service"
+  output_path = "../${path.module}/home_service.zip"
 }
 
 # Upload zip file to s3 bucket created earlier
-resource "aws_s3_object" "multitab-backend-lambda-function-object" {
+resource "aws_s3_object" "home-backend-lambda-function-object" {
   bucket = aws_s3_bucket.lambda_bucket.id
 
-  key    = "multitab_service.zip"
-  source = data.archive_file.multitab-backend-lambda-function-zip.output_path
+  key    = "home_service.zip"
+  source = data.archive_file.home-backend-lambda-function-zip.output_path
 
-  etag = filemd5(data.archive_file.multitab-backend-lambda-function-zip.output_path)
+  etag = filemd5(data.archive_file.home-backend-lambda-function-zip.output_path)
 }
