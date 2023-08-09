@@ -7,7 +7,7 @@ def lambda_handler(event, context):
     print(event)
     try:
         ## Check if user is authenticated
-        code = getAuthorizationCode()
+        code = getAuthorizationCode(event)
         if code is None:
             return buildResponse(401, "Unauthorized")
         else:
