@@ -38,7 +38,7 @@ function App() {
           <Routes>
             <Route exact path='/login' element={<Login />} />
             <Route path='/home' element={<Home />} />
-            <Route path='/multitab-opener' element={<MultiTabOpener />} />
+            <Route path='/link-manager' element={<MultiTabOpener />} />
             <Route exact path='/' element={<Home />} />
           </Routes>
         </BrowserRouter>

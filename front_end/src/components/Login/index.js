@@ -212,10 +212,10 @@ function Login() {
       >
         <Paper>
           <Typography component="h1" variant="h5" align="center">
-            Password Generator
+            Utility Hub
           </Typography>
           <Typography component="p" align="center">
-            Welcome to your password generator App!
+            Welcome to your Utility Hub!
           </Typography>
           <Button
             type="submit"
