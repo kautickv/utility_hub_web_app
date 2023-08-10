@@ -1,16 +1,35 @@
 import boto3
 import json
+import requests
 
 class CryptoDotComExchangeManager:
     
     api_access_key = None
     api_secret_key = None
-    api_base_url = "https://api.crypto.com/exchange/v1/"
+    api_base_url = "https://api.crypto.com/v2/"
 
     def __init__(self):
         keys = self._get_api_keys()
         self.api_access_key = keys[0]
         self.api_secret_key = keys[1]
+
+
+    def getCrrentPriceForTicker(self, ticker):
+        ##
+        # PURPOSE: This function will return the current usd price for the crypto ticker symbol
+        # INPUT: Ticker symbol as string. E.g BTC, ETH
+        # OUTPUT: Current price as a double
+        ##
+
+        try:
+            #send api call
+            response = requests.get(f"${self.api_base_url}public/get-ticker?instrument_name=${ticker}_USDT")
+            print(response)
+            return response
+        except Exception as e:
+            print(f"getCurrentPriceForTicker(): ${e}")
+            raise Exception("Could not get ticker price")
+
 
     def _get_api_keys():
         ##
