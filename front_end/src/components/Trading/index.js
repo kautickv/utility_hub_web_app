@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 
 // Import scripts
@@ -6,7 +6,7 @@ import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 import {checkLocalStorageForJWTToken} from "../../utils/util"
 
 // Import components
-import LoadingSpinner from "../common/LoadingSpinner";
+//import LoadingSpinner from "../common/LoadingSpinner";
 import Navbar from "../common/Navbar";
 
 
@@ -26,6 +26,7 @@ function Trading() {
         if (verifyResponse.status === 200) {
           // User is already logged in
           let userInfo = await verifyResponse.json();
+          console.log(userInfo)
 
         } else if (verifyResponse.status === 401) {
           // User JWT token is not valid or expired
