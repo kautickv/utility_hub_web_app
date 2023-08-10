@@ -13,25 +13,51 @@ class CryptoDotComExchangeManager:
         self.api_access_key = keys[0]
         self.api_secret_key = keys[1]
 
+    def getTimeSeriesDataForTicker(self, ticker, candleTimeFrame):
+        ##
+        # PURPOSE: Get the candle stick open and closing price for the specified time frame
+        # INPUT: Ticker symbol as string. E.g BTC, ETH compared to USD, and 
+        #        candleTimeFrame, e.g 5m, 1h, 1D, 1M (Only specific timeframe works. Look up docs)
+        # OUTPUT: A list of json elements containing multiple info. Look up docs.
+        # Docs: https://exchange-docs.crypto.com/spot/index.html#public-get-candlestick
+        ##
+        try:
+            #send api call
+            response = requests.get(f"{self.api_base_url}public/get-ticker?instrument_name=${ticker}_USD&timeframe={candleTimeFrame}")
+            if (response.status_code == 200):
+                ticker_data = response.text
+                ticker_data = json.loads(ticker_data)
+                return ticker_data['result']['data']
+            else:
+                raise Exception("Could not get ticker price")
+        except Exception as e:
+            print(f"getTimeSeriesDataForTicker(): ${e}")
+            raise Exception(f"Could not get ticker candlestick for {ticker}")
 
     def getCrrentPriceForTicker(self, ticker):
         ##
         # PURPOSE: This function will return the current usd price for the crypto ticker symbol
         # INPUT: Ticker symbol as string. E.g BTC, ETH
-        # OUTPUT: Current price as a double
+        # OUTPUT: A list of a couple of information for current ticker
         ##
 
         try:
             #send api call
-            response = requests.get(f"${self.api_base_url}public/get-ticker?instrument_name=${ticker}_USDT")
-            print(response)
-            return response
+            response = requests.get(f"{self.api_base_url}public/get-ticker?instrument_name=${ticker}_USD")
+            print(f"{self.api_base_url}public/get-ticker?instrument_name={ticker}_USD")
+            # View sample response here: https://exchange-docs.crypto.com/spot/index.html#public-get-ticker
+            if (response.status_code == 200):
+                ticker_data = response.text
+                ticker_data = json.loads(ticker_data)
+                return ticker_data['result']['data']
+            else:
+                raise Exception("Could not get ticker price")
         except Exception as e:
             print(f"getCurrentPriceForTicker(): ${e}")
             raise Exception("Could not get ticker price")
 
 
-    def _get_api_keys():
+    def _get_api_keys(self):
         ##
         # PURPOSE: This function will read the value of the access and secret from SSM parameter store
         # INPUT: none
