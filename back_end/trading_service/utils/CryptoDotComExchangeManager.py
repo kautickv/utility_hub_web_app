@@ -13,6 +13,21 @@ class CryptoDotComExchangeManager:
         self.api_access_key = keys[0]
         self.api_secret_key = keys[1]
 
+    def getCoinBalance(self, ticker):
+        ##
+        # PURPOSE: Get the coin balance in spot account. 
+        # INPUT: Ticker symbol as string. E.g BTC, ETH
+        # OUTPUT: A list of json elements containing multiple info about balance.
+        #         If ticker is ALL, it will return the balances for all coins in the account
+        # Docs: https://exchange-docs.crypto.com/spot/index.html#private-get-account-summary
+        ##
+
+        try:
+            print(ticker)
+        except Exception as e:
+            print(f"getCoinBalance(): {e}")
+            raise Exception (f"Could not get coin balance for {ticker}.")
+    
     def getTimeSeriesDataForTicker(self, ticker, candleTimeFrame):
         ##
         # PURPOSE: Get the candle stick open and closing price for the specified time frame
