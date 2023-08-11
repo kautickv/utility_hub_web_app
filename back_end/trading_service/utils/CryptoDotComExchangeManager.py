@@ -1,6 +1,10 @@
 import boto3
 import json
 import requests
+import hmac
+import hashlib
+import time
+
 
 class CryptoDotComExchangeManager:
     
@@ -23,7 +27,31 @@ class CryptoDotComExchangeManager:
         ##
 
         try:
-            print(ticker)
+            payload = {
+                "id":11,
+                "method":"private/get-account-summary",
+                "api_key": self.api_access_key,
+                "params":{
+                    "currency":ticker
+                },
+                "nonce": int(time.time() * 1000),
+            }
+            if(ticker == "ALL"):
+                payload["params"] = {}
+
+            # Add digital Signature
+            payload['sig'] = self._generateSignedPayload(payload)
+
+            #Send request
+            response = requests.post(self.api_base_url + payload['method'], json=payload)
+
+            if response.status_code == 200:
+                print(f"Request success")
+                print(response.json())
+            else:
+                raise Exception(f"Could not get account information. Error: {response.text}")
+            
+
         except Exception as e:
             print(f"getCoinBalance(): {e}")
             raise Exception (f"Could not get coin balance for {ticker}.")
@@ -72,6 +100,49 @@ class CryptoDotComExchangeManager:
             raise Exception("Could not get ticker price")
 
 
+    def _generateSignedPayload(self, payload):
+        ##
+        # PURPOSE: Private methods needs a digital signature. This method will generate the 
+        #          signed payload and return the signature.
+        # INPUT: Takes in the payload object
+        # OUTPUT: returns a signature of the payload
+        ##
+
+        param_str = ""
+        if "params" in payload:
+            param_str = self._params_to_str(payload['params'], 0)
+
+        payload_str = payload['method'] + str(payload['id']) + payload['api_key'] + param_str + str(payload['nonce'])
+
+        return hmac.new(
+            bytes(str(self.api_secret_key), 'utf-8'),
+            msg=bytes(payload_str, 'utf-8'),
+            digestmod=hashlib.sha256
+            ).hexdigest()
+    
+
+    def _params_to_str(self, obj, level):
+        ##
+        # PURPOSE: This function is used by _generateSignedPayload(). Converts all a dict to str
+        # INPUT: Takes in the params dict in payload
+        # OUTPUT: returns a a string representation
+        ##
+        MAX_LEVEL = 3
+        if level >= MAX_LEVEL:
+            return str(obj)
+
+        return_str = ""
+        for key in sorted(obj):
+            return_str += key
+            if obj[key] is None:
+                return_str += 'null'
+            elif isinstance(obj[key], list):
+                for subObj in obj[key]:
+                    return_str += self._params_to_str(subObj, ++level)
+            else:
+                return_str += str(obj[key])
+        return return_str
+    
     def _get_api_keys(self):
         ##
         # PURPOSE: This function will read the value of the access and secret from SSM parameter store
