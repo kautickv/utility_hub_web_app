@@ -17,6 +17,46 @@ class CryptoDotComExchangeManager:
         self.api_access_key = keys[0]
         self.api_secret_key = keys[1]
 
+    def createOrder(self, ticker, base_currency, side, type, price, quantity=None, notional=None, cliend_oid=None, time_in_force=None, exec_inst=None, trigger_price=None):
+        ##
+        # PURPOSE: Create an order to BUY or SELL ticker coin compared to base currency
+        # INPUT: Mandatory input are: ticker, base_currency, side (BUY or SELL)
+        #        type: (LIMIT, MARKET, STOP_LOSS, STOP_LIMIT, TAKE_PROFIT, TAKE_PROFIT_LIMIT)
+        # OUTPUT: A list of json elements containing order_id and client_oid
+        # Docs: (Highly reccommended)https://exchange-docs.crypto.com/spot/index.html#private-create-order
+        ##
+
+        try:
+            #construct params dict
+            params = {k: v for k, v in locals().items() if v is not None and k != "self"}
+            payload = {
+                "id":11,
+                "method":"private/get-account-summary",
+                "api_key": self.api_access_key,
+                "params": params,
+                "nonce": int(time.time() * 1000),
+            }
+
+            # Add digital Signature
+            payload['sig'] = self._generateSignedPayload(payload)
+
+            #Send request
+            response = requests.post(self.api_base_url + payload['method'], json=payload)
+
+            if response.status_code == 200:
+                print(f"Request success")
+                ticker_data = response.json()
+                if ticker_data["code"] == 0:
+                    return ticker_data["result"]
+                else:
+                    raise Exception(f"Exchange returned: {response.text}")
+            else:
+                raise Exception(f"Could not create order. Error: {response.text}")
+        except Exception as e:
+            print(f"createOrder(): {e}")
+            raise Exception (f"Could not create order for {ticker}.")
+
+
     def getCoinBalance(self, ticker):
         ##
         # PURPOSE: Get the coin balance in spot account. 
