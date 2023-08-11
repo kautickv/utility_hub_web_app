@@ -50,23 +50,21 @@ class CryptoDotComExchangeManager:
                 print(response.json())
             else:
                 raise Exception(f"Could not get account information. Error: {response.text}")
-            
-
         except Exception as e:
             print(f"getCoinBalance(): {e}")
             raise Exception (f"Could not get coin balance for {ticker}.")
     
-    def getTimeSeriesDataForTicker(self, ticker, candleTimeFrame):
+    def getTimeSeriesDataForTicker(self, ticker, base_currency, candleTimeFrame):
         ##
         # PURPOSE: Get the candle stick open and closing price for the specified time frame
-        # INPUT: Ticker symbol as string. E.g BTC, ETH compared to USD, and 
+        # INPUT: Ticker symbol as string. E.g BTC, ETH compared to base_currency, and 
         #        candleTimeFrame, e.g 5m, 1h, 1D, 1M (Only specific timeframe works. Look up docs)
         # OUTPUT: A list of json elements containing multiple info. Look up docs.
         # Docs: https://exchange-docs.crypto.com/spot/index.html#public-get-candlestick
         ##
         try:
             #send api call
-            response = requests.get(f"{self.api_base_url}public/get-ticker?instrument_name=${ticker}_USD&timeframe={candleTimeFrame}")
+            response = requests.get(f"{self.api_base_url}public/get-ticker?instrument_name={ticker}_{base_currency}&timeframe={candleTimeFrame}")
             if (response.status_code == 200):
                 ticker_data = response.text
                 ticker_data = json.loads(ticker_data)
@@ -77,16 +75,16 @@ class CryptoDotComExchangeManager:
             print(f"getTimeSeriesDataForTicker(): ${e}")
             raise Exception(f"Could not get ticker candlestick for {ticker}")
 
-    def getCrrentPriceForTicker(self, ticker):
+    def getCrrentPriceForTicker(self, ticker, base_currency):
         ##
         # PURPOSE: This function will return the current usd price for the crypto ticker symbol
-        # INPUT: Ticker symbol as string. E.g BTC, ETH
+        # INPUT: Ticker symbol as string. E.g BTC, ETH and base_currency
         # OUTPUT: A list of a couple of information for current ticker
         ##
 
         try:
             #send api call
-            response = requests.get(f"{self.api_base_url}public/get-ticker?instrument_name=${ticker}_USD")
+            response = requests.get(f"{self.api_base_url}public/get-ticker?instrument_name={ticker}_{base_currency}")
             print(f"{self.api_base_url}public/get-ticker?instrument_name={ticker}_USD")
             # View sample response here: https://exchange-docs.crypto.com/spot/index.html#public-get-ticker
             if (response.status_code == 200):
@@ -96,8 +94,8 @@ class CryptoDotComExchangeManager:
             else:
                 raise Exception("Could not get ticker price")
         except Exception as e:
-            print(f"getCurrentPriceForTicker(): ${e}")
-            raise Exception("Could not get ticker price")
+            print(f"getCurrentPriceForTicker(): {e}")
+            raise Exception(f"Could not get ticker price: {e}")
 
 
     def _generateSignedPayload(self, payload):

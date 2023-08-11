@@ -8,7 +8,7 @@ def handleGetTrading(event):
         cryptoExchange = CryptoDotComExchangeManager()
 
         # Get current BTC price
-        cryptoExchange.getCrrentPriceForTicker("BTC")
+        cryptoExchange.getCrrentPriceForTicker("BTC", "USD")
     except Exception as e:
         print(f"handleGetTrading(): ${e}")
         return buildResponse(500, "A server error occurred. Please try again later")
