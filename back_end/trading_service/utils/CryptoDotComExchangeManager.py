@@ -108,7 +108,7 @@ class CryptoDotComExchangeManager:
         ##
         try:
             #send api call
-            response = requests.get(f"{self.api_base_url}public/get-ticker?instrument_name={ticker}_{base_currency}&timeframe={candleTimeFrame}")
+            response = requests.get(f"{self.api_base_url}public/get-candlestick?instrument_name={ticker}_{base_currency}&timeframe={candleTimeFrame}")
             if (response.status_code == 200):
                 ticker_data = response.json()
                 if ticker_data['code'] == 0:
