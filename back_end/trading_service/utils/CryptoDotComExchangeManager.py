@@ -47,7 +47,11 @@ class CryptoDotComExchangeManager:
 
             if response.status_code == 200:
                 print(f"Request success")
-                print(response.json())
+                ticker_data = response.json()
+                if ticker_data["code"] == 0:
+                    return ticker_data["result"]
+                else:
+                    raise Exception(f"Exchange returned: {response.text}")
             else:
                 raise Exception(f"Could not get account information. Error: {response.text}")
         except Exception as e:
@@ -66,9 +70,11 @@ class CryptoDotComExchangeManager:
             #send api call
             response = requests.get(f"{self.api_base_url}public/get-ticker?instrument_name={ticker}_{base_currency}&timeframe={candleTimeFrame}")
             if (response.status_code == 200):
-                ticker_data = response.text
-                ticker_data = json.loads(ticker_data)
-                return ticker_data['result']['data']
+                ticker_data = response.json()
+                if ticker_data['code'] == 0:
+                    return ticker_data['result']['data']
+                else:
+                    raise Exception(f"Exchange returned: {response.text}")
             else:
                 raise Exception("Could not get ticker price")
         except Exception as e:
@@ -88,9 +94,11 @@ class CryptoDotComExchangeManager:
             print(f"{self.api_base_url}public/get-ticker?instrument_name={ticker}_USD")
             # View sample response here: https://exchange-docs.crypto.com/spot/index.html#public-get-ticker
             if (response.status_code == 200):
-                ticker_data = response.text
-                ticker_data = json.loads(ticker_data)
-                return ticker_data['result']['data']
+                ticker_data = response.json()
+                if ticker_data["code"] == 0:
+                    return ticker_data['result']['data']
+                else:
+                    raise Exception(f"Exchange returned: {response.text}")
             else:
                 raise Exception("Could not get ticker price")
         except Exception as e:
