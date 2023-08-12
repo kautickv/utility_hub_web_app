@@ -22,7 +22,7 @@ def info(sel):
     print(f"Time: {formatted_date}, Value: {sel.target[1]:.2f}")
     return (f"Time: {formatted_date}, Value: {sel.target[1]:.2f}")
 
-def plotInitialPriceData(data,ema_12,ema_26,title, rsi_data, volume_ema):
+def plotInitialPriceData(data,ema_12,ema_26,title, rsi_data, volume_ema, bollinger_data):
     # Extracting 'c' and 't' values from the data
     closing_price = [float(item['c']) for item in data]
     time = [convert_to_cdt(item['t']) for item in data]
@@ -43,38 +43,54 @@ def plotInitialPriceData(data,ema_12,ema_26,title, rsi_data, volume_ema):
     volume_values = [item['volume_ema'] for item in volume_ema]
     volume_time = [convert_to_cdt(item['t']) for item in volume_ema]
 
-    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 10))  # 3 rows, 1 column
+    # Extract "Bollinger bands" and "t" values for bollinger_data
+    bollinger_lower_band = [item['upper_band'] for item in bollinger_data]
+    bollinger_middle_band = [item['middle_band'] for item in bollinger_data]
+    bollinger_upper_band = [item['lower_band'] for item in bollinger_data]
+    bollinger_time = [convert_to_cdt(item['t']) for item in bollinger_data]
+
+    fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(10, 10))  # 4 rows, 1 column
 
     # Plotting on the first axis
-    ax1.plot(time, closing_price, marker='o', label='Closing Price')
+    ax1.plot(time, closing_price, marker='.', label='Closing Price')
     ax1.plot(ema_12_time, ema_12_values, label='EMA 12', color='red', linestyle='--')
     ax1.plot(ema_26_time, ema_26_values, label='EMA 26', color='blue', linestyle='--')
     ax1.set_xlabel('Time (CDT)')
     ax1.set_ylabel('Price')
     ax1.set_title(title)
     ax1.legend(loc='upper left')
-    ax1.tick_params(axis='x', rotation=45)
+    #ax1.tick_params(axis='x', rotation=45)
 
-    # Plotting on the second axis (You can add other data here)
-    ax2.plot(volume_time, volume_values, label='Volume EMA', marker='o') 
+    # Plotting on the second axis 
+    ax2.plot(volume_time, volume_values, label='Volume EMA') 
     ax2.set_xlabel('Time')
     ax2.set_ylabel('Volume EMA')
     ax2.set_title('Volume EMA')
 
-    # Plotting on the second axis (You can add other data here)
-    ax3.plot(rsi_time, rsi_values, label='RSI', marker='o') 
+    # Plotting on the thrid axis 
+    ax3.plot(rsi_time, rsi_values, label='RSI') 
     ax3.set_xlabel('Time')
     ax3.set_ylabel('RSI Value')
     ax3.set_title('RSI')
+
+    # Plotting on the fourth axis 
+    ax4.plot(bollinger_time, bollinger_lower_band, label='Lower Band')
+    ax4.plot(bollinger_time, bollinger_middle_band, label='Middle Band')
+    ax4.plot(bollinger_time, bollinger_upper_band, label='Upper Band') 
+    ax4.set_xlabel('Time')
+    ax4.set_ylabel('Bollinger Values')
+    ax4.set_title('Bollinger Bands')
 
     # Tight layout to ensure labels don't get cut off
     plt.tight_layout()
     cursor1 = mplcursors.cursor(ax1, hover=True)
     cursor2 = mplcursors.cursor(ax2, hover=True)  
     cursor3 = mplcursors.cursor(ax3, hover=True) 
+    cursor4 = mplcursors.cursor(ax4, hover=True) 
     cursor1.connect("add", info)
     cursor2.connect("add", info) 
     cursor3.connect("add", info) 
+    cursor4.connect("add", info)
 
     plt.show()
 
@@ -94,8 +110,10 @@ rsi_data = indicator.calculate_rsi(14)
 # Getting the volume ema
 volume_ema_data = indicator.calculate_volume_ema(14)
 
+# Get Bollinger bands:
+bollinger_bands = indicator.calculate_bollinder_bands(20,2)
 # Plot data
-plotInitialPriceData(data,ema_12, ema_26, "BTC closing price vs time",rsi_data, volume_ema_data)
+plotInitialPriceData(data,ema_12, ema_26, "BTC closing price vs time",rsi_data, volume_ema_data, bollinger_bands)
 
 
 
