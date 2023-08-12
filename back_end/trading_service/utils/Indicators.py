@@ -53,3 +53,72 @@ class Indicators():
         except Exception as e:
             print(f"calculate_ema():{e}")
             raise Exception(f"Error: {e}")
+        
+    
+    def calculate_rsi(self, period=14):
+        
+        try:
+            if len(self.crypto_data) < period:
+                raise ValueError("Not enough data to calculate RSI")
+
+            closing_prices = [float(item['c']) for item in self.crypto_data]
+            gains = []
+            losses = []
+
+            for i in range(1, len(closing_prices)):
+                delta = closing_prices[i] - closing_prices[i-1]
+                gains.append(max(delta, 0))
+                losses.append(max(-delta, 0))
+
+            avg_gain = sum(gains[:period]) / period
+            avg_loss = sum(losses[:period]) / period
+
+            rs = avg_gain / avg_loss if avg_loss != 0 else 0
+            rsi = [100 - (100 / (1 + rs))]
+
+            for i in range(period, len(closing_prices) - 1):
+                avg_gain = (avg_gain * (period - 1) + gains[i]) / period
+                avg_loss = (avg_loss * (period - 1) + losses[i]) / period
+                rs = avg_gain / avg_loss if avg_loss != 0 else 0
+                rsi.append(100 - (100 / (1 + rs)))
+
+            timestamps = [entry['t'] for entry in self.crypto_data][period:]
+            rsi_with_time = [{'t': timestamp, 'rsi': value} for timestamp, value in zip(timestamps, rsi)]
+            
+            return rsi_with_time
+            
+        except Exception as e:
+            print(f"calculate_rsi(): {e}")
+            raise Exception(f"Error: {e}")
+        
+    
+    def calculate_volume_ema(self, period=14):
+
+        try:
+            volumes = [float(item['v']) for item in self.crypto_data]
+    
+            # Ensure we have enough data
+            if len(volumes) < period:
+                raise ValueError("Not enough data to calculate EMA for volume")
+
+            # Start with a simple moving average for the initial EMA value
+            ema_values = [sum(volumes[:period]) / period]
+            
+            multiplier = 2 / (period + 1)
+
+            # Calculate the EMA values
+            for i in range(period, len(volumes)):
+                ema_today = (volumes[i] - ema_values[-1]) * multiplier + ema_values[-1]
+                ema_values.append(ema_today)
+            
+            # Extracting timestamps starting from the 'period' to match the EMA values.
+            timestamps = [entry['t'] for entry in self.crypto_data][period-1:]
+            
+            # Pairing EMA values with their associated timestamps
+            volume_ema_with_time = [{'t': timestamp, 'volume_ema': ema} for timestamp, ema in zip(timestamps, ema_values)]
+            
+            return volume_ema_with_time
+
+        except Exception as e:
+            print(f"calculate_volume_ema(): {e}")
+            raise Exception(f"Error: {e}")
