@@ -101,8 +101,8 @@ print("starting")
 indicator = Indicators(data,"1D")
 
 #Calculating short and long term ema
-ema_12 = indicator.calculate_ema(20)
-ema_26 = indicator.calculate_ema(100)
+ema_12 = indicator.calculate_ema(12)
+ema_26 = indicator.calculate_ema(26)
 
 # Calculating RSI
 rsi_data = indicator.calculate_rsi(14)
@@ -115,9 +115,5 @@ bollinger_bands = indicator.calculate_bollinder_bands(20,2)
 # Plot data
 plotInitialPriceData(data,ema_12, ema_26, "BTC closing price vs time",rsi_data, volume_ema_data, bollinger_bands)
 
-
-
-########################################################################
-# testing BinanceExchangeManager
 
 
