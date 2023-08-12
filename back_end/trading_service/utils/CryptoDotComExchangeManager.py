@@ -49,12 +49,12 @@ class CryptoDotComExchangeManager:
                 if ticker_data["code"] == 0:
                     return ticker_data["result"]
                 else:
-                    raise Exception(f"Exchange returned: {response.text}")
+                    raise Exception(f"Crypto.com returned: {response.text}")
             else:
                 raise Exception(f"Could not create order. Error: {response.text}")
         except Exception as e:
             print(f"createOrder(): {e}")
-            raise Exception (f"Could not create order for {ticker}.")
+            raise Exception (f"Could not create (Crypto.com)order for {ticker}.")
 
 
     def getCoinBalance(self, ticker):
@@ -91,12 +91,12 @@ class CryptoDotComExchangeManager:
                 if ticker_data["code"] == 0:
                     return ticker_data["result"]
                 else:
-                    raise Exception(f"Exchange returned: {response.text}")
+                    raise Exception(f"Crypto.com returned: {response.text}")
             else:
-                raise Exception(f"Could not get account information. Error: {response.text}")
+                raise Exception(f"(Crypto.com)Could not get account information. Error: {response.text}")
         except Exception as e:
             print(f"getCoinBalance(): {e}")
-            raise Exception (f"Could not get coin balance for {ticker}.")
+            raise Exception (f"(Crypto.com)Could not get coin balance for {ticker}.")
     
     def getTimeSeriesDataForTicker(self, ticker, base_currency, candleTimeFrame):
         ##
@@ -114,12 +114,12 @@ class CryptoDotComExchangeManager:
                 if ticker_data['code'] == 0:
                     return ticker_data['result']['data']
                 else:
-                    raise Exception(f"Exchange returned: {response.text}")
+                    raise Exception(f"Crypto.com returned: {response.text}")
             else:
-                raise Exception("Could not get ticker price")
+                raise Exception("(Crypto.com)Could not get ticker price")
         except Exception as e:
             print(f"getTimeSeriesDataForTicker(): ${e}")
-            raise Exception(f"Could not get ticker candlestick for {ticker}")
+            raise Exception(f"(Crypto.com)Could not get ticker candlestick for {ticker}")
 
     def getCrrentPriceForTicker(self, ticker, base_currency):
         ##
@@ -138,12 +138,12 @@ class CryptoDotComExchangeManager:
                 if ticker_data["code"] == 0:
                     return ticker_data['result']['data']
                 else:
-                    raise Exception(f"Exchange returned: {response.text}")
+                    raise Exception(f"Crypto.com returned: {response.text}")
             else:
-                raise Exception("Could not get ticker price")
+                raise Exception("(Crypto.com)Could not get ticker price")
         except Exception as e:
             print(f"getCurrentPriceForTicker(): {e}")
-            raise Exception(f"Could not get ticker price: {e}")
+            raise Exception(f"(Crypto.com)Could not get ticker price: {e}")
 
 
     def _generateSignedPayload(self, payload):
