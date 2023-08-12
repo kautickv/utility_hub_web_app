@@ -99,7 +99,7 @@ class CryptoDotComExchangeManager:
             raise Exception (f"(Crypto.com)Could not get coin balance for {ticker}.")
     
     def getTimeSeriesDataForTicker(self, ticker, base_currency, candleTimeFrame):
-        ##
+        ##  ---- NOT BEING USED AS DATA IS NOT RELIABLE. USE BINANCE API INSTEAD
         # PURPOSE: Get the candle stick open and closing price for the specified time frame
         # INPUT: Ticker symbol as string. E.g BTC, ETH compared to base_currency, and 
         #        candleTimeFrame, e.g 5m, 1h, 1D, 1M (Only specific timeframe works. Look up docs)
@@ -122,7 +122,7 @@ class CryptoDotComExchangeManager:
             raise Exception(f"(Crypto.com)Could not get ticker candlestick for {ticker}")
 
     def getCrrentPriceForTicker(self, ticker, base_currency):
-        ##
+        ##--- NOT BEING USED AS DATA IS NOT RELIABLE. USE BINANCE API INSTEAD
         # PURPOSE: This function will return the current usd price for the crypto ticker symbol
         # INPUT: Ticker symbol as string. E.g BTC, ETH and base_currency
         # OUTPUT: A list of a couple of information for current ticker
