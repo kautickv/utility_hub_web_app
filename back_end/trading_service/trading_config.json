@@ -3,6 +3,12 @@
       "access_key": "/crypto-exchange/crypto.com/api-key",
       "secret_key": "/crypto-exchange/crypto.com/secret-key"
       
-    }
+    },
+
+    "trading_pairs_to_monitor":[
+      "BTC_USDT",
+      "ETH_USDT"
+
+    ]
 }
   

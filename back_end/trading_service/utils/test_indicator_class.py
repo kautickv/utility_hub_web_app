@@ -1,5 +1,6 @@
 from Indicators import Indicators
 from BinanceExchangeManager import BinanceExchangeManager
+from CoinController import CoinController
 import matplotlib.pyplot as plt
 from datetime import datetime
 import pytz
@@ -7,6 +8,7 @@ import mplcursors
 import matplotlib.dates as mdates
 
 binanceExchange = BinanceExchangeManager()
+controller = CoinController(interval="6h", ticker="BTC", base_currency="USDT")
 data = binanceExchange.getTimeSeriesDataForTicker("BTC", "USDT", "6h")
 
 # Convert Unix timestamp to CDT timezone
@@ -101,17 +103,25 @@ print("starting")
 indicator = Indicators(data,"1D")
 
 #Calculating short and long term ema
-ema_12 = indicator.calculate_ema(12)
-ema_26 = indicator.calculate_ema(26)
+ema_12 = indicator.calculate_ema(20)
+ema_26 = indicator.calculate_ema(100)
+ema_signal = controller.getEMASignal(0.005)  # 1% threshold
+print(ema_signal)
 
 # Calculating RSI
 rsi_data = indicator.calculate_rsi(14)
+rsi_signal = controller.getRSI_Signal()
+print(rsi_signal)
 
 # Getting the volume ema
 volume_ema_data = indicator.calculate_volume_ema(14)
+volume_signal = controller.getVolumeSignal()
+print(volume_signal)
 
 # Get Bollinger bands:
 bollinger_bands = indicator.calculate_bollinder_bands(20,2)
+bollinger_signal = controller.getBollingerSignal()
+print(bollinger_signal)
 # Plot data
 plotInitialPriceData(data,ema_12, ema_26, "BTC closing price vs time",rsi_data, volume_ema_data, bollinger_bands)
 

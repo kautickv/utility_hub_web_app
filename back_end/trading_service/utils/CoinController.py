@@ -1,0 +1,190 @@
+from BinanceExchangeManager import BinanceExchangeManager
+from Indicators import Indicators
+import numpy as np
+from scipy.stats import linregress
+
+class CoinController():
+
+    _binanceExchange = None
+    _indicators = None
+    _interval = None
+    _ticker = None
+    _base_currency = None
+    _candle_data = None
+    _current_price = None
+
+    def __init__(self, interval, ticker, base_currency):
+
+        try:
+            self._interval = interval
+            self._ticker = ticker
+            self._base_currency = base_currency
+            self._binanceExchange = BinanceExchangeManager()
+            self._candle_data = self._binanceExchange.getTimeSeriesDataForTicker(self._ticker,self._base_currency, self._interval)
+            self._indicators = Indicators(self._candle_data,self._interval)
+            self._current_price = self._binanceExchange.getCrrentPriceForTicker(self._ticker, self._base_currency)['price']
+
+
+        except Exception as e:
+            print(f"Count not create Controller Object: {e}")
+            raise Exception (f"Could not create Controller Object: {e}")
+
+    
+    def getEMASignal(self, threshold):
+        ##
+        # PURPOSE: This function will check for the conditions of EMA indicators. The algorithm is as follows:
+        # INPUT : Threshold
+        # OUTPUT: BUY, SELL or NEUTRAL
+        #         If the current short-term EMA is greater than the current long-term EMA and the previous short-term EMA is within the threshold to the previous long-term EMA, then it's a BUY signal.
+        #         If the current short-term EMA is less than the current long-term EMA and the previous short-term EMA is within the threshold to the previous long-term EMA, then it's a SELL signal.
+        ##
+
+        try:
+            # Get Short term and Long term EMAs
+            short_ema = self._indicators.calculate_ema(12)
+            long_ema = self._indicators.calculate_ema(26)
+
+            # Ensure that the data is sorted by timestamp
+            short_ema = sorted(short_ema, key=lambda x: x['t'])
+            long_ema = sorted(long_ema, key=lambda x: x['t'])
+
+            # Extracting the last two data points
+            current_short_ema = short_ema[-1]['ema']
+            previous_short_ema = short_ema[-2]['ema']
+            current_long_ema = long_ema[-1]['ema']
+            previous_long_ema = long_ema[-2]['ema']
+
+            # Checking for BUY Signal
+            if (current_short_ema > current_long_ema and 
+                current_short_ema >= (1 + threshold) * current_long_ema and 
+                previous_short_ema <= previous_long_ema):
+                return 'BUY'
+            
+            # Checking for SELL Signal
+            if (current_short_ema < current_long_ema and current_short_ema <= (1 - threshold) * current_long_ema and previous_short_ema >= previous_long_ema):
+                return 'SELL'
+            
+            # If neither condition is satisfied, then it's NEUTRAL
+            return 'NEUTRAL'
+
+        except Exception as e:
+            print(f"getEMASignal(): {e}")
+            raise Exception(f"Error getting EMA Signals: {e}")
+        
+
+    def getRSI_Signal(self, lookback=5):
+        ##
+        # PURPOSE: This function will look at the RSI data and determine a buy or sell signal.
+        # Algorithm: BUY Signal if RSI is below 30 and statistically significant uptrend
+        #            SELL Signal if RSI is above 70 and statistically significant downtrend
+        # INPUT: loopback is the number of previous RSI data points to consider to determine trend
+        # OUTPUT: BUY, SELL or NEUTRAL
+
+        try:
+            # Get rsi data
+            rsi_data = self._indicators.calculate_rsi(14)
+            # Ensure that the data is sorted by timestamp
+            rsi_data = sorted(rsi_data, key=lambda x: x['t'])
+
+            # Extracting the last RSI data point
+            current_rsi = rsi_data[-1]['rsi']
+
+            # Extracting RSI data for trend detection
+            rsi_values = [item['rsi'] for item in rsi_data[-lookback:]]
+            x = np.arange(len(rsi_values))
+
+            # Fitting linear regression
+            slope, intercept, r_value, p_value, std_err = linregress(x, rsi_values)
+
+            # BUY signal criteria
+            if current_rsi < 30 and slope > 0 and p_value < 0.05:
+                return 'BUY'
+
+            # SELL signal criteria
+            elif current_rsi > 70 and slope < 0 and p_value < 0.05:
+                return 'SELL'
+
+            # Otherwise, it's neutral
+            return 'NEUTRAL'
+        except Exception as e:
+            print(f"getRSI_Signal(): {e}")
+            raise Exception(f"Could not get RSI signal: {e}")
+        
+
+    def getVolumeSignal(self, lookback=10):
+        ###
+        # PURPOSE: This function will look at the volume and determine an uptrend or downtrend
+        # Algorithm: BUY Signal if the volume is uptrend
+        #            SELL Signal if the volume is downtrend
+        # INPUT: lookback is the number of previous datapoints to look at to determine trend
+        # OUTPUT: BUY, SELL or NEUTRAL
+        
+        try:
+            #Get volume data
+            volume_data = self._indicators.calculate_volume_ema(14)
+
+            # Ensure that the data is sorted by timestamp
+            volume_data = sorted(volume_data, key=lambda x: x['t'])
+
+            # Extracting volume EMA data for trend detection
+            volume_values = [item['volume_ema'] for item in volume_data[-lookback:]]
+            x = np.arange(len(volume_values))
+
+            # Fitting linear regression
+            slope, intercept, r_value, p_value, std_err = linregress(x, volume_values)
+
+            # BUY signal criteria (Uptrend in volume)
+            if slope > 0 and p_value < 0.05:
+                return 'BUY'
+
+            # SELL signal criteria (Downtrend in volume)
+            elif slope < 0 and p_value < 0.05:
+                return 'SELL'
+
+            # Otherwise, it's neutral
+            return 'NEUTRAL'
+        
+        except Exception as e:
+            print(f"getVolumeSignal(): {e}")
+            raise Exception(f"Could not get Volume signal: {e}")
+        
+    def getBollingerSignal(self):
+        ###
+        # PURPOSE: This function will look at the bollinger bands and determine a BUY or SELL signal
+        # Algorithm: BUY: If the price touches or dips below the lower band and then starts to rebound 
+        #           (i.e., the current price is above the lower band and the previous price 
+        #           was below or equal to the lower band).
+        #           SELL: If the price touches or rises above the upper band and then starts to 
+        #           reverse downward (i.e., the current price is below the upper band and the 
+        #           previous price was above or equal to the upper band).
+        # INPUT: lookback is the number of previous datapoints to look at to determine trend
+        # OUTPUT: BUY, SELL or NEUTRAL
+
+        try:
+            bollinger_data = self._indicators.calculate_bollinder_bands()
+
+            # Ensure that the data is sorted by timestamp
+            bollinger_data = sorted(bollinger_data, key=lambda x: x['t'])
+
+            # Extracting the latest Bollinger Bands data
+            latest_data = bollinger_data[-1]
+            upper_band = latest_data['upper_band']
+            lower_band = latest_data['lower_band']
+
+            current_price = float(self._current_price)
+            previous_price = float(self._candle_data[-2]['c']) # get the previous price data
+
+             # Buy criteria
+            if previous_price <= lower_band and current_price > lower_band:
+                return 'BUY'
+            
+             # Sell criteria
+            elif previous_price >= upper_band and current_price < upper_band:
+                return 'SELL'
+            
+            # Otherwise, it's neutral
+            return 'NEUTRAL'
+        
+        except Exception as e:
+            print(f"bollingerSignal(): {e}")
+            raise Exception(f"Could not get bollinger signals: {e}")
