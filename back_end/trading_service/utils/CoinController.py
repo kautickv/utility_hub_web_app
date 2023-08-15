@@ -3,6 +3,9 @@ from Indicators import Indicators
 import numpy as np
 from scipy.stats import linregress
 
+###
+# PURPOSE: This class will be instantiated for one coin and will get all the relevant 
+#          data to calculate each indicators, determine the BUY and SELL signals.
 class CoinController():
 
     _binanceExchange = None
@@ -30,7 +33,7 @@ class CoinController():
             raise Exception (f"Could not create Controller Object: {e}")
 
     
-    def getEMASignal(self, threshold):
+    def getEMASignal(self, short_period=12,long_period=26, threshold=0.03):
         ##
         # PURPOSE: This function will check for the conditions of EMA indicators. The algorithm is as follows:
         # INPUT : Threshold
@@ -41,8 +44,8 @@ class CoinController():
 
         try:
             # Get Short term and Long term EMAs
-            short_ema = self._indicators.calculate_ema(12)
-            long_ema = self._indicators.calculate_ema(26)
+            short_ema = self._indicators.calculate_ema(short_period)
+            long_ema = self._indicators.calculate_ema(long_period)
 
             # Ensure that the data is sorted by timestamp
             short_ema = sorted(short_ema, key=lambda x: x['t'])
@@ -72,12 +75,12 @@ class CoinController():
             raise Exception(f"Error getting EMA Signals: {e}")
         
 
-    def getRSI_Signal(self, lookback=5):
+    def getRSI_Signal(self):
         ##
         # PURPOSE: This function will look at the RSI data and determine a buy or sell signal.
-        # Algorithm: BUY Signal if RSI is below 30 and statistically significant uptrend
-        #            SELL Signal if RSI is above 70 and statistically significant downtrend
-        # INPUT: loopback is the number of previous RSI data points to consider to determine trend
+        # Algorithm: BUY Signal if RSI is below 25
+        #            SELL Signal if RSI is above 70
+        # INPUT: None
         # OUTPUT: BUY, SELL or NEUTRAL
 
         try:
@@ -89,19 +92,12 @@ class CoinController():
             # Extracting the last RSI data point
             current_rsi = rsi_data[-1]['rsi']
 
-            # Extracting RSI data for trend detection
-            rsi_values = [item['rsi'] for item in rsi_data[-lookback:]]
-            x = np.arange(len(rsi_values))
-
-            # Fitting linear regression
-            slope, intercept, r_value, p_value, std_err = linregress(x, rsi_values)
-
             # BUY signal criteria
-            if current_rsi < 30 and slope > 0 and p_value < 0.05:
+            if current_rsi < 25:
                 return 'BUY'
 
             # SELL signal criteria
-            elif current_rsi > 70 and slope < 0 and p_value < 0.05:
+            elif current_rsi > 70:
                 return 'SELL'
 
             # Otherwise, it's neutral

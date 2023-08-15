@@ -57,7 +57,7 @@ class BinanceExchangeManager():
                     
                 return ticker_data_list
             else:
-                raise Exception("(Crypto.com)Could not get ticker price")
+                raise Exception("(Binance)Could not get ticker price")
         except Exception as e:
             print(f"getTimeSeriesDataForTicker(): ${e}")
-            raise Exception(f"(Crypto.com)Could not get ticker candlestick for {ticker}")
+            raise Exception(f"(Binance)Could not get ticker candlestick for {ticker}")

@@ -7,7 +7,44 @@
 
     "trading_pairs_to_monitor":[
       "BTC_USDT",
-      "ETH_USDT"
+      "ETH_USDT",
+      "BNB_USDT",
+      "XRP_USDT",
+      "DOGE_USDT",
+      "ADA_USDT",
+      "SOL_USDT",
+      "TRX_USDT",
+      "MATIC_USDT",
+      "LTC_USDT",
+      "DOT_USDT",
+      "SHIB_USDT",
+      "BCH_USDT",
+      "AVAX_USDT",
+      "LINK_USDT",
+      "XLM_USDT",
+      "XMR_USDT",
+      "ATOM_USDT",
+      "HBAR_USDT",
+      "ICP_USDT",
+      "FIL_USDT",
+      "OP_USDT",
+      "LDO_USDT",
+      "APT_USDT",
+      "ARB_USDT",
+      "VET_USDT",
+      "NEAR_USDT",
+      "QNT_USDT",
+      "MKR_USDT",
+      "GRT_USDT",
+      "AAVE_USDT",
+      "ALGO_USDT",
+      "AXS_USDT",
+      "STX_USDT",
+      "SAND_USDT",
+      "EGLD_USDT",
+      "IMX_USDT"
+
+
 
     ]
 }
