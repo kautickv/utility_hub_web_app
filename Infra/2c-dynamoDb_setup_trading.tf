@@ -8,7 +8,7 @@ resource "aws_dynamodb_table" "crypto_trading_table" {
     type = "N"
   }
   attribute {
-    name = "crpto_ticker"
+    name = "crypto_ticker"
     type = "S"
   }
   attribute {
