@@ -5,10 +5,14 @@ def handleGetTrading(event):
     
     try:
         databaseTableManager = TradingTableManager("password-generator_crypto_trading_table")
-        crypto_data = {'ticker': 'BTC', 'base_currency': 'USDT', 'ema_signal': 'NEUTRAL', 'rsi_signal': 'NEUTRAL', 'volume_signal': 'SELL', 'bollinger_signal': 'NEUTRAL'}
+        
+        body = event.get('body')
+        print(body)
 
-        response = databaseTableManager.add_item(crypto_data)
-        print(response)
+        # Get info from database
+        crypto_signals = databaseTableManager.get_items(5)
+
+        print(crypto_signals)
 
         return buildResponse(200, "OK")
        
