@@ -1,7 +1,7 @@
-from Indicators import Indicators
-from BinanceExchangeManager import BinanceExchangeManager
-from CoinController import CoinController
-from MainController import MainController
+from utils.Indicators import Indicators
+from utils.BinanceExchangeManager import BinanceExchangeManager
+from utils.CoinController import CoinController
+from utils.MainController import MainController
 import matplotlib.pyplot as plt
 from datetime import datetime
 import pytz

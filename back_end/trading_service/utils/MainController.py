@@ -1,6 +1,6 @@
 import json
 import time
-from CoinController import CoinController
+from utils.CoinController import CoinController
 
 class MainController():
 

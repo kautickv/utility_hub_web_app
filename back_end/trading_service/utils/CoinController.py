@@ -1,5 +1,5 @@
-from BinanceExchangeManager import BinanceExchangeManager
-from Indicators import Indicators
+from utils.BinanceExchangeManager import BinanceExchangeManager
+from utils.Indicators import Indicators
 import numpy as np
 from scipy.stats import linregress
 
