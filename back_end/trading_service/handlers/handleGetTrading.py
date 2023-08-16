@@ -1,5 +1,4 @@
 from utils.util import buildResponse
-from utils.MainController import MainController
 from utils.TradingTableManager import TradingTableManager
 
 def handleGetTrading(event):

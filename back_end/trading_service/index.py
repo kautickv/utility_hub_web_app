@@ -1,11 +1,16 @@
 from utils.util import buildResponse,getAuthorizationCode,verifyAuthStatus
 from handlers.handlePostTrading import handlePostTrading
 from handlers.handleGetTrading import handleGetTrading
-
+from handlers.handleScheduleTradingEvent import handleScheduleTradingEvent
 def lambda_handler(event, context):
 
     print(event)
     try:
+        ## Check if it's a schedule event by event bridge
+        if(event.get('detail-type') != None):
+            handleScheduleTradingEvent()
+            return None
+        
         ## Check if user is authenticated
         code = getAuthorizationCode(event)
         if code is None:
