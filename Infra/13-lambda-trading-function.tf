@@ -35,7 +35,8 @@ resource "aws_iam_policy" "lambda_trading_invoke_lambda_auth" {
              "dynamodb:*"
             ],
            "Resource" : [
-             "${aws_dynamodb_table.crypto_trading_table.arn}"
+             "${aws_dynamodb_table.crypto_trading_table.arn}",
+             "${aws_dynamodb_table.crypto_trading_table.arn}/index/*"
            ]
         },
         {
