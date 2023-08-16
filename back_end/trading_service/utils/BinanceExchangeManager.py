@@ -2,7 +2,7 @@ import requests
 
 class BinanceExchangeManager():
 
-    rest_base_url = "https://api.binance.com/api/v3/"
+    rest_base_url = "https://api.binance.us/api/v3/"
 
     def __init__(self):
         pass
@@ -23,10 +23,10 @@ class BinanceExchangeManager():
                 ticker_data = response.json()
                 return ticker_data
             else:
-                raise Exception("(Binance)Could not get ticker price")
+                raise Exception(f"(Binance)Could not get ticker price: {response}")
         except Exception as e:
             print(f"getCurrentPriceForTicker(): {e}")
-            raise Exception(f"(Binance)Could not get ticker price from Binance: {e}")
+            raise Exception(f"(Binance)Could not get ticker price: {e}")
         
     
     def getTimeSeriesDataForTicker(self, ticker, base_currency, candleTimeFrame):
