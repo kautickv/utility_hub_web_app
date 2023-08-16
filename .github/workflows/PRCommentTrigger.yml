@@ -46,13 +46,16 @@ jobs:
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           aws configure set default.region $AWS_DEFAULT_REGION
 
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v4
+          with:
+          python-version: '3.9'
+
       - name: Build and zip python requirement file
         id: backend_build
-        uses: actions/setup-python@v4
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/back_end
-        with:
-          python-version: '3.9'
         run: |
+          python --version
           python -m pip install -r requirements.txt -t ./python
           zip -r ../Infra/layer.zip python/
           rm -r python
