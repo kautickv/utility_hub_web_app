@@ -1,7 +1,7 @@
 from utils.BinanceExchangeManager import BinanceExchangeManager
 from utils.Indicators import Indicators
 import numpy as np
-from scipy.stats import t
+from statsmodels.distributions.empirical_distribution import ECDF
 
 ###
 # PURPOSE: This class will be instantiated for one coin and will get all the relevant 
@@ -130,13 +130,14 @@ class CoinController():
             A = np.vstack([x, np.ones(len(x))]).T
             slope, intercept = np.linalg.lstsq(A, volume_values, rcond=None)[0]
 
-            # To calculate the p-value, we need to calculate the t-statistic
+            # Calculate the p-value using the t-statistic
             residuals = volume_values - (slope * x + intercept)
             rss = np.sum(residuals**2)
             t_stat = slope / (np.sqrt(rss / (len(x) - 2) / np.sum((x - np.mean(x))**2)))
             
-            # Calculate the p-value using t-distribution from scipy
-            p_value = 2 * (1 - t.cdf(abs(t_stat), len(x) - 2))
+            # Calculate the p-value using ECDF from statsmodels
+            ecdf = ECDF(np.random.standard_t(len(x) - 2, size=10000))
+            p_value = 2 * (1 - ecdf(abs(t_stat)))
 
             # BUY signal criteria (Uptrend in volume)
             if slope > 0 and p_value < 0.05:
@@ -148,6 +149,7 @@ class CoinController():
 
             # Otherwise, it's neutral
             return 'NEUTRAL'
+
         except Exception as e:
             print(f"getVolumeSignal(): {e}")
             raise Exception(f"Could not get Volume signal: {e}")
