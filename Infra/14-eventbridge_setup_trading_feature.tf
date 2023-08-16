@@ -56,7 +56,14 @@ resource "aws_cloudwatch_event_target" "trading_cron_lambda_target" {
   rule      = aws_cloudwatch_event_rule.trading_cron_lambda_trigger.name
   target_id = "LambdaFunction"
   arn       = aws_lambda_function.trading-backend-lambda-function.arn
-  role_arn  = aws_iam_role.eventbridge_trading_lambda_role.arn
 }
 
 
+# Add permission for lambda to be involked by eventbridge
+resource "aws_lambda_permission" "allow_cloudwatch_to_invoke" {
+  statement_id  = "AllowTradingEventBridgeInvocation"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.trading-backend-lambda-function.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.trading_cron_lambda_trigger.arn
+}

@@ -91,7 +91,6 @@ resource "aws_lambda_function" "trading-backend-lambda-function" {
   memory_size = "128"
 }
 
-
 # Create a cloudwatch log group for lambda execution logs
 resource "aws_cloudwatch_log_group" "trading-lambda-function-logs" {
   name = "/aws/lambda/${aws_lambda_function.trading-backend-lambda-function.function_name}"
