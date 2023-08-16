@@ -75,7 +75,7 @@ resource "aws_lambda_function" "trading-backend-lambda-function" {
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.trading-backend-lambda-function-object.key
 
-  runtime = "python3.9"
+  runtime = "python3.10"
   handler = "index.lambda_handler"
   source_code_hash = data.archive_file.trading-backend-lambda-function-zip.output_base64sha256
   role = aws_iam_role.lambda_trading_exec_role.arn
