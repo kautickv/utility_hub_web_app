@@ -51,7 +51,7 @@ jobs:
         run: |
            sudo apt-get update
            sudo apt-get install -y python3.9
-           python --version
+           /usr/bin/python3.9 --version
 
       - name: Build and zip python requirement file
         id: backend_build
