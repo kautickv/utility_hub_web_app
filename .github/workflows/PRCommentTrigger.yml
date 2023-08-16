@@ -46,11 +46,13 @@ jobs:
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           aws configure set default.region $AWS_DEFAULT_REGION
       
-      - name: GET python version
-        id: python_version
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/back_end
+      - name: Installed python 3.9
+        id: python_install
         run: |
-          python --version
+           sudo apt-get update
+           sudo apt-get install -y python3.9 python3.9-venv python3.9-dev
+           sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
+           python3.9 --version
 
       - name: Build and zip python requirement file
         id: backend_build
