@@ -55,11 +55,10 @@ jobs:
         id: backend_build
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/back_end
         run: |
-          python --version
           python -m pip install -r requirements.txt -t ./python
           zip -r ../Infra/layer.zip python/
           rm -r python
-          ls
+          python --version
 
       - name: Terraform Init
         id: init
