@@ -1,7 +1,6 @@
 from utils.BinanceExchangeManager import BinanceExchangeManager
 from utils.Indicators import Indicators
 import numpy as np
-from scipy.stats import linregress
 
 ###
 # PURPOSE: This class will be instantiated for one coin and will get all the relevant 
@@ -116,29 +115,38 @@ class CoinController():
         # OUTPUT: BUY, SELL or NEUTRAL
         
         try:
-            #Get volume data
+            # Get volume data
             volume_data = self._indicators.calculate_volume_ema(14)
 
             # Ensure that the data is sorted by timestamp
             volume_data = sorted(volume_data, key=lambda x: x['t'])
 
             # Extracting volume EMA data for trend detection
-            volume_values = [item['volume_ema'] for item in volume_data[-lookback:]]
+            volume_values = np.array([item['volume_ema'] for item in volume_data[-lookback:]])
             x = np.arange(len(volume_values))
 
-            # Fitting linear regression
-            slope, intercept, r_value, p_value, std_err = linregress(x, volume_values)
+            # Calculate linear regression coefficients (slope and intercept)
+            A = np.vstack([x, np.ones(len(x))]).T
+            slope, intercept = np.linalg.lstsq(A, volume_values, rcond=None)[0]
+
+            # To calculate the p-value, we need to calculate the t-statistic
+            residuals = volume_values - (slope * x + intercept)
+            rss = np.sum(residuals**2)
+            t_stat = slope / (np.sqrt(rss / (len(x) - 2) / np.sum((x - np.mean(x))**2)))
+            from scipy.stats import t
+            p_value = 2 * (1 - t.cdf(abs(t_stat), len(x) - 2))
 
             # BUY signal criteria (Uptrend in volume)
             if slope > 0 and p_value < 0.05:
                 return 'BUY'
-
+            
             # SELL signal criteria (Downtrend in volume)
             elif slope < 0 and p_value < 0.05:
                 return 'SELL'
 
             # Otherwise, it's neutral
             return 'NEUTRAL'
+    
         
         except Exception as e:
             print(f"getVolumeSignal(): {e}")
