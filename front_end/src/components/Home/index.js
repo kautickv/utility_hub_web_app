@@ -8,7 +8,7 @@ import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 // Import scripts
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
-import {checkLocalStorageForJWTToken} from "../../utils/homeUtils"
+import {checkLocalStorageForJWTToken} from "../../utils/util"
 
 // Import components
 import LoadingSpinner from "../common/LoadingSpinner";
