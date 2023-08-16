@@ -49,7 +49,7 @@ resource "aws_iam_role_policy_attachment" "eventbridge_trading_lambda_combined_a
 resource "aws_cloudwatch_event_rule" "trading_cron_lambda_trigger" {
   name                = "${var.app_name}TradingLambdaTrigger"
   description         = "Trigger the Lambda function"
-  schedule_expression = "rate(1 minute)"
+  schedule_expression = "rate(5 minute)"
 }
 
 resource "aws_cloudwatch_event_target" "trading_cron_lambda_target" {
