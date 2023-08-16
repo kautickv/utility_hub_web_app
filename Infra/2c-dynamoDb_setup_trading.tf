@@ -5,7 +5,7 @@ resource "aws_dynamodb_table" "crypto_trading_table" {
   hash_key     = "key"
   attribute {
     name = "key"
-    type = "N"
+    type = "S"
   }
   attribute {
     name = "crypto_ticker"
