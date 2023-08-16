@@ -48,7 +48,7 @@ jobs:
 
       - name: Setup Python 3.9
         uses: actions/setup-python@v4
-          with:
+        with:
           python-version: '3.9'
 
       - name: Build and zip python requirement file
