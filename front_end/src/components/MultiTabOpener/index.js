@@ -270,7 +270,7 @@ function MultiTabOpener() {
             />
           </Box>
           <Container style={{ marginTop: "10px", marginBottom: "10px" }}>
-            <Grid container spacing={1}>
+            <Grid container spacing={4}>
               {tilesData
                 .filter((tile) =>
                   tile.title.toLowerCase().includes(searchTerm.toLowerCase())

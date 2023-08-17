@@ -25,20 +25,30 @@ import Paper from "@mui/material/Paper";
 import { styled } from "@mui/system";
 
 const StyledCard = styled(Card)({
-  maxWidth: 345,
-  "& .MuiCardContent-root": {
-    "& .MuiTypography-root": {
-      objectFit: "cover",
-    },
-  },
+  width: 300,
+  height: 200,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
 });
 
+const StyledCardContent = styled(CardContent)({
+  height: 320,
+  overflow: "auto",
+});
 
+const StyledCardActions = styled(CardActions)({
+  marginTop: "auto",
+});
+
+const StyledTypography = styled(Typography)({
+  whiteSpace: "normal",
+  textOverflow: "ellipsis",
+});
 
 function Tile(props) {
   const [configureOpen, setConfigureOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-
   const [urls, setUrls] = useState(props.urls);
   const [newUrl, setNewUrl] = useState({ urlTitle: "", url: "" });
 
@@ -100,8 +110,8 @@ function Tile(props) {
 
   return (
     <StyledCard>
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+      <StyledCardContent>
+        <StyledTypography gutterBottom variant="h5" component="div">
           <Box
             component="span"
             style={{ display: "flex", alignItems: "center" }}
@@ -132,12 +142,12 @@ function Tile(props) {
               </Badge>
             </Tooltip>
           </Box>
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
+        </StyledTypography>
+        <Typography variant="body2" color="text.secondary" style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {props.description}
         </Typography>
-      </CardContent>
-      <CardActions>
+      </StyledCardContent>
+      <StyledCardActions>
         <Button size="small" onClick={handleConfigureOpen}>
           Configure
         </Button>
@@ -147,7 +157,7 @@ function Tile(props) {
         <Button size="medium" onClick={handleOpenAll}>
           Open All
         </Button>
-      </CardActions>
+      </StyledCardActions>
 
       <Dialog
         open={configureOpen}
