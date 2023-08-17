@@ -35,6 +35,7 @@ function MultiTabOpener() {
   const [newTile, setNewTile] = useState({
     title: "",
     description: "",
+    default: "No",
     urls: [{ urlTitle: "", url: "" }],
   });
 

@@ -33,7 +33,7 @@ def handleGetMultitab(event):
             # Return default config only.
             with open('trading_config.json') as f:
                 configs = json.load(f)
-            return buildResponse(200, json.dumps({"config_json": configs['default_cards']})) # return empty array
+            return buildResponse(200, json.dumps(json.dumps(configs['default_cards']))) 
         
         config = decompress_json(compressed_config_json)
 
