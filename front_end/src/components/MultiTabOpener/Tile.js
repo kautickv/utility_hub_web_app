@@ -15,6 +15,7 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
+import StarIcon from "@mui/icons-material/Star";
 import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
@@ -25,11 +26,12 @@ import Paper from "@mui/material/Paper";
 import { styled } from "@mui/system";
 
 const StyledCard = styled(Card)({
-  width: 300,
+  width: 280,
   height: 200,
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
+  position: "relative",
 });
 
 const StyledCardContent = styled(CardContent)({
@@ -117,13 +119,18 @@ function Tile(props) {
             style={{ display: "flex", alignItems: "center" }}
           >
             {props.title}
+            {props.default === "Yes" && (
+              <Tooltip title="Default Tile">
+                <StarIcon style={{ marginLeft: "10px", color: "gold" }} />
+              </Tooltip>
+            )}
             <Tooltip title={`${urls.length} link(s) in this card`} arrow>
               <Badge
                 badgeContent={urls.length}
                 color="primary"
                 overlap="circular"
                 max={999}
-                style={{ marginLeft: "15px" }}
+                style={{ position: "absolute", top: 20, right: 20 }}
               >
                 <Box
                   component="span"
@@ -143,7 +150,11 @@ function Tile(props) {
             </Tooltip>
           </Box>
         </StyledTypography>
-        <Typography variant="body2" color="text.secondary" style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          style={{ whiteSpace: "normal", wordWrap: "break-word" }}
+        >
           {props.description}
         </Typography>
       </StyledCardContent>

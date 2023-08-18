@@ -14,7 +14,18 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useNavigate } from "react-router-dom";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 import {
   sendGETToMultitabBackend,
@@ -23,15 +34,17 @@ import {
 
 // Import components
 import Navbar from "../common/Navbar";
-import LoadingSpinner from "../common/LoadingSpinner"
+import LoadingSpinner from "../common/LoadingSpinner";
 import Tile from "./Tile.js";
+import Link from "./Link";
 
 function MultiTabOpener() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [tilesData, setTilesData] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true)  // Set to loading initially
+  const [isLoading, setIsLoading] = useState(true); // Set to loading initially
+  const [view, setView] = useState("LinkView");
   const [newTile, setNewTile] = useState({
     title: "",
     description: "",
@@ -100,7 +113,6 @@ function MultiTabOpener() {
 
     // Save configuration
     postNewConfigToBackend(copy);
-
   }
   async function handleConfigureSave(index, newUrls) {
     /**
@@ -204,7 +216,6 @@ function MultiTabOpener() {
   }
 
   async function handleAddTile() {
-
     if (!newTile.title.trim() || !newTile.description.trim()) {
       alert("Title and description cannot be empty.");
       return;
@@ -230,16 +241,29 @@ function MultiTabOpener() {
     });
 
     // All good. Let's close the dialog
-    handleCloseDialog()
+    handleCloseDialog();
 
     // Save configuration
-     postNewConfigToBackend(copy)
+    postNewConfigToBackend(copy);
   }
+
+  const allLinks = tilesData.flatMap((tile) =>
+    tile.urls.map((url) => ({
+      title: url.urlTitle,
+      url: url.url,
+    }))
+  );
+
+  const filteredLinks = allLinks.filter((link) =>
+    link.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <>
       <Navbar />
-      {isLoading ? (<LoadingSpinner description="Loading, please wait..."/>) : (
+      {isLoading ? (
+        <LoadingSpinner description="Loading, please wait..." />
+      ) : (
         <>
           <Fab
             color="primary"
@@ -255,11 +279,24 @@ function MultiTabOpener() {
             alignItems="center"
             style={{ marginBottom: "20px", marginTop: "20px" }}
           >
+            <ToggleButtonGroup
+              value={view}
+              exclusive
+              onChange={(event, newView) => setView(newView)}
+              aria-label="view"
+            >
+              <ToggleButton value="LinkView" aria-label="link view">
+                Link View
+              </ToggleButton>
+              <ToggleButton value="TileView" aria-label="tile view">
+                Tile View
+              </ToggleButton>
+            </ToggleButtonGroup>
             <TextField
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               variant="outlined"
-              size="large" // You can adjust this to 'medium' if 'large' is too big.
+              size="large"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -270,99 +307,136 @@ function MultiTabOpener() {
               style={{ width: "50%" }} // Adjust the width of the search bar.
             />
           </Box>
-          <Container style={{ marginTop: "10px", marginBottom: "10px" }}>
-            <Grid container spacing={4}>
-              {tilesData
-                .filter((tile) =>
-                  tile.title.toLowerCase().includes(searchTerm.toLowerCase())
-                )
-                .map((tile, index) => (
-                  <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                    <Tile
-                      title={tile.title}
-                      description={tile.description}
-                      urls={tile.urls}
-                      onSave={(newUrls) => handleConfigureSave(index, newUrls)}
-                      onDelete={() => handleDeleteTile(index)}
-                    />
-                  </Grid>
-                ))}
-            </Grid>
-          </Container>
-          <Dialog
-            open={dialogOpen}
-            onClose={handleCloseDialog}
-            aria-labelledby="form-dialog-title"
-          >
-            <DialogTitle id="form-dialog-title">Add New Card</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Please fill in the details below:
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="title"
-                label="Title"
-                type="text"
-                fullWidth
-                value={newTile.title}
-                onChange={handleTitleChange}
-              />
-              <TextField
-                margin="dense"
-                id="description"
-                label="Description"
-                type="text"
-                fullWidth
-                value={newTile.description}
-                onChange={handleDescriptionChange}
-              />
-              <Divider style={{ marginTop: "10px", marginBottom: "10px" }} />{"Input URL below:"}
-              {newTile.urls.map((url, index) => (
-                <Grid container spacing={2} key={index}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      margin="dense"
-                      id={"urlTitle" + index}
-                      label="URL Title"
-                      type="text"
-                      fullWidth
-                      value={url.urlTitle}
-                      onChange={(event) => handleUrlTitleChange(index, event)}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      margin="dense"
-                      id={"url" + index}
-                      label="URL"
-                      type="text"
-                      fullWidth
-                      value={url.url}
-                      onChange={(event) => handleUrlChange(index, event)}
-                    />
-                  </Grid>
+          {view === "TileView" && (
+            <>
+              <Container style={{ marginTop: "10px", marginBottom: "10px" }}>
+                <Grid container spacing={1}>
+                  {tilesData
+                    .filter((tile) =>
+                      tile.title
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
+                    )
+                    .map((tile, index) => (
+                      <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                        <Tile
+                          title={tile.title}
+                          description={tile.description}
+                          urls={tile.urls}
+                          default={tile.default}
+                          onSave={(newUrls) =>
+                            handleConfigureSave(index, newUrls)
+                          }
+                          onDelete={() => handleDeleteTile(index)}
+                        />
+                      </Grid>
+                    ))}
                 </Grid>
-              ))}
-              <Button
-                onClick={addNewUrl}
-                color="primary"
-                style={{ marginTop: "10px" }}
+              </Container>
+              <Dialog
+                open={dialogOpen}
+                onClose={handleCloseDialog}
+                aria-labelledby="form-dialog-title"
               >
-                Add More URL
-              </Button>
-            </DialogContent>
+                <DialogTitle id="form-dialog-title">Add New Card</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Please fill in the details below:
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="title"
+                    label="Title"
+                    type="text"
+                    fullWidth
+                    value={newTile.title}
+                    onChange={handleTitleChange}
+                  />
+                  <TextField
+                    margin="dense"
+                    id="description"
+                    label="Description"
+                    type="text"
+                    fullWidth
+                    value={newTile.description}
+                    onChange={handleDescriptionChange}
+                  />
+                  <Divider
+                    style={{ marginTop: "10px", marginBottom: "10px" }}
+                  />
+                  {"Input URL below:"}
+                  {newTile.urls.map((url, index) => (
+                    <Grid container spacing={2} key={index}>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          margin="dense"
+                          id={"urlTitle" + index}
+                          label="URL Title"
+                          type="text"
+                          fullWidth
+                          value={url.urlTitle}
+                          onChange={(event) =>
+                            handleUrlTitleChange(index, event)
+                          }
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          margin="dense"
+                          id={"url" + index}
+                          label="URL"
+                          type="text"
+                          fullWidth
+                          value={url.url}
+                          onChange={(event) => handleUrlChange(index, event)}
+                        />
+                      </Grid>
+                    </Grid>
+                  ))}
+                  <Button
+                    onClick={addNewUrl}
+                    color="primary"
+                    style={{ marginTop: "10px" }}
+                  >
+                    Add More URL
+                  </Button>
+                </DialogContent>
 
-            <DialogActions>
-              <Button onClick={handleCloseDialog} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleAddTile} color="primary">
-                Create
-              </Button>
-            </DialogActions>
-          </Dialog>
+                <DialogActions>
+                  <Button onClick={handleCloseDialog} color="primary">
+                    Cancel
+                  </Button>
+                  <Button onClick={handleAddTile} color="primary">
+                    Create
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </>
+          )}
+
+          {view === "LinkView" && (
+            <>
+             <Container style={{ marginTop: "10px", marginBottom: "10px" }}>
+                <TableContainer component={Paper}>
+                  <Table aria-label="links table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Title</TableCell>
+                        <TableCell>URL</TableCell>
+                        <TableCell align="center">Action</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {filteredLinks.map((link, index) => (
+                        <Link key={index} title={link.title} url={link.url} />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Container>
+            </>
+          )}
         </>
       )}
     </>
