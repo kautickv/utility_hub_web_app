@@ -12,7 +12,7 @@
 # List the contents of the current directory
 ls
 
-# Copy 'common' folder to all other folders in the same parent directory
+# Copy 'common' folder to all other folders in the backend directory
 for dir in ../backend/
 do
   if [ "$dir" != "./common/" ]; then
