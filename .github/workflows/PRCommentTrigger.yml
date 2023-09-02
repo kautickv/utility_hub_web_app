@@ -55,7 +55,8 @@ jobs:
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/.github
         run: |
           pwd
-          chmod +x ./scripts/build_and_zip.sh
+          ls
+          chmod +x scripts/build_and_zip.sh
         
       - name: Build and zip python requirement file
         id: backend_build
