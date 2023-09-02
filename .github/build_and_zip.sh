@@ -1,18 +1,19 @@
 #!/bin/bash
 
 # Install python requirements
-python -m pip install -r requirements.txt -t ./python
+
+#python -m pip install -r requirements.txt -t ./python
 
 # Zip the python directory
-zip -r ../Infra/layer.zip python/
+#zip -r ../Infra/layer.zip python/
 
 # Remove the python directory
-rm -r python
+#rm -r python
 
 # List the contents of the current directory
 ls
 
-# Copy 'common' folder to all other folders in the same parent directory
+# Copy 'common' folder to all other folders in the backend directory
 for dir in ../backend/
 do
   if [ "$dir" != "./common/" ]; then

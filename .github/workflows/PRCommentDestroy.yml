@@ -47,12 +47,9 @@ jobs:
 
       - name: Build and zip python requirement file
         id: backend_build
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/back_end
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/.github
         run: |
-            python -m pip install -r requirements.txt -t ./python
-            zip -r ../Infra/layer.zip python/
-            rm -r python
-            ls
+            ./build_and_zip.sh
 
       - name: Terraform Init
         id: init
