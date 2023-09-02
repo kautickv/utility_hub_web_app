@@ -3,13 +3,13 @@
 # Change to back_end directory
 cd ../back_end
 # Install python requirements
-python -m pip install -r requirements.txt -t ./python
+#python -m pip install -r requirements.txt -t ./python
 
 # Zip the python directory
-zip -r ../Infra/layer.zip python/
+#zip -r ../Infra/layer.zip python/
 
 # Remove the python directory
-rm -r python
+#rm -r python
 
 # List the contents of the current directory
 ls
@@ -19,6 +19,10 @@ for dir in ./
 do
   if [ "$dir" != "./common/" ]; then
     cp -r ./common/ "$dir"
+    echo "$dir"
+    cd "$dir"
+    ls
+    cd ..
   fi
 done
 
