@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Change to back_end directory
+cd ../back_end
 # Install python requirements
 python -m pip install -r requirements.txt -t ./python
 
@@ -13,10 +15,10 @@ rm -r python
 ls
 
 # Copy 'common' folder to all other folders in the backend directory
-for dir in ../back_end/
+for dir in ./
 do
-  if [ "$dir" != "../back_end/common/" ]; then
-    cp -r ../back_end/common/ "$dir"
+  if [ "$dir" != "./common/" ]; then
+    cp -r ./common/ "$dir"
   fi
 done
 
