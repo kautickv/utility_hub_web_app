@@ -15,8 +15,8 @@ ls
 # Copy 'common' folder to all other folders in the backend directory
 for dir in ../back_end/
 do
-  if [ "$dir" != "./common/" ]; then
-    cp -r ./common/ "$dir"
+  if [ "$dir" != "../back_end/common/" ]; then
+    cp -r ../back_end/common/ "$dir"
   fi
 done
 
