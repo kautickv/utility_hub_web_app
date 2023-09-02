@@ -52,7 +52,9 @@ jobs:
           python-version: '3.9'
       
       - name: Set execute permissions on bash script
-        run: chmod +x .github/scripts/build_and_zip.sh
+        run: |
+          pwd
+          chmod +x .github/scripts/build_and_zip.sh
         
       - name: Build and zip python requirement file
         id: backend_build
