@@ -13,7 +13,9 @@ cd ../back_end
 
 # List the contents of the current directory
 ls
+
 echo "This is branch"
+
 # Copy 'common' folder to all other folders in the backend directory
 for dir in ./
 do
@@ -25,3 +27,4 @@ do
     cd ..
   fi
 done
+
