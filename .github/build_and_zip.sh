@@ -11,3 +11,14 @@ rm -r python
 
 # List the contents of the current directory
 ls
+
+# Copy 'common' folder to all other folders in the same parent directory
+for dir in ../backend/
+do
+  if [ "$dir" != "./common/" ]; then
+    cp -r ./common/ "$dir"
+  fi
+done
+
+# List the contents of the parent directory
+ls ..
