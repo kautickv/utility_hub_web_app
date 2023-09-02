@@ -52,6 +52,7 @@ jobs:
           python-version: '3.9'
       
       - name: Set execute permissions on bash script
+        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/.github
         run: |
           pwd
           chmod +x .github/scripts/build_and_zip.sh
