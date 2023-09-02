@@ -46,6 +46,11 @@ jobs:
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           aws configure set default.region $AWS_DEFAULT_REGION
 
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
       - name: Build and zip python requirement file
         id: backend_build
         working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/back_end
@@ -53,7 +58,7 @@ jobs:
           python -m pip install -r requirements.txt -t ./python
           zip -r ../Infra/layer.zip python/
           rm -r python
-          ls
+          python --version
 
       - name: Terraform Init
         id: init
