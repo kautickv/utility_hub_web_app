@@ -317,7 +317,7 @@ function MultiTabOpener() {
                     </InputAdornment>
                   ),
                 }}
-                style={{ width: "50%" }} // Adjust the width of the search bar.
+                style={{ width: "80%"}} // Adjust the width of the search bar.
               />
             </Box>
 
