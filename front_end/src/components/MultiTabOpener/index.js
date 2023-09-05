@@ -25,6 +25,8 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Typography,
+  useTheme,
 } from "@mui/material";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 import {
@@ -51,6 +53,8 @@ function MultiTabOpener() {
     default: "No",
     urls: [{ urlTitle: "", url: "" }],
   });
+
+  const theme = useTheme();
 
   useEffect(() => {
     // Check if JWT token exists
@@ -251,6 +255,8 @@ function MultiTabOpener() {
     tile.urls.map((url) => ({
       title: url.urlTitle,
       url: url.url,
+      cardTitle: tile.title,
+      default: tile.default,
     }))
   );
 
@@ -275,38 +281,47 @@ function MultiTabOpener() {
           </Fab>
           <Box
             display="flex"
-            justifyContent="center"
             alignItems="center"
-            style={{ marginBottom: "20px", marginTop: "20px" }}
+            style={{ marginBottom: "20px", marginTop: "20px", margin: "25px" }}
           >
-            <ToggleButtonGroup
-              value={view}
-              exclusive
-              onChange={(event, newView) => setView(newView)}
-              aria-label="view"
-            >
-              <ToggleButton value="LinkView" aria-label="link view">
-                Link View
-              </ToggleButton>
-              <ToggleButton value="TileView" aria-label="tile view">
-                Tile View
-              </ToggleButton>
-            </ToggleButtonGroup>
-            <TextField
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              variant="outlined"
-              size="large"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-              style={{ width: "50%" }} // Adjust the width of the search bar.
-            />
+            <Box flexGrow={1}>
+              <ToggleButtonGroup
+                value={view}
+                exclusive
+                onChange={(event, newView) => setView(newView)}
+                aria-label="view"
+              >
+                <ToggleButton value="LinkView" aria-label="link view">
+                  Link View
+                </ToggleButton>
+                <ToggleButton value="TileView" aria-label="tile view">
+                  Tile View
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
+
+            <Box flexGrow={2} style={{ textAlign: "center" }}>
+              <TextField
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                variant="outlined"
+                size="large"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                style={{ width: "50%" }} // Adjust the width of the search bar.
+              />
+            </Box>
+
+            <Box flexGrow={1}>
+              {/* This box is to keep symmetry. If you have any components you'd like to align to the right, you can place them here. */}
+            </Box>
           </Box>
+
           {view === "TileView" && (
             <>
               <Container style={{ marginTop: "10px", marginBottom: "10px" }}>
@@ -417,19 +432,44 @@ function MultiTabOpener() {
 
           {view === "LinkView" && (
             <>
-             <Container style={{ marginTop: "10px", marginBottom: "10px" }}>
+              <Container style={{ marginTop: "10px", marginBottom: "10px" }}>
                 <TableContainer component={Paper}>
                   <Table aria-label="links table">
-                    <TableHead>
+                    <TableHead
+                      style={{ backgroundColor: theme.palette.secondary.main }}
+                    >
                       <TableRow>
-                        <TableCell>Title</TableCell>
-                        <TableCell>URL</TableCell>
-                        <TableCell align="center">Action</TableCell>
+                        <TableCell align="left" style={{ padding: "8px 16px" }}>
+                          <Typography variant="h5" color="textPrimary">
+                            Title
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="left" style={{ padding: "8px 16px" }}>
+                          <Typography variant="h5" color="textPrimary">
+                            URL
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="left" style={{ padding: "8px 16px" }}>
+                          <Typography variant="h5" color="textPrimary">
+                            CardName
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="left" style={{ padding: "8px 16px" }}>
+                          <Typography variant="h5" color="textPrimary">
+                            Open
+                          </Typography>
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {filteredLinks.map((link, index) => (
-                        <Link key={index} title={link.title} url={link.url} />
+                        <Link
+                          key={index}
+                          title={link.title}
+                          url={link.url}
+                          cardTitle={link.cardTitle}
+                          defaultUrl={link.default}
+                        />
                       ))}
                     </TableBody>
                   </Table>
