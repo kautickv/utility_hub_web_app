@@ -1,5 +1,4 @@
 from common.CommonUtility import CommonUtility
-from utils.util import getAuthorizationCode,verifyAuthStatus
 from handlers.handlePostTrading import handlePostTrading
 from handlers.handleGetTrading import handleGetTrading
 
@@ -10,12 +9,12 @@ def lambda_handler(event, context):
         #initialise CommonUtility Class
         common_utility = CommonUtility()
         ## Check if user is authenticated
-        code = getAuthorizationCode(event)
+        code = common_utility.getAuthorizationCode(event)
         if code is None:
             return common_utility.buildResponse(401, "Unauthorized")
         else:
             ## VerifyAuthStatus will also return the user details associated with JWT Token
-            user_details = verifyAuthStatus(code)
+            user_details = common_utility.verifyAuthStatus(code)
             if user_details == None:
                 return common_utility.buildResponse(401, "Unauthorized")
             

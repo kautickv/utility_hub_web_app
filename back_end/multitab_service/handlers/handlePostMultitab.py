@@ -1,6 +1,4 @@
 from common.CommonUtility import CommonUtility
-from utils.util import verifyAuthStatus
-from utils.util import getAuthorizationCode
 from utils.util import compress_json
 from utils.util import decompress_json
 from datetime import datetime
@@ -10,7 +8,7 @@ import traceback
 import os
 import json 
 
-def handlePostMultitab(event):
+def handlePostMultitab(event, user_details):
 
     # This function will first check if the user is authenticated. Returns 401 error
     # This function is called when user wants to modify their bookmarks. 
@@ -20,15 +18,6 @@ def handlePostMultitab(event):
     try:
         # Initialize CommonUtility Class
         common_utility = CommonUtility()
-        # Extract auth code
-        code = getAuthorizationCode(event)
-        if code is None:
-            return common_utility.buildResponse(401, "Unauthorized")
-        else:
-            ## VerifyAuthStatus will also return the user details associated with JWT Token
-            user_details = verifyAuthStatus(code)
-            if user_details == None:
-                return common_utility.buildResponse(401, "Unauthorized")
 
         ## User verified to be authenticated. Now, update the config in database.
         configTableManager = BookmarksTableManager(os.getenv('BOOKMARKS_TABLE_NAME'))

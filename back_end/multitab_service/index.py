@@ -22,11 +22,11 @@ def lambda_handler(event, context):
                 return common_utility.buildResponse(401, "Unauthorized")
             
         if http_method == 'POST' and path =='/multitab':
-            return handlePostMultitab(event)
+            return handlePostMultitab(event, user_details)
     
         elif http_method == 'GET' and path =='/multitab':
 
-            return handleGetMultitab(event)
+            return handleGetMultitab(event, user_details)
         else:
             return common_utility.buildResponse(404, "Resource not found")
     

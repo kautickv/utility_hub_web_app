@@ -1,6 +1,5 @@
 from common.CommonUtility import CommonUtility
 from handlers.get_slack_data_handler import get_slack_data_handler
-from utils.util import getAuthorizationCode
 
 def lambda_handler(event, context):
     print(event)
@@ -13,7 +12,7 @@ def lambda_handler(event, context):
     getDataFrom = event['queryStringParameters']['from'].strip()
     try:
         # Extract auth code
-        code = getAuthorizationCode(event)
+        code = common_utility.getAuthorizationCode(event)
         if code is None:
             return common_utility.buildResponse(401, "Unauthorized")
         else:
