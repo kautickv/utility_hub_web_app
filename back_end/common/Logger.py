@@ -5,6 +5,8 @@
 
 import logging
 import traceback
+import os
+import sys
 
 class Logger:
 
@@ -26,8 +28,14 @@ class Logger:
     def format_exception(e, function_name=''):
         error_type = type(e).__name__
         error_message = str(e)
+        # Extracting the current stack frame
+        current_frame = traceback.extract_tb(sys.exc_info()[2])[-1]
+        line_num = current_frame.lineno
+        filename = current_frame.filename
+        module_name = os.path.splitext(os.path.basename(filename))[0]
+
         stack_trace = traceback.format_exc()
-        return f"Error in {function_name}: {error_type} - {error_message}\n{stack_trace}"
+        return (f"Error in {function_name} (Module: {module_name}, Filename: {filename}, Line: {line_num}): "f"{error_type} - {error_message}\n{stack_trace}")
 
     def log_exception(self, e, function_name=''):
         error_details = self.format_exception(e, function_name)
