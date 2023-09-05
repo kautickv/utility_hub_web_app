@@ -288,11 +288,15 @@ function MultiTabOpener() {
               <ToggleButtonGroup
                 value={view}
                 exclusive
-                onChange={(event, newView) => setView(newView)}
+                onChange={(event, newView) => {
+                  if (newView !== null) {
+                    setView(newView);
+                  }
+                }}
                 aria-label="view"
               >
                 <ToggleButton value="LinkView" aria-label="link view">
-                  Link View
+                  URL View
                 </ToggleButton>
                 <ToggleButton value="TileView" aria-label="tile view">
                   Tile View
