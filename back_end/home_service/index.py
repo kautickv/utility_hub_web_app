@@ -1,6 +1,5 @@
 from common.CommonUtility import CommonUtility
 from handlers.get_slack_data_handler import get_slack_data_handler
-from utils.util import verifyAuthStatus
 from utils.util import getAuthorizationCode
 
 def lambda_handler(event, context):
@@ -19,7 +18,7 @@ def lambda_handler(event, context):
             return common_utility.buildResponse(401, "Unauthorized")
         else:
             ## VerifyAuthStatus will also return the user details associated with JWT Token
-            user_details = verifyAuthStatus(code)
+            user_details = common_utility.verifyAuthStatus(code)
             if user_details == None:
                 return common_utility.buildResponse(401, "Unauthorized")
             

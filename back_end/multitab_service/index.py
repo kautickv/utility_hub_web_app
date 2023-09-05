@@ -7,13 +7,29 @@ def lambda_handler(event, context):
     http_method = event['httpMethod']
     path = event['path']
 
-    #initialize CommonUtility Class
+    # Initialize CommonUtility Class
     common_utility = CommonUtility()
-    if http_method == 'POST' and path =='/multitab':
-        return handlePostMultitab(event)
     
-    elif http_method == 'GET' and path =='/multitab':
+    try:
+        # Extract auth code
+        code = common_utility.getAuthorizationCode(event)
+        if code is None:
+            return common_utility.buildResponse(401, "Unauthorized")
+        else:
+            ## VerifyAuthStatus will also return the user details associated with JWT Token
+            user_details = common_utility.verifyAuthStatus(code)
+            if user_details == None:
+                return common_utility.buildResponse(401, "Unauthorized")
+            
+        if http_method == 'POST' and path =='/multitab':
+            return handlePostMultitab(event)
+    
+        elif http_method == 'GET' and path =='/multitab':
 
-        return handleGetMultitab(event)
-    else:
-        return common_utility.buildResponse(404, "Resource not found")
+            return handleGetMultitab(event)
+        else:
+            return common_utility.buildResponse(404, "Resource not found")
+    
+    except Exception as e:
+        print(f"Error: ${e}")
+        return common_utility.buildResponse(500, "An error occurred. Please try again later")
