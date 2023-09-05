@@ -1,7 +1,7 @@
 ###
 # PURPOSE: This class will contain the implementation of helper functions which will
 #          be shared by all the lambdas.
-
+###
 import json
 import boto3
 import os

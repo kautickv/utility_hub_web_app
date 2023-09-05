@@ -2,6 +2,7 @@
 # PURPOSE: This Logger class will be used to log all the exceptions occurred across this
 #          entire program. The Logger class will format the error with error type, 
 #          error message and a full traceback of the error or exception.
+###
 
 import logging
 import traceback
