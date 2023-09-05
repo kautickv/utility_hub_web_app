@@ -3,7 +3,7 @@ from utils.util import compress_json
 from utils.util import decompress_json
 from datetime import datetime
 from utils.BookmarksTableManager import BookmarksTableManager
-import traceback
+from common.Logger import Logger
 
 import os
 import json 
@@ -18,6 +18,8 @@ def handlePostMultitab(event, user_details):
     try:
         # Initialize CommonUtility Class
         common_utility = CommonUtility()
+        #Initialise Logging instance
+        logging_instance = Logger()
 
         ## User verified to be authenticated. Now, update the config in database.
         configTableManager = BookmarksTableManager(os.getenv('BOOKMARKS_TABLE_NAME'))
@@ -39,6 +41,5 @@ def handlePostMultitab(event, user_details):
             return common_utility.buildResponse(500, "An error occurred updating configuration")
     
     except Exception as e:
-        print('handlePostMultitab(): ' + str(e))
-        traceback.print_exc()  
+        logging_instance.log_exception(e, 'handlePostMultitab')
         return common_utility.buildResponse(500, 'Internal Server error. Please try again')

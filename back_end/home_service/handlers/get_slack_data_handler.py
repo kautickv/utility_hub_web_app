@@ -2,7 +2,7 @@ from common.CommonUtility import CommonUtility
 from utils.SlackManager import SlackManager
 import json
 from datetime import datetime, timedelta
-
+from common.Logger import Logger
 
 def get_slack_data_handler(numberOfDays, user_details):
     try:
@@ -32,7 +32,9 @@ def get_slack_data_handler(numberOfDays, user_details):
         return common_utility.buildResponse(200, json.dumps(all_messages))
     
     except Exception as e:
-        print(f"get_slack_data_handler(): ${e}")
+        #Initialise Logging instance
+        logging_instance = Logger()
+        logging_instance.log_exception(e, 'get_slack_data_handler')
         return common_utility.buildResponse(500,"An error occurred. Please try again later")
 
 

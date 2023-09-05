@@ -1,10 +1,14 @@
 from common.CommonUtility import CommonUtility
 from handlers.get_slack_data_handler import get_slack_data_handler
+from common.Logger import Logger
 
 def lambda_handler(event, context):
     print(event)
     http_method = event['httpMethod']
     path = event['path']
+
+    #Initialise Logging instance
+    logging_instance = Logger()
 
     # Initialize CommonUtility Class
     common_utility = CommonUtility()
@@ -28,5 +32,6 @@ def lambda_handler(event, context):
             return common_utility.buildResponse(404, "Resource not found")
     
     except Exception as e:
-        print(f"Error: ${e}")
+        logging_instance.log_exception(e, 'home_service_lambda')
+
         return common_utility.buildResponse(500, "An error occurred. Please try again later")

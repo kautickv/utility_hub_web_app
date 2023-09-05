@@ -1,6 +1,7 @@
 from common.CommonUtility import CommonUtility
 from handlers.handlePostMultitab import handlePostMultitab
 from handlers.handleGetMultitab import handleGetMultitab
+from common.Logger import Logger
 
 def lambda_handler(event, context):
     print(event)
@@ -31,5 +32,8 @@ def lambda_handler(event, context):
             return common_utility.buildResponse(404, "Resource not found")
     
     except Exception as e:
-        print(f"Error: ${e}")
+        #Initialise Logging instance
+        logging_instance = Logger()
+        logging_instance.log_exception(e, 'multitab_service_handler')
+
         return common_utility.buildResponse(500, "An error occurred. Please try again later")

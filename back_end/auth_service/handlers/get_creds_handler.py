@@ -1,6 +1,7 @@
 import boto3
 import base64
 from common.CommonUtility import CommonUtility
+from common.Logger import Logger
 import json
 
 def encrypt_to_base64(text):
@@ -32,7 +33,9 @@ def get_creds_handler(event, context):
             "client_id_base64": encrypt_to_base64(client_id),
         })
     except Exception as e:
-        print(f"Error in get_creds. Error: {str(e)}")
+        #Initialise Logging instance
+        logging_instance = Logger()
+        logging_instance.log_exception(e, 'get_creds_handler')
         return common_utility.buildResponse(500, {
             "message": "Internal Server error. Try again later"
         })

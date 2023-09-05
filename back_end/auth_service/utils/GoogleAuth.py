@@ -6,7 +6,7 @@ import jwt
 from datetime import datetime, timedelta
 from utils.util import getJWTSecretKey, decode_jwt_token
 from utils.DynamoDBManager import DynamoDBManager
-from utils.CustomError import CustomError
+from common.Logger import Logger
 
 class GoogleAuth:
 
@@ -21,6 +21,9 @@ class GoogleAuth:
 
         # Create instance of signin dynamo table
         self.__signInTableDb = DynamoDBManager(os.getenv('USER_TABLE_NAME'))
+        #Initialise Logging instance
+        self.logging_instance = Logger()
+
 
     def get_google_auth_data(self):
 
@@ -44,7 +47,9 @@ class GoogleAuth:
                 "client_secret": client_secret
             }
         except Exception as e:
-            print(f'Error(get_google_auth_data): {e}')
+            self.logging_instance.log_exception(e, 'get_google_auth_data')
+            raise  # Throw exception
+
 
     def exchange_code_for_token(self, body):
         google_data = self.get_google_auth_data()
@@ -65,7 +70,7 @@ class GoogleAuth:
 
             return True
         except Exception as e:
-            print(f'Error(exchange_code_for_token): {e}')
+            self.logging_instance.log_exception(e, 'exchange_code_for_token')
             return False
 
     def get_user_info_from_google(self):
@@ -79,7 +84,7 @@ class GoogleAuth:
             return True
 
         except Exception as e:
-            print(f'Error(get_user_info_from_google): {e}')
+            self.logging_instance.log_exception(e, 'get_user_info_from_google')
             return False
 
     def generate_jwt_token(self, expInHours):
@@ -101,7 +106,8 @@ class GoogleAuth:
 
             return token
         except Exception as e:
-            print(f'Error generating jwt secret from ssm parameter store: {e}')
+            self.logging_instance.log_exception(e, 'generate_jwt_token')
+            raise # Throw exception
 
     def add_user_info_in_db(self):
         # This function will add safe the user information in the user database.
@@ -122,14 +128,14 @@ class GoogleAuth:
 
             # Add item in database
             if (not self.__signInTableDb.add_item(userData)):
-                raise CustomError(f"(add_user_info_in_db): User Could not be added to database.")
+                raise Exception(f"(add_user_info_in_db): User Could not be added to database.")
             
 
             return True
         
 
         except Exception as e:
-            print(f"Error (add_user_info_in_db): ${str(e)}")
+            self.logging_instance.log_exception(e, 'add_user_info_in_db')
             return False
 
     def logoutUser(self, token):
@@ -144,7 +150,7 @@ class GoogleAuth:
             self.__signInTableDb.update_user_data(decoded_jwt_token["email"], login_status=0, last_logout=str(datetime.utcnow()))
             return True
         except Exception as e:
-            print(f"Could not update user data")
+            self.logging_instance.log_exception(e, 'logoutUser')
             return False
 
     # Getter functions

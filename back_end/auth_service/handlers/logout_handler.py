@@ -1,5 +1,6 @@
 from common.CommonUtility import CommonUtility
 from utils.GoogleAuth import GoogleAuth
+from common.Logger import Logger
 
 def logout_handler(event, context):
 
@@ -32,4 +33,7 @@ def logout_handler(event, context):
             else:
                 return common_utility.buildResponse(400, {"message": "Bad request"})
     except Exception as e:
+        #Initialise Logging instance
+        logging_instance = Logger()
+        logging_instance.log_exception(e, 'logout_handler')
         return common_utility.buildResponse(500, {"message": "Internal server error. Try again later"})

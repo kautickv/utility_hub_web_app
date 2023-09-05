@@ -1,6 +1,7 @@
 from common.CommonUtility import CommonUtility
 from utils.util import verifyUserLoginStatus
 from utils.util import decode_jwt_token
+from common.Logger import Logger
 
 def verify_handler(event, context):
     # This function will receive a request with JWT Token in HTTP header and verify if it's valid.
@@ -44,4 +45,7 @@ def verify_handler(event, context):
             else:
                 return common_utility.buildResponse(401, {"message": "Unauthorized"})
     except Exception as e:
+        #Initialise Logging instance
+        logging_instance = Logger()
+        logging_instance.log_exception(e, 'verify_handler')
         return common_utility.buildResponse(500, {"message": "Internal server error. Try again later"})

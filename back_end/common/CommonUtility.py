@@ -5,11 +5,13 @@
 import json
 import boto3
 import os
+from common.Logger import Logger
 
 class CommonUtility:
 
     def __init__(self):
-        pass
+        #Initialise Logging instance
+        self.logging_instance = Logger()
 
     
     def buildResponse(self, code, message, jwt_token=""):
@@ -61,8 +63,8 @@ class CommonUtility:
                 return None
             
         except Exception as e:
-            print("Failed to get auth status of user")
-            raise Exception ("verifyAuthStatus(): " + str(e))
+            self.logging_instance.log_exception(e, 'verifyAuthStatus')
+            raise
     
 
     def getAuthorizationCode(self, event):
@@ -88,5 +90,5 @@ class CommonUtility:
             return token
             
         except Exception as e:
-            print("An error occurred while extracting authorization code from header" + str(e))
-            raise Exception("getAuthorizationCode(): " + str(e))
+            self.logging_instance.log_exception(e, 'getAuthorizationCode')
+            raise
