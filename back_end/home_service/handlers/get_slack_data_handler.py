@@ -1,4 +1,4 @@
-from utils.util import buildResponse
+from common.CommonUtility import CommonUtility
 from utils.SlackManager import SlackManager
 import json
 from datetime import datetime, timedelta
@@ -6,7 +6,9 @@ from datetime import datetime, timedelta
 
 def get_slack_data_handler(numberOfDays, user_details):
     try:
-            
+
+        # Initialize CommonUtility Class
+        common_utility = CommonUtility()
         ## At this point, user is authenticated. Initialise slack Manager
         slack_client = SlackManager()
 
@@ -27,11 +29,11 @@ def get_slack_data_handler(numberOfDays, user_details):
             message = extractInfoFromSlackResponse(messages)
             all_messages[slack_client.getChannelName(channel)] = message
         
-        return buildResponse(200, json.dumps(all_messages))
+        return common_utility.buildResponse(200, json.dumps(all_messages))
     
     except Exception as e:
         print(f"get_slack_data_handler(): ${e}")
-        return buildResponse(500,"An error occurred. Please try again later")
+        return common_utility.buildResponse(500,"An error occurred. Please try again later")
 
 
 def extractInfoFromSlackResponse(message):

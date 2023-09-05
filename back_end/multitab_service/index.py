@@ -1,4 +1,4 @@
-from utils.util import buildResponse
+from common.CommonUtility import CommonUtility
 from handlers.handlePostMultitab import handlePostMultitab
 from handlers.handleGetMultitab import handleGetMultitab
 
@@ -7,6 +7,8 @@ def lambda_handler(event, context):
     http_method = event['httpMethod']
     path = event['path']
 
+    #initialize CommonUtility Class
+    common_utility = CommonUtility()
     if http_method == 'POST' and path =='/multitab':
         return handlePostMultitab(event)
     
@@ -14,4 +16,4 @@ def lambda_handler(event, context):
 
         return handleGetMultitab(event)
     else:
-        return buildResponse(404, "Resource not found")
+        return common_utility.buildResponse(404, "Resource not found")

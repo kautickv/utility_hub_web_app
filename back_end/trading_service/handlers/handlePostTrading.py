@@ -1,4 +1,7 @@
-from utils.util import buildResponse
+from common.CommonUtility import CommonUtility
 
 def handlePostTrading(event):
-    return buildResponse(200, "OK")
+
+    # Initialize CommonUtility Class
+    common_utility = CommonUtility()
+    return common_utility.buildResponse(200, "OK")

@@ -1,4 +1,4 @@
-from utils.util import buildResponse
+from common.CommonUtility import CommonUtility
 from utils.util import verifyUserLoginStatus
 from utils.util import decode_jwt_token
 
@@ -6,7 +6,8 @@ def verify_handler(event, context):
     # This function will receive a request with JWT Token in HTTP header and verify if it's valid.
     # Returns 200 if valid, 401 if invalid and 500 if an error occurred.
     print(event)
-
+    #Initialize CommonUtility Class
+    common_utility = CommonUtility()
     # Extract token from headers
     token = None
     try:
@@ -36,11 +37,11 @@ def verify_handler(event, context):
             token = None
         
         if token is None:
-            return buildResponse(401, {"message": "Missing JWT token"})
+            return common_utility.buildResponse(401, {"message": "Missing JWT token"})
         else:
             if (verifyUserLoginStatus(token)):
-                return buildResponse(200, {"token_details": decode_jwt_token(token)})
+                return common_utility.buildResponse(200, {"token_details": decode_jwt_token(token)})
             else:
-                return buildResponse(401, {"message": "Unauthorized"})
+                return common_utility.buildResponse(401, {"message": "Unauthorized"})
     except Exception as e:
-        return buildResponse(500, {"message": "Internal server error. Try again later"})
+        return common_utility.buildResponse(500, {"message": "Internal server error. Try again later"})

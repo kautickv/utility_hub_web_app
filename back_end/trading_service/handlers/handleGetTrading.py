@@ -1,9 +1,11 @@
-from utils.util import buildResponse
+from common.CommonUtility import CommonUtility
 from utils.CryptoDotComExchangeManager import CryptoDotComExchangeManager
 
 def handleGetTrading(event):
     
     try:
+        # Initialize CommonUtility Class
+        common_utility = CommonUtility()
         # Create Exchange manager class
         cryptoExchange = CryptoDotComExchangeManager()
 
@@ -11,4 +13,4 @@ def handleGetTrading(event):
         cryptoExchange.getCrrentPriceForTicker("BTC", "USD")
     except Exception as e:
         print(f"handleGetTrading(): ${e}")
-        return buildResponse(500, "A server error occurred. Please try again later")
+        return common_utility.buildResponse(500, "A server error occurred. Please try again later")

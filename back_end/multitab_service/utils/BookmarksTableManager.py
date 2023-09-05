@@ -1,5 +1,4 @@
 import boto3
-import json
 
 class BookmarksTableManager:
     def __init__(self, table_name):

@@ -10,7 +10,7 @@ class CommonUtility:
         pass
 
     
-    def buildResponse(code, message, jwt_token=""):
+    def buildResponse(self, code, message, jwt_token=""):
     ###
     # PURPOSE: This function will return json object having the statusCode, headers and body of
     #          a response onject.
@@ -26,3 +26,6 @@ class CommonUtility:
             },
             'body': json.dumps(message)
         }
+    
+
+    

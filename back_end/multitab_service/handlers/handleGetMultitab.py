@@ -1,4 +1,4 @@
-from utils.util import buildResponse
+from common.CommonUtility import CommonUtility
 from utils.util import verifyAuthStatus
 from utils.util import getAuthorizationCode
 from utils.BookmarksTableManager import BookmarksTableManager
@@ -17,15 +17,17 @@ def handleGetMultitab(event):
     
     
     try:
+        # Initialize CommonUtility Class
+        common_utility = CommonUtility()
         # Extract auth code
         code = getAuthorizationCode(event)
         if code is None:
-            return buildResponse(401, "Unauthorized")
+            return common_utility.buildResponse(401, "Unauthorized")
         else:
             ## VerifyAuthStatus will also return the user details associated with JWT Token
             user_details = verifyAuthStatus(code)
             if user_details == None:
-                return buildResponse(401, "Unauthorized")
+                return common_utility.buildResponse(401, "Unauthorized")
         ## User verified to be authenticated. Now, update the config in database.
         configTableManager = BookmarksTableManager(os.getenv('BOOKMARKS_TABLE_NAME'))
         compressed_config_json = configTableManager.get_user_data(user_details['email'])
@@ -33,13 +35,13 @@ def handleGetMultitab(event):
             # Return default config only.
             with open('trading_config.json') as f:
                 configs = json.load(f)
-            return buildResponse(200, json.dumps(json.dumps(configs['default_cards']))) 
+            return common_utility.buildResponse(200, json.dumps(json.dumps(configs['default_cards']))) 
         
         config = decompress_json(compressed_config_json)
 
-        return buildResponse(200, json.dumps(config))
+        return common_utility.buildResponse(200, json.dumps(config))
     
     except Exception as e:
         print('handlePostMultitab(): ' + str(e))
         traceback.print_exc()  
-        return buildResponse(500, 'Internal Server error. Please try again')
+        return common_utility.buildResponse(500, 'Internal Server error. Please try again')

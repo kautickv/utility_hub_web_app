@@ -1,4 +1,4 @@
-from utils.util import buildResponse
+from common.CommonUtility import CommonUtility
 from utils.util import verifyAuthStatus
 from utils.util import getAuthorizationCode
 from utils.util import compress_json
@@ -18,15 +18,17 @@ def handlePostMultitab(event):
     
     
     try:
+        # Initialize CommonUtility Class
+        common_utility = CommonUtility()
         # Extract auth code
         code = getAuthorizationCode(event)
         if code is None:
-            return buildResponse(401, "Unauthorized")
+            return common_utility.buildResponse(401, "Unauthorized")
         else:
             ## VerifyAuthStatus will also return the user details associated with JWT Token
             user_details = verifyAuthStatus(code)
             if user_details == None:
-                return buildResponse(401, "Unauthorized")
+                return common_utility.buildResponse(401, "Unauthorized")
 
         ## User verified to be authenticated. Now, update the config in database.
         configTableManager = BookmarksTableManager(os.getenv('BOOKMARKS_TABLE_NAME'))
@@ -43,11 +45,11 @@ def handlePostMultitab(event):
         }
         ## Update the config for user.
         if (configTableManager.update_user_data(email=config_data['email'], config_json=config_data['config_json'], last_modified=str(datetime.utcnow()))):
-            return buildResponse(200, "OK")
+            return common_utility.buildResponse(200, "OK")
         else:
-            return buildResponse(500, "An error occurred updating configuration")
+            return common_utility.buildResponse(500, "An error occurred updating configuration")
     
     except Exception as e:
         print('handlePostMultitab(): ' + str(e))
         traceback.print_exc()  
-        return buildResponse(500, 'Internal Server error. Please try again')
+        return common_utility.buildResponse(500, 'Internal Server error. Please try again')
