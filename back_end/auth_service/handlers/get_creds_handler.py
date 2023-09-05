@@ -1,6 +1,6 @@
 import boto3
 import base64
-from utils.util import buildResponse
+from common.Utility import buildResponse
 import json
 
 def encrypt_to_base64(text):
