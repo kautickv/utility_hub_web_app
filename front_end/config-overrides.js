@@ -7,7 +7,7 @@ module.exports = function override(config, env) {
   // Change the entry point
   config.entry = {
     main: path.join(__dirname, 'src/index.js'),
-    extension: path.join(__dirname, 'src/extensionApp.js'),
+    extension: path.join(__dirname, 'src/ExtensionApp.js'),
   };
 
   // Output multiple HTML files (one for each entry)

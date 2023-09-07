@@ -4,7 +4,7 @@
   "version": "1.0",
   "description": "Renders the Utility Hub as chrome extension",
   "action":{
-    "default_popup":"popup.html",
+    "default_popup":"extension.html",
     "default_icon":{
       "16":"logo512.png",
       "128":"logo512.png"
