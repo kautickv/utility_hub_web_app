@@ -1,23 +1,19 @@
 import boto3
-import json
+from common.Logger import Logger
 
 class BookmarksTableManager:
     def __init__(self, table_name):
         self.dynamodb = boto3.resource('dynamodb')
         self.table_name = table_name
         self.table = self.dynamodb.Table(table_name)
-
+        self.logging_instance = Logger()
     
     def remove_item(self, key):
         try:
-
-            print("Key")
-            print(key)
             self.table.delete_item(Key=key)
-            print("Item has been added")
             return True
         except Exception as e:
-            print(f"Error removing item from DynamoDB: {e}")
+            self.logging_instance.log_exception(e, 'remove_item')
             return False
         
     
@@ -55,8 +51,8 @@ class BookmarksTableManager:
             
             return True
         except Exception as e:
-            print(f"Error updating user data in DynamoDB: {e}")
-            raise Exception("Error: " + str(e))
+            self.logging_instance.log_exception(e, 'update_user_data')
+            raise
 
     def get_user_data(self, email):
         try:
@@ -74,6 +70,6 @@ class BookmarksTableManager:
                 return None
 
         except Exception as e:
-            print(f"Error getting user data from DynamoDB: {e}")
-            raise Exception("Error: " + str(e))
+            self.logging_instance.log_exception(e, 'get_user_data')
+            raise
         

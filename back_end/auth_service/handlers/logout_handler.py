@@ -1,12 +1,17 @@
-from utils.util import buildResponse
+from common.CommonUtility import CommonUtility
 from utils.GoogleAuth import GoogleAuth
+from common.Logger import Logger
 
 def logout_handler(event, context):
 
     print(event)
+    #Initialise CommonUtility Class
+    common_utility = CommonUtility()
+    # Initialize GoogleAuth class
     auth = GoogleAuth()
-    # Extract token from headers
+    
     try:
+        # Extract token from headers
         if "Authorization" in event["headers"]:
             authorization_header = event["headers"]["Authorization"]
             if authorization_header.startswith("Bearer "):
@@ -21,11 +26,14 @@ def logout_handler(event, context):
             token = None
         
         if token is None:
-            return buildResponse(400, {"message": "Missing JWT token"})
+            return common_utility.buildResponse(400, {"message": "Missing JWT token"})
         else:
             if (auth.logoutUser(token)):
-                return buildResponse(200, {"message": "OK"})
+                return common_utility.buildResponse(200, {"message": "OK"})
             else:
-                return buildResponse(400, {"message": "Bad request"})
+                return common_utility.buildResponse(400, {"message": "Bad request"})
     except Exception as e:
-        return buildResponse(500, {"message": "Internal server error. Try again later"})
+        #Initialise Logging instance
+        logging_instance = Logger()
+        logging_instance.log_exception(e, 'logout_handler')
+        return common_utility.buildResponse(500, {"message": "Internal server error. Try again later"})

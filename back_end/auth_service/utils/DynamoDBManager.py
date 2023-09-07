@@ -1,29 +1,29 @@
 import boto3
+from common.Logger import Logger
 
 class DynamoDBManager:
     def __init__(self, table_name):
         self.dynamodb = boto3.resource('dynamodb')
         self.table_name = table_name
         self.table = self.dynamodb.Table(table_name)
+        #Initialise Logging instance
+        self.logging_instance = Logger()
+
 
     def add_item(self, item):
         try:
             self.table.put_item(Item=item)
             return True
         except Exception as e:
-            print(f"Error adding item to DynamoDB: {e}")
+            self.logging_instance.log_exception(e, 'add_item')
             return False
 
     def remove_item(self, key):
         try:
-
-            print("Key")
-            print(key)
             self.table.delete_item(Key=key)
-            print("Item has been added")
             return True
         except Exception as e:
-            print(f"Error removing item from DynamoDB: {e}")
+            self.logging_instance.log_exception(e, 'remove_item')
             return False
 
     def check_item_exists(self, key):
@@ -31,7 +31,7 @@ class DynamoDBManager:
             response = self.table.get_item(Key=key)
             return 'Item' in response
         except Exception as e:
-            print(f"Error checking item existence in DynamoDB: {e}")
+            self.logging_instance.log_exception(e, 'check_item_exists')
             return False
         
     def get_all_attributes(self, key):
@@ -44,7 +44,7 @@ class DynamoDBManager:
             else:
                 return None
         except Exception as e:
-            print(f"Error retrieving all fields from dynamo table")
+            self.logging_instance.log_exception(e, 'get_all_attributes')
             raise Exception("Error: " + str(e))
     
     def update_user_data(self, email, first_name=None, last_name=None, jwt_token=None, last_login=None ,last_logout=None, login_status=None, refresh_token=None):
@@ -104,5 +104,5 @@ class DynamoDBManager:
             
             return True
         except Exception as e:
-            print(f"Error updating user data in DynamoDB: {e}")
+            self.logging_instance.log_exception(e, 'update_user_data')
             raise Exception("Error: " + str(e))

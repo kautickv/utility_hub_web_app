@@ -2,6 +2,7 @@ import boto3
 import json
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+from common.Logger import Logger
 
 class SlackManager:
     
@@ -13,6 +14,8 @@ class SlackManager:
             slackToken = self._getSlackBotTokenFromSSM()
             # create a client instance
             self.client = WebClient(token=slackToken)
+            #Initialise Logging instance
+            self.logging_instance = Logger()
 
         except Exception as e:
             raise Exception (f'Initialising Slack Manager error: ${e}')
@@ -30,10 +33,9 @@ class SlackManager:
             response = self.client.chat_postMessage(channel=channelId, text=message)
             return response["message"]["text"] == message
         
-        except SlackApiError as e:
-            raise Exception (f"Slack error while sending slack message: ${e}")
         except Exception as e:
-            raise Exception (f"Unexpected error while sending slack message: ${e}")
+            self.logging_instance.log_exception(e, 'postMessageInChannel')
+            raise
         
 
     def getMessageInChannelForTimeRange(self, channelId, startTime, endTime):
@@ -60,8 +62,8 @@ class SlackManager:
             return messages
         
         except Exception as e:
-            print(f"Error while reading slack channel messaes: ${e}")
-            raise Exception (f"Error while reading slack channel messaes: ${e}")
+            self.logging_instance.log_exception(e, 'getMessageInChannelForTimeRange')
+            raise
         
 
     def _getSlackBotTokenFromSSM(self):
@@ -79,9 +81,8 @@ class SlackManager:
             return secret_key
     
         except Exception as e:
-            print("Failed to get Slack Bot token")
-            raise Exception ("Error reading Slack Bot token from SSM Parameter Store")
-
+            self.logging_instance.log_exception(e, '_getSlackBotTokenFromSSM')
+            raise
 
     def getChannelName (self, channelId):
         # This function will return the channel name given the channel id
@@ -94,4 +95,5 @@ class SlackManager:
 
             return response['channel']['name']
         except Exception as e:
-            raise Exception(f"Error getting channel name for ${channelId}: ${e}")
+            self.logging_instance.log_exception(e, 'getChannelName')
+            raise

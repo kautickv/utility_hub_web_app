@@ -45,6 +45,9 @@ Please ensure that your code adheres to the project's coding standards and inclu
 
 For any questions or inquiries, please reach out at kautickv29@gmail.com
 
+## Improvements
+1. UI & UX: From a usability perspective, providing feedback (like a toast notification) after successful operations like saving a configuration could be a good touch.
+
 ## Current Issues
 
 1. Every time the Terraform script is applied, a new layer is created irrespective of whether changes have been made to the layer. This can consume a lot of storage and cost money.

@@ -15,6 +15,7 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
+import StarIcon from "@mui/icons-material/Star";
 import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
@@ -25,20 +26,31 @@ import Paper from "@mui/material/Paper";
 import { styled } from "@mui/system";
 
 const StyledCard = styled(Card)({
-  maxWidth: 345,
-  "& .MuiCardContent-root": {
-    "& .MuiTypography-root": {
-      objectFit: "cover",
-    },
-  },
+  width: 280,
+  height: 200,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
+  position: "relative",
 });
 
+const StyledCardContent = styled(CardContent)({
+  height: 320,
+  overflow: "auto",
+});
 
+const StyledCardActions = styled(CardActions)({
+  marginTop: "auto",
+});
+
+const StyledTypography = styled(Typography)({
+  whiteSpace: "normal",
+  textOverflow: "ellipsis",
+});
 
 function Tile(props) {
   const [configureOpen, setConfigureOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-
   const [urls, setUrls] = useState(props.urls);
   const [newUrl, setNewUrl] = useState({ urlTitle: "", url: "" });
 
@@ -100,20 +112,25 @@ function Tile(props) {
 
   return (
     <StyledCard>
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+      <StyledCardContent>
+        <StyledTypography gutterBottom variant="h5" component="div">
           <Box
             component="span"
             style={{ display: "flex", alignItems: "center" }}
           >
             {props.title}
+            {props.default === "Yes" && (
+              <Tooltip title="Default Tile">
+                <StarIcon style={{ marginLeft: "10px", color: "gold" }} />
+              </Tooltip>
+            )}
             <Tooltip title={`${urls.length} link(s) in this card`} arrow>
               <Badge
                 badgeContent={urls.length}
                 color="primary"
                 overlap="circular"
                 max={999}
-                style={{ marginLeft: "15px" }}
+                style={{ position: "absolute", top: 20, right: 20 }}
               >
                 <Box
                   component="span"
@@ -132,12 +149,16 @@ function Tile(props) {
               </Badge>
             </Tooltip>
           </Box>
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
+        </StyledTypography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          style={{ whiteSpace: "normal", wordWrap: "break-word" }}
+        >
           {props.description}
         </Typography>
-      </CardContent>
-      <CardActions>
+      </StyledCardContent>
+      <StyledCardActions>
         <Button size="small" onClick={handleConfigureOpen}>
           Configure
         </Button>
@@ -147,7 +168,7 @@ function Tile(props) {
         <Button size="medium" onClick={handleOpenAll}>
           Open All
         </Button>
-      </CardActions>
+      </StyledCardActions>
 
       <Dialog
         open={configureOpen}

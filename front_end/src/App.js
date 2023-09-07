@@ -2,6 +2,7 @@ import React from "react";
 import Home from "./components/Home";
 import Login from "./components/Login"
 import MultiTabOpener from "./components/MultiTabOpener"
+import Trading from "./components/Trading"
 import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -24,6 +25,9 @@ const theme = createTheme({
     secondary: {
       main: '#ffe0b2',
     },
+    third:{
+      main: '#fdfbe2'
+    }
   },
 });
 
@@ -39,6 +43,7 @@ function App() {
             <Route exact path='/login' element={<Login />} />
             <Route path='/home' element={<Home />} />
             <Route path='/link-manager' element={<MultiTabOpener />} />
+            <Route path='/trading' element={<Trading />} />
             <Route exact path='/' element={<Home />} />
           </Routes>
         </BrowserRouter>

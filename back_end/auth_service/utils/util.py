@@ -4,21 +4,7 @@ import os
 import jwt
 import boto3
 from datetime import datetime
-
-
-def buildResponse(code, message, jwt_token=""):
-    
-    return{
-        'statusCode': code,
-        'headers':{
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Expose-Headers':'x-amzn-Remapped-Authorization',
-            'Authorization': 'Bearer ' + jwt_token,
-            'Content-Type': 'application/json', 
-        },
-        'body': json.dumps(message)
-
-    }
+from common.Logger import Logger
 
 def getJWTSecretKey():
 
@@ -34,8 +20,11 @@ def getJWTSecretKey():
             return secret_key
     
     except Exception as e:
-        print("Failed to get JWT Secret key")
-        raise Exception ("Error reading JWT Secret key from SSM Parameter Store")
+        #Initialise Logging instance
+        logging_instance = Logger()
+        logging_instance.log_exception(e, 'getJWTSecretKey')
+
+        raise # Throw exception
     
 def is_jwt_token_valid(decoded_token):
     # This function checks if a jwt Token is still valid and has not expired.
@@ -50,8 +39,10 @@ def is_jwt_token_valid(decoded_token):
                 return True
         return False
     except Exception as e:
-        print(f"Error checking if JWT token is valid: {e}")
-        raise Exception ("Error checking if JWT token are valid")
+        #Initialise Logging instance
+        logging_instance = Logger()
+        logging_instance.log_exception(e, 'is_jwt_token_valid')
+        raise 
 
 def decode_jwt_token(token):
     # This function takes in an encoded function and decodes it.
@@ -69,8 +60,10 @@ def decode_jwt_token(token):
         print("Token is invalid.")
         return 401
     except Exception as e:
-        print(f"Error Decoding token: {e}")
-        raise Exception ("Error decoding JWT token")
+        #Initialise Logging instance
+        logging_instance = Logger()
+        logging_instance.log_exception(e, 'decode_jwt_token')
+        raise 
 
 def verifyUserLoginStatus(jwtToken):
     # This function returns true if user is authenticated.
@@ -109,5 +102,9 @@ def verifyUserLoginStatus(jwtToken):
         print("Token is invalid.")
         return False
     except Exception as e:
-        raise Exception("An error occurred during token verification.")
+        #Initialise Logging instance
+        logging_instance = Logger()
+        logging_instance.log_exception(e, 'verifyUserLoginStatus')
+
+        raise # Throw exception
     

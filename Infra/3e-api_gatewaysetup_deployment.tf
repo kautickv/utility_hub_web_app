@@ -4,6 +4,15 @@ resource "aws_api_gateway_deployment" "password_generator_api_gateway_deployment
 
   triggers = {
     redeployment = sha1(jsonencode([
+      aws_api_gateway_resource.password_generator_api_gateway_trading_resource.id,
+      aws_api_gateway_method.get_trading_method.id,
+      aws_api_gateway_integration.get_trading_integration.id,
+      aws_api_gateway_method.options_trading_method.id,
+      aws_api_gateway_method_response.options_trading_method_response_200.id,
+      aws_api_gateway_integration.options_trading_integration.id,
+      aws_api_gateway_integration_response.options_trading_integration_response.id,
+      aws_api_gateway_method.post_trading_method.id,
+      aws_api_gateway_integration.post_trading_integration.id,
       aws_api_gateway_resource.password_generator_api_gateway_home_resource.id,
       aws_api_gateway_method.get_home_method.id,
       aws_api_gateway_integration.get_home_integration.id,

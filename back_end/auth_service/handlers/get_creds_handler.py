@@ -1,6 +1,7 @@
 import boto3
 import base64
-from utils.util import buildResponse
+from common.CommonUtility import CommonUtility
+from common.Logger import Logger
 import json
 
 def encrypt_to_base64(text):
@@ -12,6 +13,8 @@ def encrypt_to_base64(text):
 def get_creds_handler(event, context):
 
     try:
+        # Initialise Utility class
+        common_utility = CommonUtility()
         # Return google Client_id and redirect_uri to user
         # Create a Boto3 client for SSM
         ssm_client = boto3.client('ssm')
@@ -26,11 +29,13 @@ def get_creds_handler(event, context):
         # Extract the client_id
         client_id = response['Parameter']['Value']
 
-        return buildResponse(200, {
+        return common_utility.buildResponse(200, {
             "client_id_base64": encrypt_to_base64(client_id),
         })
     except Exception as e:
-        print(f"Error in get_creds. Error: {str(e)}")
-        return buildResponse(500, {
+        #Initialise Logging instance
+        logging_instance = Logger()
+        logging_instance.log_exception(e, 'get_creds_handler')
+        return common_utility.buildResponse(500, {
             "message": "Internal Server error. Try again later"
         })

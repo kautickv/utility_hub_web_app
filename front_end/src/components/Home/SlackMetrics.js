@@ -8,10 +8,8 @@ import Divider from "@mui/material/Divider";
 // Import components
 import SlackChannel from "./SlackChannel";
 // Import scripts
-import {
-  getSlackData,
-  checkLocalStorageForJWTToken,
-} from "../../utils/homeUtils";
+import { getSlackData } from "../../utils/homeUtils";
+import { checkLocalStorageForJWTToken } from "../../utils/util";
 
 function SlackMetrics() {
   const navigate = useNavigate();
@@ -27,9 +25,9 @@ function SlackMetrics() {
           let response = await getSlackData(jwtToken);
           response = JSON.parse(response);
           //for (let key in response) {
-           // for (let msg in response[key]) {
-             // console.log(response[key][msg]["text"]);
-           // }
+          // for (let msg in response[key]) {
+          // console.log(response[key][msg]["text"]);
+          // }
           //}
           setSlackData(response);
         } else {
@@ -65,7 +63,7 @@ function SlackMetrics() {
       {Object.entries(slackData).map(([channel, messages], index, arr) => (
         <React.Fragment key={channel}>
           <SlackChannel channel={channel} messages={messages} />
-          {index !== arr.length - 1 && <Divider sx={{ my: 2 }} />} 
+          {index !== arr.length - 1 && <Divider sx={{ my: 2 }} />}
         </React.Fragment>
       ))}
     </Box>
