@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import { Button, Box, Container, Typography, Paper } from '@mui/material';
 import { styled, keyframes } from '@mui/system';
 import { useNavigate } from "react-router-dom";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 import LoadingSpinner from "../common/LoadingSpinner"; 
-import { AuthContext } from '../../context/AuthContext';
+//import { AuthContext } from '../../context/AuthContext';
+
 
 // Styled components
 // Define keyframes for background animation
@@ -33,7 +34,7 @@ function Login() {
   let url = useRef(null);
   let redirectUrl = useRef(null);
   const [loading, setLoading] = useState(false)
-  const { loginUser } = useContext(AuthContext);
+  //const { loginUser } = useContext(AuthContext);
 
   // Run this function once every time loads
   useEffect(() => {
@@ -144,6 +145,10 @@ function Login() {
           response.json().then((data) => {
             console.log(data);
             localStorage.setItem("JWT_Token", data.JWT_Token);
+            // Decode JWT token and save in Auth Context
+            //let user_details = decodeJWT(data.JWT_Token);
+           // console.log(user_details)
+            //loginUser(user_details)
           });
           // Redirect user to main application
           navigate("/home");

@@ -1,5 +1,3 @@
-import jwt from 'jsonwebtoken';
-
 async function sendVerifyAPIToAuthenticationServer(jwtToken) {
   /*
     PURPOSE: Send an HTTP POST request to the verify endpoint to check if user is logged in.
@@ -69,15 +67,5 @@ function checkLocalStorageForJWTToken() {
 }
 
 
-function decodeJWT(token) {
-  try {
-    const decoded = jwt.decode(token);
-    return decoded;
-  } catch (e) {
-    console.error("Invalid JWT token:", e);
-    return null;
-  }
-}
 
-
-export { sendVerifyAPIToAuthenticationServer, logout, checkLocalStorageForJWTToken, decodeJWT};
+export { sendVerifyAPIToAuthenticationServer, logout, checkLocalStorageForJWTToken};
