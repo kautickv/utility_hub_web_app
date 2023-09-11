@@ -2,6 +2,7 @@ import React from "react";
 import Home from "./components/Home";
 import Login from "./components/Login"
 import MultiTabOpener from "./components/MultiTabOpener"
+import { AuthProvider } from './context/AuthContext';
 import Trading from "./components/Trading"
 import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -38,15 +39,17 @@ function App() {
     <>
       <CssBaseline />
       <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <Routes>
-            <Route exact path='/login' element={<Login />} />
-            <Route path='/home' element={<Home />} />
-            <Route path='/link-manager' element={<MultiTabOpener />} />
-            <Route path='/trading' element={<Trading />} />
-            <Route exact path='/' element={<Home />} />
-          </Routes>
-        </BrowserRouter>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route exact path='/login' element={<Login />} />
+              <Route path='/home' element={<Home />} />
+              <Route path='/link-manager' element={<MultiTabOpener />} />
+              <Route path='/trading' element={<Trading />} />
+              <Route exact path='/' element={<Home />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
       </ThemeProvider>
     </>
   );
