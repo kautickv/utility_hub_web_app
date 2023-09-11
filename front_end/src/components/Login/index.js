@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef, useContext} from "react";
 import { Button, Box, Container, Typography, Paper } from '@mui/material';
 import { styled, keyframes } from '@mui/system';
 import { useNavigate } from "react-router-dom";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 import LoadingSpinner from "../common/LoadingSpinner"; 
-//import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 
 
 // Styled components
@@ -34,7 +34,7 @@ function Login() {
   let url = useRef(null);
   let redirectUrl = useRef(null);
   const [loading, setLoading] = useState(false)
-  //const { loginUser } = useContext(AuthContext);
+  const { loginUser, logoutUser} = useContext(AuthContext);
 
   // Run this function once every time loads
   useEffect(() => {
@@ -73,11 +73,17 @@ function Login() {
     let verifyResponse = await sendVerifyAPIToAuthenticationServer(jwtToken);
     if (verifyResponse.status === 200) {
       // User is already logged in
+      // Set Context
+      let userInfo = await verifyResponse.json();
+      loginUser(userInfo)
       // Redirect user to main application
       navigate("/home");
     } else if (verifyResponse.status === 401) {
       // User JWT token is not valid
       localStorage.removeItem("JWT_Token");
+
+      // Logout user from context
+      logoutUser()
       navigate("/login");
     } else {
       // An error occurred while verifying
@@ -87,6 +93,8 @@ function Login() {
       );
       // User JWT token is not valid
       localStorage.removeItem("JWT_Token");
+      // Logout user from context
+      logoutUser();
       navigate("/login");
     }
 
@@ -145,10 +153,10 @@ function Login() {
           response.json().then((data) => {
             console.log(data);
             localStorage.setItem("JWT_Token", data.JWT_Token);
-            // Decode JWT token and save in Auth Context
-            //let user_details = decodeJWT(data.JWT_Token);
-           // console.log(user_details)
-            //loginUser(user_details)
+            // Assign user info to context
+            let user_details = data.payload;
+            console.log(user_details)
+            loginUser(user_details)
           });
           // Redirect user to main application
           navigate("/home");

@@ -50,6 +50,7 @@ def decode_jwt_token(token):
     try:
         # Get Secret Key
         secret_key = getJWTSecretKey()
+        print(token)
         decoded_token = jwt.decode(token, secret_key, algorithms=["HS256"])
 
         return decoded_token
