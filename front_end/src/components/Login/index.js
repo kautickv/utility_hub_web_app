@@ -4,6 +4,7 @@ import { styled, keyframes } from '@mui/system';
 import { useNavigate } from "react-router-dom";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 import LoadingSpinner from "../common/LoadingSpinner"; 
+import { AuthContext } from '../../context/AuthContext';
 
 // Styled components
 // Define keyframes for background animation
@@ -32,6 +33,7 @@ function Login() {
   let url = useRef(null);
   let redirectUrl = useRef(null);
   const [loading, setLoading] = useState(false)
+  const { loginUser } = useContext(AuthContext);
 
   // Run this function once every time loads
   useEffect(() => {
