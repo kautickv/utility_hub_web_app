@@ -1,17 +1,25 @@
 {
-  "manifest_version":3,
+  "manifest_version": 3,
   "name": "Utility Hub",
   "version": "1.0",
   "description": "Renders the Utility Hub as chrome extension",
-  "action":{
-    "default_popup":"extension.html",
-    "default_icon":{
-      "16":"logo512.png",
-      "128":"logo512.png"
-    }
+  "permissions": [
+    "activeTab",
+    "storage",
+    "webRequest"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
   },
-  "permissions":[
-    "activeTab"
-  ]
-
+  "action": {
+    "default_popup": "extension.html",
+    "default_icon": {
+      "16": "logo512.png",
+      "128": "logo512.png"
+    }
+  }
 }
