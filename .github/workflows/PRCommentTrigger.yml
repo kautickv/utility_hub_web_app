@@ -52,7 +52,7 @@ jobs:
           python-version: '3.9'
       
       - name: Set execute permissions on bash script
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/.github
+        working-directory: ./.github
         run: |
           pwd
           ls
@@ -60,32 +60,32 @@ jobs:
         
       - name: Build and zip python requirement file
         id: backend_build
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/.github
+        working-directory: ./.github
         run: |
           ./scripts/build_and_zip.sh
 
       - name: Terraform Init
         id: init
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
+        working-directory: ./Infra
         run: |
           terraform init
           ls
 
       - name: Terraform Validate
         id: validate
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
+        working-directory: ./Infra
         run: |
           terraform validate -no-color
 
       - name: Terraform Plan
         id: plan
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
+        working-directory: ./Infra
         run: |
           terraform plan -out=tfplan
         continue-on-error: true
 
       - name: Terraform Apply
-        working-directory: /home/runner/work/password_generator_webapp/password_generator_webapp/Infra
+        working-directory: ./Infra
         run: terraform apply -auto-approve
 
       - name: Set latest commit status as ${{ job.status }}
