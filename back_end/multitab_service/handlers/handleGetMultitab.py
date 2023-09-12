@@ -23,7 +23,7 @@ def handleGetMultitab(event, user_details):
         compressed_config_json = configTableManager.get_user_data(user_details['email'])
         if compressed_config_json == None:
             # Return default config only.
-            with open('trading_config.json') as f:
+            with open('multitab_config.json') as f:
                 configs = json.load(f)
             return common_utility.buildResponse(200, json.dumps(json.dumps(configs['default_cards']))) 
         

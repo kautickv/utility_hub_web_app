@@ -67,6 +67,7 @@ function Home() {
         //Token not found.
         logoutUser()
         navigate("/login");
+        return
       }
     };
 
