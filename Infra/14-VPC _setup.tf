@@ -106,7 +106,6 @@ resource "aws_route_table" "public_rt" {
 # Might be that public subnet need access to dynaoDB
 resource "aws_route" "public_dynamodb_route" {
   route_table_id         = aws_route_table.public_rt.id
-  destination_prefix_list_id = aws_vpc_endpoint.dynamodb_ep.prefix_list_id
   vpc_endpoint_id        = aws_vpc_endpoint.dynamodb_ep.id
 }
 
@@ -161,7 +160,6 @@ resource "aws_route_table" "private_rt" {
 #Private subnet will need DynamoDB Access
 resource "aws_route" "private_dynamodb_route" {
   route_table_id         = aws_route_table.private_rt.id
-  destination_prefix_list_id = aws_vpc_endpoint.dynamodb_ep.prefix_list_id
   vpc_endpoint_id        = aws_vpc_endpoint.dynamodb_ep.id
 }
 
