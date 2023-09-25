@@ -103,6 +103,14 @@ resource "aws_lambda_function" "password-generator-backend-lambda-function" {
       "USER_TABLE_NAME" = aws_dynamodb_table.sign_in_user_table.name
     }
   }
+  vpc_config {
+    subnet_ids = [
+      aws_subnet.private_subnet_1.id,
+      aws_subnet.private_subnet_2.id,
+      aws_subnet.private_subnet_3.id
+    ]
+    security_group_ids = [aws_security_group.lambda_sg.id]
+  }
 
   timeout = "15"
   memory_size = "128"
