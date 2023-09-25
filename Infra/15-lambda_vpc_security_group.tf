@@ -9,6 +9,6 @@ resource "aws_security_group" "lambda_sg" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    security_groups = [aws_security_group.ssm_vpce_sg.id]  # If using VPC endpoints; replace with actual SG IDs
+    cidr_blocks = [aws_vpc.my_vpc.cidr_block]
   }
 }

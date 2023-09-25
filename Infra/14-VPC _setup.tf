@@ -202,7 +202,7 @@ resource "aws_security_group" "ssm_vpce_sg" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    security_groups = [aws_security_group.lambda_sg.id] # Replace with actual source security group ID(s)
+    cidr_blocks = [aws_vpc.my_vpc.cidr_block]
   }
 
   # Egress rule to allow all outbound traffic on port 443
