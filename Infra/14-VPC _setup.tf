@@ -113,6 +113,8 @@ resource "aws_route_table" "public_rt" {
 resource "aws_route" "public_dynamodb_route" {
   route_table_id         = aws_route_table.public_rt.id
   vpc_endpoint_id        = aws_vpc_endpoint.dynamodb_ep.id
+  destination_cidr_block  = "0.0.0.0/0"
+
 }
 
 # Associate public subnets with public route table
@@ -167,6 +169,7 @@ resource "aws_route_table" "private_rt" {
 resource "aws_route" "private_dynamodb_route" {
   route_table_id         = aws_route_table.private_rt.id
   vpc_endpoint_id        = aws_vpc_endpoint.dynamodb_ep.id
+  destination_cidr_block  = "0.0.0.0/0"
 }
 
 # Associate private subnets with private route table
