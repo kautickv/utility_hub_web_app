@@ -108,17 +108,6 @@ resource "aws_route_table" "public_rt" {
   }
 }
 
-# Add DynamoDB VPC Endpoint route to public route table
-# Might be that public subnet need access to dynaoDB
-resource "aws_route" "public_dynamodb_route" {
-  route_table_id         = aws_route_table.public_rt.id
-  vpc_endpoint_id        = aws_vpc_endpoint.dynamodb_ep.id
-  destination_cidr_block  = "0.0.0.0/0"
-
-  depends_on = [aws_vpc_endpoint.dynamodb_ep]
-
-}
-
 # Associate public subnets with public route table
 resource "aws_route_table_association" "public_subnet_1_assoc" {
   subnet_id      = aws_subnet.public_subnet_1.id
@@ -166,15 +155,6 @@ resource "aws_route_table" "private_rt" {
   }
 }
 
-# Add DynamoDB VPC Endpoint route to private route table
-#Private subnet will need DynamoDB Access
-resource "aws_route" "private_dynamodb_route" {
-  route_table_id         = aws_route_table.private_rt.id
-  vpc_endpoint_id        = aws_vpc_endpoint.dynamodb_ep.id
-  destination_cidr_block  = "0.0.0.0/0"
-
-  depends_on = [aws_vpc_endpoint.dynamodb_ep]
-}
 
 # Associate private subnets with private route table
 resource "aws_route_table_association" "private_subnet_1_assoc" {
@@ -196,6 +176,7 @@ resource "aws_route_table_association" "private_subnet_3_assoc" {
 resource "aws_vpc_endpoint" "dynamodb_ep" {
   vpc_id            = aws_vpc.my_vpc.id
   service_name      = "com.amazonaws.${var.region}.dynamodb"
+  route_table_ids   = [aws_route_table.public_rt.id, aws_route_table.private_rt.id] 
   vpc_endpoint_type = "Gateway"
   tags = {
     Name = "${var.app_name}-DynamoDB-Endpoint"
