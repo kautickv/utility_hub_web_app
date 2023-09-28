@@ -222,6 +222,6 @@ resource "aws_vpc_endpoint" "ssm_ep" {
 # Add VPC endpoint for SSM in private route table
 resource "aws_vpc_endpoint_route_table_association" "ssm_endpoint_rta" {
   vpc_endpoint_id = aws_vpc_endpoint.ssm_ep.id
-  route_table_id  = aws_route_table.private_rt.id # Replace with your private route table ID
+  route_table_id  = aws_route_table.private_rt.id
 }
 
