@@ -89,7 +89,7 @@ resource "aws_lambda_function" "multitab-backend-lambda-function" {
     }
   }
 
-  timeout = "15"
+  timeout = "180"
   memory_size = "128"
 }
 

@@ -88,7 +88,7 @@ resource "aws_lambda_function" "home-backend-lambda-function" {
     }
   }
 
-  timeout = "15"
+  timeout = "180"
   memory_size = "128"
 }
 

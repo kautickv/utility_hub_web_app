@@ -121,7 +121,7 @@ resource "aws_lambda_function" "password-generator-backend-lambda-function" {
     security_group_ids = [aws_security_group.lambda_sg.id]
   }
 
-  timeout = "15"
+  timeout = "180"
   memory_size = "128"
 }
 
