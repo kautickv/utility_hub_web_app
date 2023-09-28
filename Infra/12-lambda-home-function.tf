@@ -88,6 +88,15 @@ resource "aws_lambda_function" "home-backend-lambda-function" {
     }
   }
 
+  vpc_config {
+    subnet_ids = [
+      aws_subnet.private_subnet_1.id,
+      aws_subnet.private_subnet_2.id,
+      aws_subnet.private_subnet_3.id
+    ]
+    security_group_ids = [aws_security_group.lambda_sg.id]
+  }
+
   timeout = "180"
   memory_size = "128"
 }
