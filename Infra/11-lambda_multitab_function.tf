@@ -59,6 +59,15 @@ resource "aws_iam_policy" "lambda_multitab_invoke_lambda_auth" {
           "Effect": "Allow",
           "Action":"lambda:InvokeFunction",
           "Resource": "${aws_lambda_function.password-generator-backend-lambda-function.arn}"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CreateNetworkInterface",
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DeleteNetworkInterface"
+            ],
+            "Resource": "*"
         }
       ]
    })
@@ -89,7 +98,16 @@ resource "aws_lambda_function" "multitab-backend-lambda-function" {
     }
   }
 
-  timeout = "15"
+  vpc_config {
+    subnet_ids = [
+      aws_subnet.private_subnet_1.id,
+      aws_subnet.private_subnet_2.id,
+      aws_subnet.private_subnet_3.id
+    ]
+    security_group_ids = [aws_security_group.lambda_sg.id]
+  }
+
+  timeout = "180"
   memory_size = "128"
 }
 
