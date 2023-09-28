@@ -6,8 +6,8 @@ resource "aws_security_group" "lambda_sg" {
 
   # Egress rule to allow outbound traffic on port 443
   egress {
-    from_port   = 443
-    to_port     = 443
+    from_port   = 0
+    to_port     = 0
     protocol    = "-1" # Allow all protocols
     cidr_blocks = ["0.0.0.0/0"]
   }
