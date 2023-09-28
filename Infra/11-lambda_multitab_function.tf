@@ -59,6 +59,15 @@ resource "aws_iam_policy" "lambda_multitab_invoke_lambda_auth" {
           "Effect": "Allow",
           "Action":"lambda:InvokeFunction",
           "Resource": "${aws_lambda_function.password-generator-backend-lambda-function.arn}"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CreateNetworkInterface",
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DeleteNetworkInterface"
+            ],
+            "Resource": "*"
         }
       ]
    })
@@ -88,7 +97,7 @@ resource "aws_lambda_function" "multitab-backend-lambda-function" {
       "AUTH_SERVICE_LAMBDA_NAME" = aws_lambda_function.password-generator-backend-lambda-function.function_name
     }
   }
-  
+
   vpc_config {
     subnet_ids = [
       aws_subnet.private_subnet_1.id,

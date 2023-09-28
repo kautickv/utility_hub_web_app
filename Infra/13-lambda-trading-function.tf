@@ -58,6 +58,15 @@ resource "aws_iam_policy" "lambda_trading_invoke_lambda_auth" {
           "Effect": "Allow",
           "Action":"lambda:InvokeFunction",
           "Resource": "${aws_lambda_function.password-generator-backend-lambda-function.arn}"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CreateNetworkInterface",
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DeleteNetworkInterface"
+            ],
+            "Resource": "*"
         }
       ]
    })
