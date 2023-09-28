@@ -8,7 +8,7 @@ resource "aws_security_group" "lambda_sg" {
   egress {
     from_port   = 443
     to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = [aws_vpc.my_vpc.cidr_block]
+    protocol    = "-1" # Allow all protocols
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
