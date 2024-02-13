@@ -37,7 +37,7 @@ Step 4:
 - Open IAM, click on "Identity providers" and click on "Add Provider"
 - For provider type, select "OpenID Connect"
 - For provider URL, enter https://token.actions.githubusercontent.com.
-- Click on "Get Thumbnail"
+- Click on "Get thumbprints"
 - For audience, enter sts.amazonaws.com.
 
 
