@@ -32,13 +32,21 @@ Step 3:
   }
 }
 
-
 Step 4:
+- Add github as an OIDC Identity provider in AWS IAM
+- Open IAM, click on "Identity providers" and click on "Add Provider"
+- For provider type, select "OpenID Connect"
+- For provider URL, enter https://token.actions.githubusercontent.com.
+- Click on "Get Thumbnail"
+- For audience, enter sts.amazonaws.com.
+
+
+Step 5:
  - Now, we need to create a backend S3 bucket for our dev deployment
  - Go to S3, Click "Create bucket".
  - Provide a unique name for your bucket. E.g utility-hub-s3-terraform-backend
  - Select the AWS Region where you want to create the bucket
  - Repeat same process for the prod account
 
-Step 5:
+Step 6:
 - Update the respective main.tf file inside dev/ and prod/ respectively with the newly created bucket details.
