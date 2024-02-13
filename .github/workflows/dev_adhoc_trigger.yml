@@ -36,15 +36,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: pending
       
-      - name: Set AWS Credentials
-        env:
-          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
-          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          AWS_DEFAULT_REGION: us-east-1
-        run: |
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set default.region $AWS_DEFAULT_REGION
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+            role-to-assume: arn:aws:iam::211125677766:role/pipeline-deployment-role
+            aws-region: "us-east-1"
 
       - name: Setup Python 3.9
         uses: actions/setup-python@v4
@@ -66,26 +62,26 @@ jobs:
 
       - name: Terraform Init
         id: init
-        working-directory: ./Infra
+        working-directory: ./Infra/environments/dev
         run: |
           terraform init
           ls
 
       - name: Terraform Validate
         id: validate
-        working-directory: ./Infra
+        working-directory: ./Infra/environments/dev
         run: |
           terraform validate -no-color
 
       - name: Terraform Plan
         id: plan
-        working-directory: ./Infra
+        working-directory: ./Infra/environments/dev
         run: |
           terraform plan -out=tfplan
         continue-on-error: true
 
       - name: Terraform Apply
-        working-directory: ./Infra
+        working-directory: ./Infra/environments/dev
         run: terraform apply -auto-approve
 
       - name: Set latest commit status as ${{ job.status }}
