@@ -38,6 +38,7 @@ Step 4:
  - Go to S3, Click "Create bucket".
  - Provide a unique name for your bucket. E.g utility-hub-s3-terraform-backend
  - Select the AWS Region where you want to create the bucket
+ - Create a folder inside the bucket to store the state files. E.g terraformStateFiles
  - Repeat same process for the prod account
 
 Step 5:
