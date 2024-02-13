@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write
       issues: read
       pull-requests: read
       statuses: write
@@ -39,7 +40,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-            role-to-assume: arn:aws:iam::211125677766:role/pipeline-deployment-role
+            role-to-assume: arn:aws:iam::211125677766:role/pipeline-deployments-role
             aws-region: "us-east-1"
 
       - name: Setup Python 3.9
