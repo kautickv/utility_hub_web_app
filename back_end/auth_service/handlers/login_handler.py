@@ -1,5 +1,6 @@
 from common.CommonUtility import CommonUtility
 from utils.GoogleAuth import GoogleAuth
+from utils.util import decode_jwt_token
 from common.Logger import Logger
 
 
@@ -24,7 +25,7 @@ def login_handler(body):
             return common_utils.buildResponse(500, {"message":"Internal server error adding in DB"})
         
         # Generate a jwt token and set it as the response header/or return in http body.
-        return common_utils.buildResponse(200, {"message": "OK", "JWT_Token": auth.get_jwt_token()})
+        return common_utils.buildResponse(200, {"message": "OK", "JWT_Token": auth.get_jwt_token(), "payload":decode_jwt_token(auth.get_jwt_token())})
     except Exception as e:
         #Initialise Logging instance
         logging_instance = Logger()

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -28,17 +28,18 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 import {
   sendGETToMultitabBackend,
   sendPostToMultitabBackend,
 } from "../../utils/multitabUtil";
+import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 
 // Import components
 import Navbar from "../common/Navbar";
 import LoadingSpinner from "../common/LoadingSpinner";
 import Tile from "./Tile.js";
 import Link from "./Link";
+import { AuthContext } from "../../context/AuthContext";
 
 function MultiTabOpener() {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ function MultiTabOpener() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Set to loading initially
   const [view, setView] = useState("LinkView");
+  const { isAuthenticated, logoutUser, loginUser} = useContext(AuthContext);
   const [newTile, setNewTile] = useState({
     title: "",
     description: "",
@@ -63,32 +65,42 @@ function MultiTabOpener() {
       try {
         let jwtToken = checkLocalStorageForJWTToken();
         if (jwtToken) {
-          // Check if JWT token is valid and if user is logged in
-          let verifyResponse = await sendVerifyAPIToAuthenticationServer(
-            jwtToken
-          );
-
-          if (verifyResponse.status === 200) {
+          // Check context if user is authenticated
+          if (isAuthenticated) {
             // User is already logged in
             // Fetch config data from backend
             let response = await sendGETToMultitabBackend(jwtToken);
             setTilesData(JSON.parse(JSON.parse(response)));
             setIsLoading(false);
-          } else if (verifyResponse.status === 401) {
-            // User JWT token is not valid or expired
-            localStorage.removeItem("JWT_Token");
+          } else {
+            // User is not authenticated in context. Needs to send verify User auth
+            // Check if JWT token is valid and if user is logged in
+            let verifyResponse = await sendVerifyAPIToAuthenticationServer(
+              jwtToken
+            );
+
+            if (verifyResponse.status === 200) {
+              // User is already logged in
+              let userInfo = await verifyResponse.json();
+              // Set user context
+              loginUser(userInfo);
+            } else if (verifyResponse.status === 401) {
+              // User JWT token is not valid or expired
+              // Logout user from context
+              logoutUser()
+              navigate("/login");
+            } else {
+              console(
+                `An error has occurred. Verify Path returns ${verifyResponse}`
+              );
+              alert("An error has occurred. Please try again later");
+            }
             setIsLoading(false);
             navigate("/login");
-          } else {
-            console(
-              `An error has occurred. Verify Path returns ${verifyResponse}`
-            );
-            alert("An error has occurred. Please try again later");
-            setIsLoading(false);
           }
         } else {
           //Token not found.
-          localStorage.removeItem("JWT_Token");
+          logoutUser();
           setIsLoading(false);
           navigate("/login");
         }
@@ -100,7 +112,7 @@ function MultiTabOpener() {
     };
 
     verifyIfUserLoggedIn();
-  }, [navigate]);
+  }, [navigate, isAuthenticated, logoutUser, loginUser]);
 
   async function handleDeleteTile(index) {
     /**
@@ -317,7 +329,7 @@ function MultiTabOpener() {
                     </InputAdornment>
                   ),
                 }}
-                style={{ width: "80%"}} // Adjust the width of the search bar.
+                style={{ width: "80%" }} // Adjust the width of the search bar.
               />
             </Box>
 

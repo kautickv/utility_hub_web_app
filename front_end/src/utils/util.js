@@ -67,4 +67,5 @@ function checkLocalStorageForJWTToken() {
 }
 
 
+
 export { sendVerifyAPIToAuthenticationServer, logout, checkLocalStorageForJWTToken};
