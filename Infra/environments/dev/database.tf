@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------------------
-# Create database for multitab feature
-module "dev_dynamodb_table" {
+# Create database for multitab/bookmarks feature
+module "bookmarks_dynamodb_table" {
   source      = "../../modules/dynamodb"
   name        = "utility_hub_bookmarks_table"
   hash_key    = "email"
@@ -31,7 +31,7 @@ module "dev_dynamodb_table" {
 # Create dynamoDb table for authentication service
 #-------------------------------------------------------------------------------------------
 # Create database for multitab feature
-module "dev_dynamodb_table" {
+module "auth_dynamodb_table" {
   source      = "../../modules/dynamodb"
   name        = "utility_hub_authentication_table"
   hash_key    = "email"
