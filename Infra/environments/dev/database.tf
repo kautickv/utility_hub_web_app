@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------------------
 # Create database for multitab feature
 module "dev_dynamodb_table" {
-  source      = "../../modules/dynamodb_table"
+  source      = "../../modules/dynamodb"
   name        = "utility_hub_bookmarks_table"
   hash_key    = "email"
   attributes  = [
