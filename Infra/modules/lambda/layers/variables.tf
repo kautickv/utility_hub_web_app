@@ -8,7 +8,7 @@ variable "key" {
   type = string
 }
 
-variable "source" {
+variable "file_source" {
   description = "The path to the file on local"
   type = string
 }
