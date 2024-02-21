@@ -4,6 +4,8 @@ resource "aws_api_gateway_rest_api" "utility_hub_api_gateway" {
   description = "REST API gateway for Utility Hub app."
 }
 
+## AUTH RESOURCE
+##------------------------------------------------------------------------------------
 # create a new resource called "auth" inside api gateway
 module "auth_resource" {
   source = "../../modules/api_gateway/api_gateway_resource"
@@ -12,6 +14,8 @@ module "auth_resource" {
   rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
 }
 
+## CREDS RESOURCE
+##------------------------------------------------------------------------------------
 # Create a new resource called "creds" inside inside auth resource
 module "creds_resource" {
   source = "../../modules/api_gateway/api_gateway_resource"
@@ -31,3 +35,25 @@ module "get_creds_method" {
   resource_options_method = module.creds_resource.options_method
   resource_options_http_method = module.creds_resource.options_http_method
 }
+
+# Configure GET /auth/creds to invoke auth lambda
+module "get_creds_lambda_integration" {
+  source = "../../modules/api_gateway/method_lambda_integration"
+
+  statement_id = "AllowAuthBackendLambdaInvoke"
+  function_name = module.auth_lamda_function.function_name
+  source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*"
+  http_method = module.get_creds_method.http_method
+  resource_id = module.creds_resource.resource_id
+  rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
+  lambda_invoke_arn = module.auth_lamda_function.invoke_arn
+
+}
+
+## XXX RESOURCE
+##------------------------------------------------------------------------------------
+
+
+
+## DEPLOY API GATEWAY
+##------------------------------------------------------------------------------------
