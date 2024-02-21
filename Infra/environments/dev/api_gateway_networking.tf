@@ -57,3 +57,28 @@ module "get_creds_lambda_integration" {
 
 ## DEPLOY API GATEWAY
 ##------------------------------------------------------------------------------------
+# Deploy the API gateway
+resource "aws_api_gateway_deployment" "utility_hub_api_gateway_deployment" {
+  rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
+
+  triggers = {
+    //Added this to trigger a re-deployment everytime terraform script runs.
+    last_modified = timestamp()
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Deploy in a staging environment called "dev"
+resource "aws_api_gateway_stage" "password_generator_api_gateway_stage" {
+  deployment_id = aws_api_gateway_deployment.utility_hub_api_gateway_deployment.id
+  rest_api_id   = aws_api_gateway_rest_api.password_generator_api_gateway.id
+  stage_name    = "dev"
+}
+
+# Print the invoke URL for /auth/creds on terminal
+output "invoke_url" {
+  value = aws_api_gateway_stage.password_generator_api_gateway_stage.invoke_url
+}
