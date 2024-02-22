@@ -152,7 +152,7 @@ module "post_logout_lambda_integration" {
 
 ## BOOKMARKMANAGER RESOURCE
 ##------------------------------------------------------------------------------------
-# Create a new resource called "bookmarkmanager" inside inside auth resource
+# Create a new resource called "bookmarkmanager" in root resource
 module "bookmarkmanager_resource" {
   source = "../../modules/api_gateway/api_gateway_resource"
   parent_resource_id = aws_api_gateway_rest_api.utility_hub_api_gateway.root_resource_id
@@ -184,6 +184,41 @@ module "post_bookmarkmanager_lambda_integration" {
   lambda_invoke_arn = module.auth_lamda_function.invoke_arn
 }
 
+## HOME RESOURCE
+##------------------------------------------------------------------------------------
+# Create a new resource called "home" in root resource
+module "home_resource" {
+  source = "../../modules/api_gateway/api_gateway_resource"
+  parent_resource_id = aws_api_gateway_rest_api.utility_hub_api_gateway.root_resource_id
+  path_part = "home"
+  rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
+}
+
+# Create a GET method inside "home" resource
+module "get_home_method" {
+  source = "../../modules/api_gateway/api_gateway_method"
+  rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
+  authorization = "NONE"
+  http_method = "GET"
+  resource_id = module.home_resource.resource_id
+  resource_options_method = module.home_resource.options_method_id
+  resource_options_http_method = module.home_resource.options_http_method
+}
+
+# Configure POST /home to invoke auth lambda
+module "get_home_lambda_integration" {
+  source = "../../modules/api_gateway/method_lambda_integration"
+
+  statement_id = "AllowGetHomeLambdaInvoke"
+  function_name = module.home_lamda_function.function_name
+  source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*/${module.get_home_method.http_method}/home"
+  http_method = module.home_resource.http_method
+  resource_id = module.home_resource.resource_id
+  rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
+  lambda_invoke_arn = module.home_lamda_function.invoke_arn
+}
+
+
 
 
 ## DEPLOY API GATEWAY
@@ -206,7 +241,8 @@ resource "aws_api_gateway_deployment" "utility_hub_api_gateway_deployment" {
       module.post_verify_lambda_integration,
       module.post_login_lambda_integration,
       module.post_logout_lambda_integration,
-      module.post_bookmarkmanager_lambda_integration
+      module.post_bookmarkmanager_lambda_integration,
+      module.get_home_lambda_integration
 
   ]
 }
