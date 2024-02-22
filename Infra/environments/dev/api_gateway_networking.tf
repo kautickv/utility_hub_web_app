@@ -39,9 +39,9 @@ module "get_creds_method" {
 module "get_creds_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
-  statement_id = "AllowAuthBackendLambdaInvoke"
+  statement_id = "AllowGetCredsLambdaInvoke"
   function_name = module.auth_lamda_function.function_name
-  source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*"
+  source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*/${module.get_creds_method.http_method}/auth/creds"
   http_method = module.get_creds_method.http_method
   resource_id = module.creds_resource.resource_id
   rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
@@ -73,9 +73,9 @@ module "post_verify_method" {
 module "post_verify_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
-  statement_id = "AllowAuthBackendLambdaInvoke"
+  statement_id = "AllowPostVerifyLambdaInvoke"
   function_name = module.auth_lamda_function.function_name
-  source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*"
+  source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*/${module.post_verify_method.http_method}/auth/verify"
   http_method = module.post_verify_method.http_method
   resource_id = module.verify_resource.resource_id
   rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
@@ -107,9 +107,9 @@ module "post_login_method" {
 module "post_login_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
-  statement_id = "AllowAuthBackendLambdaInvoke"
+  statement_id = "AllowPostLoginLambdaInvoke"
   function_name = module.auth_lamda_function.function_name
-  source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*"
+  source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*/${module.post_login_method.http_method}/auth/login"
   http_method = module.post_login_method.http_method
   resource_id = module.login_resource.resource_id
   rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
@@ -141,14 +141,49 @@ module "post_logout_method" {
 module "post_logout_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
-  statement_id = "AllowAuthBackendLambdaInvoke"
+  statement_id = "AllowPostLogoutLambdaInvoke"
   function_name = module.auth_lamda_function.function_name
-  source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*"
+  source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*/${module.post_logout_method.http_method}/auth/logout"
   http_method = module.post_logout_method.http_method
   resource_id = module.logout_resource.resource_id
   rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
   lambda_invoke_arn = module.auth_lamda_function.invoke_arn
 }
+
+## BOOKMARKMANAGER RESOURCE
+##------------------------------------------------------------------------------------
+# Create a new resource called "bookmarkmanager" inside inside auth resource
+module "bookmarkmanager_resource" {
+  source = "../../modules/api_gateway/api_gateway_resource"
+  parent_resource_id = aws_api_gateway_rest_api.utility_hub_api_gateway.root_resource_id
+  path_part = "bookmarkmanager"
+  rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
+}
+
+# Create a POST method inside "bookmarkmanager" resource
+module "post_bookmarkmanager_method" {
+  source = "../../modules/api_gateway/api_gateway_method"
+  rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
+  authorization = "NONE"
+  http_method = "POST"
+  resource_id = module.bookmarkmanager_resource.resource_id
+  resource_options_method = module.bookmarkmanager_resource.options_method_id
+  resource_options_http_method = module.bookmarkmanager_resource.options_http_method
+}
+
+# Configure POST /bookmarkmanager to invoke auth lambda
+module "post_bookmarkmanager_lambda_integration" {
+  source = "../../modules/api_gateway/method_lambda_integration"
+
+  statement_id = "AllowPostBookmarksManagerLambdaInvoke"
+  function_name = module.auth_lamda_function.function_name
+  source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*/${module.post_bookmarkmanager_method.http_method}/bookmarkmanager"
+  http_method = module.post_bookmarkmanager_method.http_method
+  resource_id = module.bookmarkmanager_resource.resource_id
+  rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
+  lambda_invoke_arn = module.auth_lamda_function.invoke_arn
+}
+
 
 
 ## DEPLOY API GATEWAY
@@ -170,7 +205,8 @@ resource "aws_api_gateway_deployment" "utility_hub_api_gateway_deployment" {
       module.get_creds_lambda_integration,
       module.post_verify_lambda_integration,
       module.post_login_lambda_integration,
-      module.post_logout_lambda_integration
+      module.post_logout_lambda_integration,
+      module.post_bookmarkmanager_lambda_integration
 
   ]
 }
