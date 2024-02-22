@@ -2,7 +2,7 @@
 module "s3_static_hosting" {
     source = "../../modules/s3"
 
-    bucket_name = "utitlityhub.vaisnavsingkautick.com"
+    bucket_name = var.bucket_name
     force_destroy = true
 }
 
@@ -29,12 +29,33 @@ resource "aws_s3_bucket_website_configuration" "static_hosting_bucket_config" {
   }
 }
 
-# Print the bucket id
-output "S3_bucket_hosting_id" {
-  value = module.s3_static_hosting.bucket_id
+# Create a Cloudfront origin access identity
+resource "aws_cloudfront_origin_access_identity" "static_hosting_oai" {
+  comment = "Access identity for static hosting"
 }
 
-# Print the bucket website endpoint to terminal
-output "website_endpoint" {
-  value = aws_s3_bucket_website_configuration.static_hosting_bucket_config.website_endpoint
+#Create s3 bucket policy to allow only cloudfront read access
+data "aws_iam_policy_document" "s3_allow_cloudfront_access" {
+  statement {
+    sid = "AllowCloudfrontAccess"
+    effect = "Allow"
+    principals {
+      type = "CanonicalUser"
+      identifiers = [aws_cloudfront_origin_access_identity.static_hosting_oai.s3_canonical_user_id]
+    }
+    actions = [
+      "s3:GetObject"
+    ]
+
+    resources = [
+                 "${module.s3_static_hosting.bucket_arn}/*"
+    ]
+  }
 }
+
+# Assign the above policy to s3 static hosting bucket
+resource "aws_s3_bucket_policy" "s3_allow_public_access" {
+  bucket = module.s3_static_hosting.bucket_id
+  policy = data.aws_iam_policy_document.s3_allow_cloudfront_access.json
+}
+

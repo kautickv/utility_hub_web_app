@@ -253,8 +253,3 @@ resource "aws_api_gateway_stage" "utility_hub_api_gateway_stage" {
   rest_api_id   = aws_api_gateway_rest_api.utility_hub_api_gateway.id
   stage_name    = "dev"
 }
-
-# Print the invoke URL for /auth/creds on terminal
-output "invoke_url" {
-  value = aws_api_gateway_stage.utility_hub_api_gateway_stage.invoke_url
-}
