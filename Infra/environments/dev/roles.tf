@@ -38,3 +38,46 @@ resource "aws_iam_policy_attachment" "auth_role_kms_decrypt_policy_attachment" {
   roles      = [aws_iam_role.auth_lambda_exec_role.name]
   policy_arn = aws_iam_policy.kms_decrypt_policy.arn
 }
+
+##--------------------------------------------------------------------------------------------------------------------------------
+## CREATE A ROLE FOR BOOKMARKMANAGER LAMBDA FUNCTION
+##--------------------------------------------------------------------------------------------------------------------------------
+resource "aws_iam_role" "bookmarkmanager_lambda_exec_role" {
+  name = "utility-hub-bookmarkmanager-lambda-function_exec"
+
+  assume_role_policy = jsonencode({
+   "Version" : "2012-10-17",
+   "Statement" : [
+     {
+       "Effect" : "Allow",
+       "Principal" : {
+         "Service" : "lambda.amazonaws.com"
+       },
+       "Action" : "sts:AssumeRole"
+     },
+   ]
+  })
+}
+# Attach basic execution policy to the above role
+resource "aws_iam_role_policy_attachment" "bookmarkmanager_role_basic_exec_attachment" {
+  role       = aws_iam_role.bookmarkmanager_lambda_exec_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+# Attach BookmarksManager DynamoDB access policy
+resource "aws_iam_policy_attachment" "Bookmarkmanager_dynamodb_policy_attachment" {
+  name       = "bookmarkmanager_role_DynamoDB_Policy_Attachment"
+  roles      = [aws_iam_role.bookmarkmanager_lambda_exec_role.name]
+  policy_arn = aws_iam_policy.bookmarkmanager_dynamodb_policy.arn
+}
+# Attach SSM read access policy
+resource "aws_iam_policy_attachment" "bookmarkmanager_role_ssm_policy_attachment" {
+  name       = "bookmarkmanager_role_ssm_Policy_Attachment"
+  roles      = [aws_iam_role.bookmarkmanager_lambda_exec_role.name]
+  policy_arn = aws_iam_policy.ssm_read_policy.arn
+}
+# Attach KMS decrypt access policy
+resource "aws_iam_policy_attachment" "bookmarkmanager_role_kms_decrypt_policy_attachment" {
+  name       = "bookmarkmanager_role_kms_decrypt_Policy_Attachment"
+  roles      = [aws_iam_role.bookmarkmanager_lambda_exec_role.name]
+  policy_arn = aws_iam_policy.kms_decrypt_policy.arn
+}

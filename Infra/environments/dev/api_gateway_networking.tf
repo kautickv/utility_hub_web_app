@@ -176,7 +176,7 @@ module "post_bookmarkmanager_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
   statement_id = "AllowPostBookmarksManagerLambdaInvoke"
-  function_name = module.auth_lamda_function.function_name
+  function_name = module.bookmarkmanager_lamda_function.function_name
   source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*/${module.post_bookmarkmanager_method.http_method}/bookmarkmanager"
   http_method = module.post_bookmarkmanager_method.http_method
   resource_id = module.bookmarkmanager_resource.resource_id

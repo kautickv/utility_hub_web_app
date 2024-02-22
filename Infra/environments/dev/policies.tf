@@ -54,4 +54,21 @@ resource "aws_iam_policy" "kms_decrypt_policy" {
   })
 }
 
+##--------------------------------------------------------------------------------------------------------------------------------
+## Policy to give read/write access to Bookmarkmanager table
+## Policy to give access to Auth DynamoDB Table
+resource "aws_iam_policy" "bookmarkmanager_dynamodb_policy" {
+  name        = "Bookmarkmanager_DynamoDB_Policy"
+  description = "Policy for Bookmarkmanager DynamoDB access"
 
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = "dynamodb:*",
+        Resource = "${module.bookmarks_dynamodb_table.table_arn}"
+      }
+    ]
+  })
+}
