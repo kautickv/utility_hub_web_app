@@ -170,7 +170,7 @@ resource "aws_api_gateway_deployment" "utility_hub_api_gateway_deployment" {
       module.get_creds_lambda_integration,
       module.post_verify_lambda_integration,
       module.post_login_lambda_integration,
-      post_logout_lambda_integration
+      module.post_logout_lambda_integration
 
   ]
 }
