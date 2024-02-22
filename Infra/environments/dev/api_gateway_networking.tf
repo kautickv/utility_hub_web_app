@@ -72,13 +72,13 @@ resource "aws_api_gateway_deployment" "utility_hub_api_gateway_deployment" {
 }
 
 # Deploy in a staging environment called "dev"
-resource "aws_api_gateway_stage" "password_generator_api_gateway_stage" {
+resource "aws_api_gateway_stage" "utility_hub_api_gateway_stage" {
   deployment_id = aws_api_gateway_deployment.utility_hub_api_gateway_deployment.id
-  rest_api_id   = aws_api_gateway_rest_api.password_generator_api_gateway.id
+  rest_api_id   = aws_api_gateway_rest_api.utility_hub_api_gateway.id
   stage_name    = "dev"
 }
 
 # Print the invoke URL for /auth/creds on terminal
 output "invoke_url" {
-  value = aws_api_gateway_stage.password_generator_api_gateway_stage.invoke_url
+  value = aws_api_gateway_stage.utility_hub_api_gateway_stage.invoke_url
 }

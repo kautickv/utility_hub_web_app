@@ -9,7 +9,7 @@ resource "aws_s3_object" "lambda_function_layer_object" {
 }
 
 # Put zip folder inside a layer
-resource "aws_lambda_layer" "layer" {
+resource "aws_lambda_layer_version" "layer" {
   layer_name          = var.layer_name
   s3_bucket = var.layer_s3_bucket_id
   s3_key    = aws_s3_object.lambda_function_layer_object.key

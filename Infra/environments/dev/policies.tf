@@ -9,7 +9,7 @@ resource "aws_iam_policy" "auth_dynamodb_policy" {
       {
         Effect   = "Allow",
         Action   = "dynamodb:*",
-        Resource = "${aws_dynamodb_table.sign_in_user_table.arn}"
+        Resource = "${module.auth_dynamodb_table.table_arn}"
       }
     ]
   })
