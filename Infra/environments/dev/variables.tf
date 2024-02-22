@@ -12,3 +12,9 @@ variable "hosted_zone_id"{
     description = "The ID for the hosted zone"
     type = string
 }
+
+variable "app_name"{
+  description = "The name of the application"
+  type = string
+  default = "Test_App"
+}
