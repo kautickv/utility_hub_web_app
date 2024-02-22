@@ -35,7 +35,6 @@ resource "aws_api_gateway_method_response" "options_new_method_response_200" {
     "method.response.header.Access-Control-Allow-Methods" = true
     "method.response.header.Access-Control-Allow-Origin"  = true
   }
-  depends_on = [var.resource_options_method]
 }
 
 resource "aws_api_gateway_integration" "options_new_method_integration" {
@@ -46,7 +45,6 @@ resource "aws_api_gateway_integration" "options_new_method_integration" {
   request_templates = {
     "application/json" = "{\"statusCode\": 200}"
   }
-  depends_on    = [var.resource_options_method]
 }
 
 resource "aws_api_gateway_integration_response" "options_new_method_integration_response" {
