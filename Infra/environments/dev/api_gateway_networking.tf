@@ -67,6 +67,13 @@ resource "aws_api_gateway_deployment" "utility_hub_api_gateway_deployment" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [
+      module.auth_resource,
+      module.creds_resource,
+      module.get_creds_method,
+      module.get_creds_lambda_integration
+  ]
 }
 
 # Deploy in a staging environment called "dev"
