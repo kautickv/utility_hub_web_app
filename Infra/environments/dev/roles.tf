@@ -81,3 +81,9 @@ resource "aws_iam_policy_attachment" "bookmarkmanager_role_kms_decrypt_policy_at
   roles      = [aws_iam_role.bookmarkmanager_lambda_exec_role.name]
   policy_arn = aws_iam_policy.kms_decrypt_policy.arn
 }
+# Attach Access to invoke Auth Lambda
+resource "aws_iam_policy_attachment" "bookmarkmanager_invoke_auth_lambda_policy_attachment" {
+  name       = "bookmarkmanager_invoke_auth_lambda_policy_attachment"
+  roles      = [aws_iam_role.bookmarkmanager_lambda_exec_role.name]
+  policy_arn = aws_iam_policy.invoke_auth_lambda_policy.arn
+}

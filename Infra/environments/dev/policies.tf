@@ -55,8 +55,26 @@ resource "aws_iam_policy" "kms_decrypt_policy" {
 }
 
 ##--------------------------------------------------------------------------------------------------------------------------------
+# Policy to give access to invoke AUTH lambda function
+resource "aws_iam_policy" "invoke_auth_lambda_policy" {
+  name        = "Invoke_Auth_Lambda_Policy"
+  description = "This policy gives a resource access to invoke the auth lambda"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = "lambda:InvokeFunction",
+        Resource = "${module.auth_lamda_function.function_arn}"
+      }
+    ]
+  })
+}
+
+
+##--------------------------------------------------------------------------------------------------------------------------------
 ## Policy to give read/write access to Bookmarkmanager table
-## Policy to give access to Auth DynamoDB Table
 resource "aws_iam_policy" "bookmarkmanager_dynamodb_policy" {
   name        = "Bookmarkmanager_DynamoDB_Policy"
   description = "Policy for Bookmarkmanager DynamoDB access"

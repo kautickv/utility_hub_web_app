@@ -4,3 +4,6 @@ output "function_name" {
 output "invoke_arn" {
   value = aws_lambda_function.lamda_function.invoke_arn
 }
+output "function_arn"{
+  value = aws_lambda_function.lamda_function.arn
+}
