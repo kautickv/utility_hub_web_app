@@ -24,6 +24,6 @@ data "aws_iam_policy_document" "s3_allow_cloudfront_access" {
 
 # Assign the above policy to s3 static hosting bucket
 resource "aws_s3_bucket_policy" "s3_allow_public_access" {
-  bucket = aws_s3_bucket.static_hosting_bucket_name.id
+  bucket = module.s3_static_hosting.bucket_id
   policy = data.aws_iam_policy_document.s3_allow_cloudfront_access.json
 }
