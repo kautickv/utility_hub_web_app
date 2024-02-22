@@ -48,7 +48,7 @@ module "get_creds_lambda_integration" {
   lambda_invoke_arn = module.auth_lamda_function.invoke_arn
 }
 
-## LOGIN RESOURCE
+## VERIFY RESOURCE
 ##------------------------------------------------------------------------------------
 # Create a new resource called "verify" inside inside auth resource
 module "verify_resource" {
@@ -58,8 +58,8 @@ module "verify_resource" {
   rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
 }
 
-# Create a GET Creds method inside "verify" resource
-module "get_verify_method" {
+# Create a POST method inside "verify" resource
+module "post_verify_method" {
   source = "../../modules/api_gateway/api_gateway_method"
   rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
   authorization = "NONE"
@@ -70,14 +70,48 @@ module "get_verify_method" {
 }
 
 # Configure GET /auth/creds to invoke auth lambda
-module "get_verify_lambda_integration" {
+module "post_verify_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
   statement_id = "AllowAuthBackendLambdaInvoke"
   function_name = module.auth_lamda_function.function_name
   source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*"
-  http_method = module.get_verify_method.http_method
+  http_method = module.post_verify_method.http_method
   resource_id = module.verify_resource.resource_id
+  rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
+  lambda_invoke_arn = module.auth_lamda_function.invoke_arn
+}
+
+## LOGIN RESOURCE
+##------------------------------------------------------------------------------------
+# Create a new resource called "login" inside inside auth resource
+module "login_resource" {
+  source = "../../modules/api_gateway/api_gateway_resource"
+  parent_resource_id = module.auth_resource.resource_id
+  path_part = "login"
+  rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
+}
+
+# Create a POST method inside "login" resource
+module "post_login_method" {
+  source = "../../modules/api_gateway/api_gateway_method"
+  rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
+  authorization = "NONE"
+  http_method = "POST"
+  resource_id = module.login_resource.resource_id
+  resource_options_method = module.login_resource.options_method_id
+  resource_options_http_method = module.login_resource.options_http_method
+}
+
+# Configure GET /auth/creds to invoke auth lambda
+module "post_login_lambda_integration" {
+  source = "../../modules/api_gateway/method_lambda_integration"
+
+  statement_id = "AllowAuthBackendLambdaInvoke"
+  function_name = module.auth_lamda_function.function_name
+  source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*"
+  http_method = module.post_login_method.http_method
+  resource_id = module.login_resource.resource_id
   rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
   lambda_invoke_arn = module.auth_lamda_function.invoke_arn
 }
@@ -99,10 +133,10 @@ resource "aws_api_gateway_deployment" "utility_hub_api_gateway_deployment" {
   }
 
   depends_on = [
-      module.auth_resource,
-      module.creds_resource,
-      module.get_creds_method,
-      module.get_creds_lambda_integration
+      module.get_creds_lambda_integration,
+      module.post_verify_lambda_integration,
+      module.post_login_lambda_integration
+
   ]
 }
 
