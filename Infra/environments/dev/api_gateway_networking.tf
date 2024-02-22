@@ -22,8 +22,6 @@ module "creds_resource" {
   parent_resource_id = module.auth_resource.resource_id
   path_part = "creds"
   rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
-
-  depends_on = [ module.auth_resource ]
 }
 
 # Create a GET Creds method inside "creds" resource
@@ -35,8 +33,6 @@ module "get_creds_method" {
   resource_id = module.creds_resource.resource_id
   resource_options_method = module.creds_resource.options_method_id
   resource_options_http_method = module.creds_resource.options_http_method
-
-  depends_on = [ module.creds_resource ]
 }
 
 # Configure GET /auth/creds to invoke auth lambda
@@ -50,8 +46,6 @@ module "get_creds_lambda_integration" {
   resource_id = module.creds_resource.resource_id
   rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
   lambda_invoke_arn = module.auth_lamda_function.invoke_arn
-
-  depends_on = [ module.get_creds_method ]
 }
 
 ## XXX RESOURCE

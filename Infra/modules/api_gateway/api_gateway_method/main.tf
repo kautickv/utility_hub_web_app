@@ -21,3 +21,5 @@ resource "aws_api_gateway_method_response" "new_method_response_200" {
   }
   depends_on = [aws_api_gateway_method.new_method]
 }
+
+
