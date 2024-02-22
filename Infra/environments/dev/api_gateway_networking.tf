@@ -212,7 +212,7 @@ module "get_home_lambda_integration" {
   statement_id = "AllowGetHomeLambdaInvoke"
   function_name = module.home_lamda_function.function_name
   source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*/${module.get_home_method.http_method}/home"
-  http_method = module.home_resource.http_method
+  http_method = module.get_home_method.http_method
   resource_id = module.home_resource.resource_id
   rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
   lambda_invoke_arn = module.home_lamda_function.invoke_arn
