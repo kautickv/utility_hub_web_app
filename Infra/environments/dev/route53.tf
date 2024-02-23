@@ -2,6 +2,8 @@
 
 # Add cloudfront distribution domain name as a record.
 resource "aws_route53_record" "root-a" {
+  
+  provider = aws.dns_account # Use DNS Account
   zone_id = var.hosted_zone_id
   name    = var.domain_name
   type    = "A"
