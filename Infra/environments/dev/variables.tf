@@ -16,7 +16,7 @@ variable "hosted_zone_id"{
 variable "app_name"{
   description = "The name of the application"
   type = string
-  default = "Test_App"
+  default = "Utility_hub"
 }
 
 variable "aws_access_key_id_1" {
