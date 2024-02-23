@@ -19,21 +19,6 @@ variable "app_name"{
   default = "Utility_hub"
 }
 
-variable "aws_access_key_id_1" {
-  description = "AWS Access Key ID for Account 1"
-  type        = string
-}
-
-variable "aws_secret_access_key_1" {
-  description = "AWS Secret Access Key for Account 1"
-  type        = string
-}
-
-variable "aws_session_token_1" {
-  description = "AWS Session Token for Account 1"
-  type        = string
-}
-
 variable "aws_access_key_id_2" {
   description = "AWS Access Key ID for Account 2"
   type        = string

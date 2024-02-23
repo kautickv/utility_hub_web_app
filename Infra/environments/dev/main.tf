@@ -21,20 +21,15 @@ terraform {
 
 # Default AWS Account
 provider "aws" {
+  # Use default credentials
   region = "us-east-1" # Set your desired AWS region
-  access_key = var.aws_access_key_id_1
-  secret_key = var.aws_secret_access_key_1
-  token      = var.aws_session_token_1
 }
 
 # Used only for Certificate manager
 provider "aws" {
+  # use default credentials
   alias = "acm"
   region = "us-east-1"
-
-  access_key = var.aws_access_key_id_1
-  secret_key = var.aws_secret_access_key_1
-  token      = var.aws_session_token_1
 
 }
 
