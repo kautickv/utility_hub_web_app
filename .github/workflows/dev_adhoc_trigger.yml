@@ -82,9 +82,6 @@ jobs:
         id: init
         working-directory: ./Infra/environments/dev
         env:
-          TF_VAR_aws_access_key_id_1: ${{ env.AWS_ACCESS_KEY_ID }}
-          TF_VAR_aws_secret_access_key_1: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          TF_VAR_aws_session_token_1: ${{ env.AWS_SESSION_TOKEN }}
           TF_VAR_aws_access_key_id_2: ${{ env.AWS_ACCESS_KEY_ID_2 }}
           TF_VAR_aws_secret_access_key_2: ${{ env.AWS_SECRET_ACCESS_KEY_2 }}
           TF_VAR_aws_session_token_2: ${{ env.AWS_SESSION_TOKEN_2 }}
@@ -96,9 +93,6 @@ jobs:
         id: validate
         working-directory: ./Infra/environments/dev
         env:
-          TF_VAR_aws_access_key_id_1: ${{ env.AWS_ACCESS_KEY_ID }}
-          TF_VAR_aws_secret_access_key_1: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          TF_VAR_aws_session_token_1: ${{ env.AWS_SESSION_TOKEN }}
           TF_VAR_aws_access_key_id_2: ${{ env.AWS_ACCESS_KEY_ID_2 }}
           TF_VAR_aws_secret_access_key_2: ${{ env.AWS_SECRET_ACCESS_KEY_2 }}
           TF_VAR_aws_session_token_2: ${{ env.AWS_SESSION_TOKEN_2 }}
@@ -109,9 +103,6 @@ jobs:
         id: plan
         working-directory: ./Infra/environments/dev
         env:
-          TF_VAR_aws_access_key_id_1: ${{ env.AWS_ACCESS_KEY_ID }}
-          TF_VAR_aws_secret_access_key_1: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          TF_VAR_aws_session_token_1: ${{ env.AWS_SESSION_TOKEN }}
           TF_VAR_aws_access_key_id_2: ${{ env.AWS_ACCESS_KEY_ID_2 }}
           TF_VAR_aws_secret_access_key_2: ${{ env.AWS_SECRET_ACCESS_KEY_2 }}
           TF_VAR_aws_session_token_2: ${{ env.AWS_SESSION_TOKEN_2 }}
@@ -122,13 +113,11 @@ jobs:
       - name: Terraform Apply
         working-directory: ./Infra/environments/dev
         env:
-          TF_VAR_aws_access_key_id_1: ${{ env.AWS_ACCESS_KEY_ID }}
-          TF_VAR_aws_secret_access_key_1: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          TF_VAR_aws_session_token_1: ${{ env.AWS_SESSION_TOKEN }}
           TF_VAR_aws_access_key_id_2: ${{ env.AWS_ACCESS_KEY_ID_2 }}
           TF_VAR_aws_secret_access_key_2: ${{ env.AWS_SECRET_ACCESS_KEY_2 }}
           TF_VAR_aws_session_token_2: ${{ env.AWS_SESSION_TOKEN_2 }}
-        run: terraform apply -auto-approve
+        run: |
+          TF_LOG=DEBUG terraform apply -auto-approve
 
       - name: Set latest commit status as ${{ job.status }}
         uses: myrotvorets/set-commit-status-action@master
