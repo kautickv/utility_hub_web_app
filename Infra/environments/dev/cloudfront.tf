@@ -1,7 +1,7 @@
 # Create new Cloudfront discribution
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name              = s3_static_hosting.bucket_regional_domain_name
+    domain_name              = module.s3_static_hosting.bucket_regional_domain_name
     origin_id                = "S3-.${var.bucket_name}"
 
      s3_origin_config {
