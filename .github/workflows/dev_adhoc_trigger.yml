@@ -37,11 +37,33 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: pending
       
-      - name: Configure AWS Credentials
+      - name: Assume dev account role
+        id: dev_account_role
         uses: aws-actions/configure-aws-credentials@v4
         with:
             role-to-assume: arn:aws:iam::211125677766:role/pipeline-deployments-role
             aws-region: "us-east-1"
+            role-session-name: devSession
+
+      - name: Set dev credentials as env variables
+        run: |
+            echo "AWS_ACCESS_KEY_ID_1=${{ steps.dev_account_role.outputs.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+            echo "AWS_SECRET_ACCESS_KEY_1=${{ steps.dev_account_role.outputs.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+            echo "AWS_SESSION_TOKEN_1=${{ steps.dev_account_role.outputs.AWS_SESSION_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Assume DNS account role
+        id: dns_account_role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+            role-to-assume: arn:aws:iam::324277551001:role/pipeline-deployments-role
+            aws-region: "us-east-1"
+            role-session-name: DNSSession
+
+      - name: Set DNS credentials as env variables
+        run: |
+          echo "AWS_ACCESS_KEY_ID_2=${{ steps.dns_account_role.outputs.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY_2=${{ steps.dns_account_role.outputs.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN_2=${{ steps.dns_account_role.outputs.AWS_SESSION_TOKEN }}" >> $GITHUB_ENV
 
       - name: Setup Python 3.9
         uses: actions/setup-python@v4
