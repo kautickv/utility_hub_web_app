@@ -19,6 +19,7 @@ terraform {
   }
 }
 
+# Default AWS Account
 provider "aws" {
   region = "us-east-1" # Set your desired AWS region
 }
@@ -26,5 +27,11 @@ provider "aws" {
 # Used only for Certificate manager
 provider "aws" {
   alias = "acm"
+  region = "us-east-1"
+}
+
+#Provider for DNS Account setup
+provider "aws"{
+  alias = "dns_account"
   region = "us-east-1"
 }
