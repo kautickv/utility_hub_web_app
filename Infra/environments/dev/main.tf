@@ -22,16 +22,28 @@ terraform {
 # Default AWS Account
 provider "aws" {
   region = "us-east-1" # Set your desired AWS region
+  access_key = var.aws_access_key_id_1
+  secret_key = var.aws_secret_access_key_1
+  token      = var.aws_session_token_1
 }
 
 # Used only for Certificate manager
 provider "aws" {
   alias = "acm"
   region = "us-east-1"
+
+  access_key = var.aws_access_key_id_1
+  secret_key = var.aws_secret_access_key_1
+  token      = var.aws_session_token_1
+
 }
 
 #Provider for DNS Account setup
 provider "aws"{
   alias = "dns_account"
   region = "us-east-1"
+
+  access_key = var.aws_access_key_id_2
+  secret_key = var.aws_secret_access_key_2
+  token      = var.aws_session_token_2
 }

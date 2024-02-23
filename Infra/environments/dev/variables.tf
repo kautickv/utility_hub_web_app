@@ -18,3 +18,11 @@ variable "app_name"{
   type = string
   default = "Test_App"
 }
+
+variable "aws_access_key_id_1" {}
+variable "aws_secret_access_key_1" {}
+variable "aws_session_token_1" {}
+
+variable "aws_access_key_id_2" {}
+variable "aws_secret_access_key_2" {}
+variable "aws_session_token_2" {}
