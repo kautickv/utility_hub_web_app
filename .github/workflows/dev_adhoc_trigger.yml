@@ -117,7 +117,7 @@ jobs:
           TF_VAR_aws_secret_access_key_2: ${{ env.AWS_SECRET_ACCESS_KEY_2 }}
           TF_VAR_aws_session_token_2: ${{ env.AWS_SESSION_TOKEN_2 }}
         run: |
-          TF_LOG=DEBUG terraform apply -auto-approve
+          terraform apply -auto-approve
 
       - name: Set latest commit status as ${{ job.status }}
         uses: myrotvorets/set-commit-status-action@master
