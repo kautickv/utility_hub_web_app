@@ -47,9 +47,9 @@ jobs:
   
       - name: Set DNS credentials as env variables
         run: |
-            echo "AWS_ACCESS_KEY_ID_2=${{ steps.dns_account_role.outputs.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
-            echo "AWS_SECRET_ACCESS_KEY_2=${{ steps.dns_account_role.outputs.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
-            echo "AWS_SESSION_TOKEN_2=${{ steps.dns_account_role.outputs.AWS_SESSION_TOKEN }}" >> $GITHUB_ENV
+            echo "AWS_ACCESS_KEY_ID_2=${{ env.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+            echo "AWS_SECRET_ACCESS_KEY_2=${{ env.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+            echo "AWS_SESSION_TOKEN_2=${{ env.AWS_SESSION_TOKEN }}" >> $GITHUB_ENV
   
       
       - name: Assume dev account role
@@ -59,12 +59,6 @@ jobs:
             role-to-assume: arn:aws:iam::211125677766:role/pipeline-deployments-role
             aws-region: "us-east-1"
             role-session-name: devSession
-
-      - name: Set dev credentials as env variables
-        run: |
-            echo "AWS_ACCESS_KEY_ID_1=${{ steps.dev_account_role.outputs.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
-            echo "AWS_SECRET_ACCESS_KEY_1=${{ steps.dev_account_role.outputs.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
-            echo "AWS_SESSION_TOKEN_1=${{ steps.dev_account_role.outputs.AWS_SESSION_TOKEN }}" >> $GITHUB_ENV
 
       - name: Setup Python 3.9
         uses: actions/setup-python@v4
@@ -88,9 +82,9 @@ jobs:
         id: init
         working-directory: ./Infra/environments/dev
         env:
-          TF_VAR_aws_access_key_id_1: ${{ env.AWS_ACCESS_KEY_ID_1 }}
-          TF_VAR_aws_secret_access_key_1: ${{ env.AWS_SECRET_ACCESS_KEY_1 }}
-          TF_VAR_aws_session_token_1: ${{ env.AWS_SESSION_TOKEN_1 }}
+          TF_VAR_aws_access_key_id_1: ${{ env.AWS_ACCESS_KEY_ID }}
+          TF_VAR_aws_secret_access_key_1: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_aws_session_token_1: ${{ env.AWS_SESSION_TOKEN }}
           TF_VAR_aws_access_key_id_2: ${{ env.AWS_ACCESS_KEY_ID_2 }}
           TF_VAR_aws_secret_access_key_2: ${{ env.AWS_SECRET_ACCESS_KEY_2 }}
           TF_VAR_aws_session_token_2: ${{ env.AWS_SESSION_TOKEN_2 }}
@@ -102,9 +96,9 @@ jobs:
         id: validate
         working-directory: ./Infra/environments/dev
         env:
-          TF_VAR_aws_access_key_id_1: ${{ env.AWS_ACCESS_KEY_ID_1 }}
-          TF_VAR_aws_secret_access_key_1: ${{ env.AWS_SECRET_ACCESS_KEY_1 }}
-          TF_VAR_aws_session_token_1: ${{ env.AWS_SESSION_TOKEN_1 }}
+          TF_VAR_aws_access_key_id_1: ${{ env.AWS_ACCESS_KEY_ID }}
+          TF_VAR_aws_secret_access_key_1: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_aws_session_token_1: ${{ env.AWS_SESSION_TOKEN }}
           TF_VAR_aws_access_key_id_2: ${{ env.AWS_ACCESS_KEY_ID_2 }}
           TF_VAR_aws_secret_access_key_2: ${{ env.AWS_SECRET_ACCESS_KEY_2 }}
           TF_VAR_aws_session_token_2: ${{ env.AWS_SESSION_TOKEN_2 }}
@@ -115,9 +109,9 @@ jobs:
         id: plan
         working-directory: ./Infra/environments/dev
         env:
-          TF_VAR_aws_access_key_id_1: ${{ env.AWS_ACCESS_KEY_ID_1 }}
-          TF_VAR_aws_secret_access_key_1: ${{ env.AWS_SECRET_ACCESS_KEY_1 }}
-          TF_VAR_aws_session_token_1: ${{ env.AWS_SESSION_TOKEN_1 }}
+          TF_VAR_aws_access_key_id_1: ${{ env.AWS_ACCESS_KEY_ID }}
+          TF_VAR_aws_secret_access_key_1: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_aws_session_token_1: ${{ env.AWS_SESSION_TOKEN }}
           TF_VAR_aws_access_key_id_2: ${{ env.AWS_ACCESS_KEY_ID_2 }}
           TF_VAR_aws_secret_access_key_2: ${{ env.AWS_SECRET_ACCESS_KEY_2 }}
           TF_VAR_aws_session_token_2: ${{ env.AWS_SESSION_TOKEN_2 }}
@@ -128,9 +122,9 @@ jobs:
       - name: Terraform Apply
         working-directory: ./Infra/environments/dev
         env:
-          TF_VAR_aws_access_key_id_1: ${{ env.AWS_ACCESS_KEY_ID_1 }}
-          TF_VAR_aws_secret_access_key_1: ${{ env.AWS_SECRET_ACCESS_KEY_1 }}
-          TF_VAR_aws_session_token_1: ${{ env.AWS_SESSION_TOKEN_1 }}
+          TF_VAR_aws_access_key_id_1: ${{ env.AWS_ACCESS_KEY_ID }}
+          TF_VAR_aws_secret_access_key_1: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_aws_session_token_1: ${{ env.AWS_SESSION_TOKEN }}
           TF_VAR_aws_access_key_id_2: ${{ env.AWS_ACCESS_KEY_ID_2 }}
           TF_VAR_aws_secret_access_key_2: ${{ env.AWS_SECRET_ACCESS_KEY_2 }}
           TF_VAR_aws_session_token_2: ${{ env.AWS_SESSION_TOKEN_2 }}
