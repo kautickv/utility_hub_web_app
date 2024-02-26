@@ -13,9 +13,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = var.terraform_backend_bucket # Create bucket prior to when script runs. State will be stored to this bucket. Add necessary permissions to bucket and user/role
-    key            = var.terraform_backend_key # Folder structure to where exactly to store state
-    region         = var.terraform_backend_region
+    bucket         = "utility-hub-s3-terraform-backend" # Create bucket prior to when script runs. State will be stored to this bucket. Add necessary permissions to bucket and user/role
+    key            = "terraformStateFiles" # Folder structure to where exactly to store state
+    region         = "us-east-1"
   }
 }
 
