@@ -184,6 +184,30 @@ module "post_bookmarkmanager_lambda_integration" {
   lambda_invoke_arn = module.auth_lamda_function.invoke_arn
 }
 
+# Create a GET method inside "bookmarkmanager" resource
+module "get_bookmarkmanager_method" {
+  source = "../../modules/api_gateway/api_gateway_method"
+  rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
+  authorization = "NONE"
+  http_method = "GET"
+  resource_id = module.bookmarkmanager_resource.resource_id
+  resource_options_method = module.bookmarkmanager_resource.options_method_id
+  resource_options_http_method = module.bookmarkmanager_resource.options_http_method
+}
+
+# Configure POST /bookmarkmanager to invoke auth lambda
+module "post_bookmarkmanager_lambda_integration" {
+  source = "../../modules/api_gateway/method_lambda_integration"
+
+  statement_id = "AllowGetBookmarksManagerLambdaInvoke"
+  function_name = module.bookmarkmanager_lamda_function.function_name
+  source_arn = "${aws_api_gateway_rest_api.utility_hub_api_gateway.execution_arn}/*/${module.get_bookmarkmanager_method.http_method}/bookmarkmanager"
+  http_method = module.get_bookmarkmanager_method.http_method
+  resource_id = module.bookmarkmanager_resource.resource_id
+  rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
+  lambda_invoke_arn = module.auth_lamda_function.invoke_arn
+}
+
 ## HOME RESOURCE
 ##------------------------------------------------------------------------------------
 # Create a new resource called "home" in root resource
@@ -241,6 +265,7 @@ resource "aws_api_gateway_deployment" "utility_hub_api_gateway_deployment" {
       module.post_verify_lambda_integration,
       module.post_login_lambda_integration,
       module.post_logout_lambda_integration,
+      module.post_bookmarkmanager_lambda_integration,
       module.post_bookmarkmanager_lambda_integration,
       module.get_home_lambda_integration
 
