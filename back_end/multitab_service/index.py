@@ -22,10 +22,10 @@ def lambda_handler(event, context):
             if user_details == None:
                 return common_utility.buildResponse(401, "Unauthorized")
             
-        if http_method == 'POST' and path =='/multitab':
+        if http_method == 'POST' and path =='/bookmarkmanager':
             return handlePostMultitab(event, user_details)
     
-        elif http_method == 'GET' and path =='/multitab':
+        elif http_method == 'GET' and path =='/bookmarkmanager':
 
             return handleGetMultitab(event, user_details)
         else:
