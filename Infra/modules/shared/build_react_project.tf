@@ -5,10 +5,10 @@
 # Create .env and store in front_end folder. Contains API gateway invoke url, s3 website endpoint.
 resource "local_file" "react_env_file" {
 
-  depends_on = [aws_api_gateway_stage.utility_hub_api_gateway_stage]
+  depends_on = [aws_api_gateway_stage.root_api_gateway_stage]
   filename = "../../../${path.module}/front_end/.env"
   content  = <<-EOF
-    REACT_APP_API_GATEWAY_BASE_URL=${aws_api_gateway_stage.utility_hub_api_gateway_stage.invoke_url}
+    REACT_APP_API_GATEWAY_BASE_URL=${aws_api_gateway_stage.root_api_gateway_stage.invoke_url}
     REACT_APP_BUCKET_HOSTING_ID =${module.s3_static_hosting.bucket_id}
     REACT_APP_S3_WEBSITE_ENDPOINT =${aws_s3_bucket_website_configuration.static_hosting_bucket_config.website_endpoint}
 

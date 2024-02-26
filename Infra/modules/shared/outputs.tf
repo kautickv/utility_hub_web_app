@@ -15,5 +15,5 @@ output "cloudfront_distribution_domain_name" {
 
 # Print the invoke URL for /auth/creds on terminal
 output "invoke_url" {
-  value = aws_api_gateway_stage.utility_hub_api_gateway_stage.invoke_url
+  value = aws_api_gateway_stage.root_api_gateway_stage.invoke_url
 }
