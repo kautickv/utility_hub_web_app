@@ -4,7 +4,6 @@ module "build_dev_infra" {
     source = "../../modules/shared"
 
     providers = {
-        aws.default = aws.default
         aws.acm   = aws.acm
         aws.dns_account = aws.dns_account
     }
