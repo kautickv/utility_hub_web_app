@@ -196,7 +196,7 @@ module "get_bookmarkmanager_method" {
 }
 
 # Configure POST /bookmarkmanager to invoke auth lambda
-module "post_bookmarkmanager_lambda_integration" {
+module "get_bookmarkmanager_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
   statement_id = "AllowGetBookmarksManagerLambdaInvoke"
@@ -266,7 +266,7 @@ resource "aws_api_gateway_deployment" "utility_hub_api_gateway_deployment" {
       module.post_login_lambda_integration,
       module.post_logout_lambda_integration,
       module.post_bookmarkmanager_lambda_integration,
-      module.post_bookmarkmanager_lambda_integration,
+      module.get_bookmarkmanager_lambda_integration,
       module.get_home_lambda_integration
 
   ]
