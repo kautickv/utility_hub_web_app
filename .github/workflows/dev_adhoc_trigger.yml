@@ -59,7 +59,7 @@ jobs:
       - name: Extract AWS Roles ARNs
         working-directory: ./.github
         run: |
-          bash ./scripts/extract_iam_role_arns.sh '../../Infra/deployment_config.json' 'dev' >> $GITHUB_ENV
+          bash ./scripts/extract_iam_role_arns.sh '../Infra/deployment_config.json' 'dev' >> $GITHUB_ENV
       
       - name: Assume DNS account role
         id: dns_account_role
