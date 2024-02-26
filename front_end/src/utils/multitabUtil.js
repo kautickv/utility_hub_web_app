@@ -7,7 +7,7 @@ async function sendGETToMultitabBackend(jwtToken) {
       */
     try {
       let response = await fetch(
-        `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/multitab`,
+        `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/bookmarkmanager`,
         {
           method: "GET",
           headers: {
@@ -39,7 +39,7 @@ async function sendPostToMultitabBackend(jwtToken, config) {
     */
   try {
     let response = await fetch(
-      `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/multitab`,
+      `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/bookmarkmanager`,
       {
         method: "POST",
         headers: {
