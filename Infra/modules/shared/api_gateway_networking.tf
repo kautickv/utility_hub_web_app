@@ -1,6 +1,6 @@
 # Create a REST API gateway in AWS
 resource "aws_api_gateway_rest_api" "utility_hub_api_gateway" {
-  name        = "utility_hub_api_gateway"
+  name        = "${var.app_name}_api_gateway"
   description = "REST API gateway for Utility Hub app."
 }
 

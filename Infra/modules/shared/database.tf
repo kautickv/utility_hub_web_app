@@ -2,7 +2,7 @@
 # Create database for multitab/bookmarks feature
 module "bookmarks_dynamodb_table" {
   source      = "../../modules/dynamodb"
-  name        = "utility_hub_bookmarks_table"
+  name        = "${var.app_name}_bookmarks_table"
   hash_key    = "email"
   attributes  = [
     { name = "email", type = "S" },
@@ -33,7 +33,7 @@ module "bookmarks_dynamodb_table" {
 # Create database for multitab feature
 module "auth_dynamodb_table" {
   source      = "../../modules/dynamodb"
-  name        = "utility_hub_authentication_table"
+  name        = "${var.app_name}_authentication_table"
   hash_key    = "email"
   attributes  = [
     { name = "email", type = "S" },

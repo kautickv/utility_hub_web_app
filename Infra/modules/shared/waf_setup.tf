@@ -1,7 +1,7 @@
 # Create IP Set for the IP addresses to allow
 resource "aws_wafv2_ip_set" "allow_specific_ips" {
   name               = "AllowedIPs"
-  description        = "An IP set to allow traffic only from specific IP addresses"
+  description        = "An IP set to allow traffic only from specific IP addresses for ${var.app_name}"
   scope              = "CLOUDFRONT" 
   ip_address_version = "IPV4"
 

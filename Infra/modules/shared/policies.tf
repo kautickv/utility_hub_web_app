@@ -1,6 +1,6 @@
 ## Policy to give access to Auth DynamoDB Table
 resource "aws_iam_policy" "auth_dynamodb_policy" {
-  name        = "Auth_DynamoDB_Policy"
+  name        = "${var.app_name}_Auth_DynamoDB_Policy"
   description = "Policy for Auth DynamoDB access"
 
   policy = jsonencode({
@@ -18,7 +18,7 @@ resource "aws_iam_policy" "auth_dynamodb_policy" {
 ##--------------------------------------------------------------------------------------------------------------------------------
 # Policy to give SSM Read Access
 resource "aws_iam_policy" "ssm_read_policy" {
-  name        = "SSM_Policy"
+  name        = "${var.app_name}_SSM_Policy"
   description = "Policy for SSM access"
 
   policy = jsonencode({
@@ -39,7 +39,7 @@ resource "aws_iam_policy" "ssm_read_policy" {
 ##--------------------------------------------------------------------------------------------------------------------------------
 # Policy to give KMS Decrypt access
 resource "aws_iam_policy" "kms_decrypt_policy" {
-  name        = "KMS_Decrypt_Policy"
+  name        = "${var.app_name}_KMS_Decrypt_Policy"
   description = "Policy for KMS decryption"
 
   policy = jsonencode({
@@ -57,7 +57,7 @@ resource "aws_iam_policy" "kms_decrypt_policy" {
 ##--------------------------------------------------------------------------------------------------------------------------------
 # Policy to give access to invoke AUTH lambda function
 resource "aws_iam_policy" "invoke_auth_lambda_policy" {
-  name        = "Invoke_Auth_Lambda_Policy"
+  name        = "${var.app_name}_Invoke_Auth_Lambda_Policy"
   description = "This policy gives a resource access to invoke the auth lambda"
 
   policy = jsonencode({
@@ -76,7 +76,7 @@ resource "aws_iam_policy" "invoke_auth_lambda_policy" {
 ##--------------------------------------------------------------------------------------------------------------------------------
 ## Policy to give read/write access to Bookmarkmanager table
 resource "aws_iam_policy" "bookmarkmanager_dynamodb_policy" {
-  name        = "Bookmarkmanager_DynamoDB_Policy"
+  name        = "${var.app_name}_Bookmarkmanager_DynamoDB_Policy"
   description = "Policy for Bookmarkmanager DynamoDB access"
 
   policy = jsonencode({

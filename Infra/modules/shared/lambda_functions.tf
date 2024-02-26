@@ -21,7 +21,7 @@ resource "aws_s3_object" "auth_lamda_function_object" {
 module "auth_lamda_function" {
   source = "../../modules/lambda/functions"
 
-  function_name = "Utility_hub_auth_service"
+  function_name = "${var.app_name}_auth_service"
   s3_bucket_id = module.lambda_zip_s3_bucket.bucket_id
   s3_bucket_key = aws_s3_object.auth_lamda_function_object.key
   handler_name = "index.lambda_handler"
@@ -59,7 +59,7 @@ resource "aws_s3_object" "bookmarkmanager_lamda_function_object" {
 module "bookmarkmanager_lamda_function" {
   source = "../../modules/lambda/functions"
 
-  function_name = "Utility_hub_bookmarkmanager_service"
+  function_name = "${var.app_name}_bookmarkmanager_service"
   s3_bucket_id = module.lambda_zip_s3_bucket.bucket_id
   s3_bucket_key = aws_s3_object.bookmarkmanager_lamda_function_object.key
   handler_name = "index.lambda_handler"
@@ -99,7 +99,7 @@ resource "aws_s3_object" "home_lamda_function_object" {
 module "home_lamda_function" {
   source = "../../modules/lambda/functions"
 
-  function_name = "Utility_hub_home_service"
+  function_name = "${var.app_name}_home_service"
   s3_bucket_id = module.lambda_zip_s3_bucket.bucket_id
   s3_bucket_key = aws_s3_object.home_lamda_function_object.key
   handler_name = "index.lambda_handler"

@@ -31,7 +31,7 @@ resource "aws_s3_bucket_website_configuration" "static_hosting_bucket_config" {
 
 # Create a Cloudfront origin access identity
 resource "aws_cloudfront_origin_access_identity" "static_hosting_oai" {
-  comment = "Access identity for static hosting"
+  comment = "${var.app_name} - Access identity for static hosting"
 }
 
 #Create s3 bucket policy to allow only cloudfront read access

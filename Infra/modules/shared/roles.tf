@@ -1,6 +1,6 @@
 # Create an IAM role to assign to auth lambda function
 resource "aws_iam_role" "auth_lambda_exec_role" {
-  name = "utility-hub-auth-lambda-function_exec"
+  name = "${var.app_name}-auth-lambda-function_exec"
 
   assume_role_policy = jsonencode({
    "Version" : "2012-10-17",
@@ -40,7 +40,7 @@ resource "aws_iam_role_policy_attachment" "auth_role_kms_decrypt_policy_attachme
 ## CREATE A ROLE FOR BOOKMARKMANAGER LAMBDA FUNCTION
 ##--------------------------------------------------------------------------------------------------------------------------------
 resource "aws_iam_role" "bookmarkmanager_lambda_exec_role" {
-  name = "utility-hub-bookmarkmanager-lambda-function_exec"
+  name = "${var.app_name}-bookmarkmanager-lambda-function_exec"
 
   assume_role_policy = jsonencode({
    "Version" : "2012-10-17",
@@ -85,7 +85,7 @@ resource "aws_iam_role_policy_attachment" "bookmarkmanager_invoke_auth_lambda_po
 ## CREATE A ROLE FOR HOME LAMBDA FUNCTION
 ##--------------------------------------------------------------------------------------------------------------------------------
 resource "aws_iam_role" "home_lambda_exec_role" {
-  name = "utility-hub-home-lambda-function_exec"
+  name = "${var.app_name}-home-lambda-function_exec"
 
   assume_role_policy = jsonencode({
    "Version" : "2012-10-17",
