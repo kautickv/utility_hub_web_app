@@ -1,7 +1,7 @@
 # Create a REST API gateway in AWS
 resource "aws_api_gateway_rest_api" "root_api_gateway" {
   name        = "${var.app_name}_api_gateway"
-  description = "REST API gateway for Utility Hub app."
+  description = "REST API gateway for ${var.app_name} app."
 }
 
 ## AUTH RESOURCE

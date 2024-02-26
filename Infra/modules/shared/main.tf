@@ -13,16 +13,16 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "utility-hub-s3-terraform-backend" # Create bucket prior to when script runs. State will be stored to this bucket. Add necessary permissions to bucket and user/role
-    key            = "terraformStateFiles" # Folder structure to where exactly to store state
-    region         = "us-east-1" # Region
+    bucket         = var.terraform_backend_bucket # Create bucket prior to when script runs. State will be stored to this bucket. Add necessary permissions to bucket and user/role
+    key            = var.terraform_backend_key # Folder structure to where exactly to store state
+    region         = var.terraform_backend_region
   }
 }
 
 # Default AWS Account
 provider "aws" {
   # Use default credentials
-  region = "us-east-1" # Set your desired AWS region
+  region = var.aws_default_region
 }
 
 # Used only for Certificate manager
@@ -36,9 +36,9 @@ provider "aws" {
 #Provider for DNS Account setup
 provider "aws"{
   alias = "dns_account"
-  region = "us-east-1"
+  region = var.dns_account_region
 
-  access_key = var.aws_access_key_id_2
-  secret_key = var.aws_secret_access_key_2
-  token      = var.aws_session_token_2
+  access_key = var.dns_aws_access_key_id
+  secret_key = var.dns_aws_secret_access_key
+  token      = var.dns_aws_session_token
 }
