@@ -3,7 +3,7 @@
 # Zip the current backend python script
 data "archive_file" "auth_lamda_function_zip" {
   type = "zip"
-
+  #Do delete
   source_dir  = "${path.module}/../../../back_end/auth_service"
   output_path = "${path.module}/../../../auth_service.zip"
 }
