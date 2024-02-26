@@ -181,7 +181,7 @@ module "post_bookmarkmanager_lambda_integration" {
   http_method = module.post_bookmarkmanager_method.http_method
   resource_id = module.bookmarkmanager_resource.resource_id
   rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
-  lambda_invoke_arn = module.auth_lamda_function.invoke_arn
+  lambda_invoke_arn = module.bookmarkmanager_lamda_function.invoke_arn
 }
 
 # Create a GET method inside "bookmarkmanager" resource
@@ -205,7 +205,7 @@ module "get_bookmarkmanager_lambda_integration" {
   http_method = module.get_bookmarkmanager_method.http_method
   resource_id = module.bookmarkmanager_resource.resource_id
   rest_api_id = aws_api_gateway_rest_api.utility_hub_api_gateway.id
-  lambda_invoke_arn = module.auth_lamda_function.invoke_arn
+  lambda_invoke_arn = module.bookmarkmanager_lamda_function.invoke_arn
 }
 
 ## HOME RESOURCE
