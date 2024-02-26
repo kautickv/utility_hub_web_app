@@ -4,8 +4,8 @@
 data "archive_file" "auth_lamda_function_zip" {
   type = "zip"
 
-  source_dir  = "../../../${path.module}/back_end/auth_service"
-  output_path = "../../../${path.module}/auth_service.zip"
+  source_dir  = "${path.module}/../../../../back_end/auth_service"
+  output_path = "${path.module}/../../../../auth_service.zip"
 }
 
 # Upload zip file to s3 bucket created earlier
@@ -42,8 +42,8 @@ module "auth_lamda_function" {
 data "archive_file" "bookmarkmanager_lamda_function_zip" {
   type = "zip"
 
-  source_dir  = "../../../${path.module}/back_end/multitab_service"
-  output_path = "../../../${path.module}/bookmarkmanager_service.zip"
+  source_dir  = "${path.module}/../../../../back_end/multitab_service"
+  output_path = "${path.module}/../../../../bookmarkmanager_service.zip"
 }
 
 # Upload zip file to s3 bucket created earlier
@@ -59,7 +59,7 @@ resource "aws_s3_object" "bookmarkmanager_lamda_function_object" {
 module "bookmarkmanager_lamda_function" {
   source = "../../modules/lambda/functions"
 
-  function_name = "${var.app_name}_bookmarkmanager_service"
+  function_name = "Utility_hub_bookmarkmanager_service"
   s3_bucket_id = module.lambda_zip_s3_bucket.bucket_id
   s3_bucket_key = aws_s3_object.bookmarkmanager_lamda_function_object.key
   handler_name = "index.lambda_handler"
@@ -82,8 +82,8 @@ module "bookmarkmanager_lamda_function" {
 data "archive_file" "home_lamda_function_zip" {
   type = "zip"
 
-  source_dir  = "../../../${path.module}/back_end/home_service"
-  output_path = "../../../${path.module}/home_service.zip"
+  source_dir  = "${path.module}/../../../../back_end/home_service"
+  output_path = "${path.module}/../../../../home_service.zip"
 }
 
 # Upload zip file to s3 bucket created earlier
@@ -99,7 +99,7 @@ resource "aws_s3_object" "home_lamda_function_object" {
 module "home_lamda_function" {
   source = "../../modules/lambda/functions"
 
-  function_name = "${var.app_name}_home_service"
+  function_name = "Utility_hub_home_service"
   s3_bucket_id = module.lambda_zip_s3_bucket.bucket_id
   s3_bucket_key = aws_s3_object.home_lamda_function_object.key
   handler_name = "index.lambda_handler"
