@@ -1,5 +1,5 @@
 ## Checkout https://dev.to/zirkelc/trigger-github-workflow-for-comment-on-pull-request-45l2
-
+name: Deploy Dev on PR comment
 on: issue_comment
 
 jobs:
@@ -40,8 +40,8 @@ jobs:
       - name: Setup Python 3.9
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
-        
+          python-version: "3.9"
+
       - name: Set execute permissions on bash script
         working-directory: ./.github
         run: |
@@ -49,41 +49,40 @@ jobs:
           ls
           chmod +x scripts/build_and_zip.sh
           chmod +x scripts/extract_iam_role_arns.sh
-          
+
       - name: Build and zip python requirement file
         id: backend_build
         working-directory: ./.github
         run: |
           ./scripts/build_and_zip.sh
-      
+
       - name: Extract AWS Roles ARNs
         working-directory: ./.github
         run: |
           bash ./scripts/extract_iam_role_arns.sh '../Infra/deployment_config.json' 'dev' >> $GITHUB_ENV
-      
+
       - name: Assume DNS account role
         id: dns_account_role
         uses: aws-actions/configure-aws-credentials@v4
         with:
-              role-to-assume: ${{ env.DNS_IAM_ROLE_ARN }}
-              aws-region: ${{ env.DNS_IAM_ROLE_REGION }}
-              role-session-name: DNSSession
-  
+          role-to-assume: ${{ env.DNS_IAM_ROLE_ARN }}
+          aws-region: ${{ env.DNS_IAM_ROLE_REGION }}
+          role-session-name: DNSSession
+
       - name: Set DNS credentials as env variables
         run: |
-            echo "DNS_AWS_ACCESS_KEY_ID=${{ env.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
-            echo "DNS_AWS_SECRET_ACCESS_KEY=${{ env.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
-            echo "DNS_AWS_SESSION_TOKEN=${{ env.AWS_SESSION_TOKEN }}" >> $GITHUB_ENV
-  
-      
+          echo "DNS_AWS_ACCESS_KEY_ID=${{ env.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "DNS_AWS_SECRET_ACCESS_KEY=${{ env.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "DNS_AWS_SESSION_TOKEN=${{ env.AWS_SESSION_TOKEN }}" >> $GITHUB_ENV
+
       - name: Assume dev account role
         id: dev_account_role
         uses: aws-actions/configure-aws-credentials@v4
         with:
-            role-to-assume: ${{ env.DEFAULT_IAM_ROLE_ARN }}
-            aws-region: ${{ env.DEFAULT_IAM_ROLE_REGION }}
-            role-session-name: devSession
-      
+          role-to-assume: ${{ env.DEFAULT_IAM_ROLE_ARN }}
+          aws-region: ${{ env.DEFAULT_IAM_ROLE_REGION }}
+          role-session-name: devSession
+
       - name: Terraform Init
         id: init
         working-directory: ./Infra/environments/dev
