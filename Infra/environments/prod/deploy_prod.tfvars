@@ -2,7 +2,7 @@
 ##---------------------------------------------------------
 app_name = "utility-hub"
 domain_name = "utilityhub.vaisnavsingkautick.com"
-bucket_name= "utilityhubprod.vaisnavsingkautick.com"
+bucket_name= "prod-utilityhub.vaisnavsingkautick.com"
 hosted_zone_id= "Z0236168HPT8WHQWIY9"
 
 ## Deployment Variables

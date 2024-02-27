@@ -5,7 +5,7 @@ on: issue_comment
 jobs:
   pr_commented:
     # This job only runs for pull request comments
-    name: PR comment
+    name: PR comment Destroy
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/Destroy-all' }}
     runs-on: ubuntu-latest
     permissions:
