@@ -7,7 +7,7 @@ on:
 jobs:
   main_merge:
     # Run jobs on merge to main
-    name: PR comment
+    name: Deploy Prod
     runs-on: ubuntu-latest
     permissions:
       contents: read
