@@ -1,6 +1,9 @@
 ## Checkout https://dev.to/zirkelc/trigger-github-workflow-for-comment-on-pull-request-45l2
 name: Deploy Dev on PR comment
-on: issue_comment
+on: 
+  issue_comment:
+    types: [created]
+  workflow_dispatch: # Allow to trigger manually
 
 jobs:
   pr_commented:
