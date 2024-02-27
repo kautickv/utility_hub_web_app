@@ -1,8 +1,8 @@
 ## App Variables
 ##---------------------------------------------------------
 app_name = "utility-hub"
-domain_name = "devutilityhub.vaisnavsingkautick.com"
-bucket_name= "devutilityhub.vaisnavsingkautick.com"
+domain_name = "utilityhub.vaisnavsingkautick.com"
+bucket_name= "utilityhubprod.vaisnavsingkautick.com"
 hosted_zone_id= "Z0236168HPT8WHQWIY9"
 
 ## Deployment Variables
