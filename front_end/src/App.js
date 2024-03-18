@@ -1,4 +1,5 @@
 import React from "react";
+import { SnackbarProvider } from 'notistack'; 
 import Home from "./components/Home";
 import Login from "./components/Login"
 import MultiTabOpener from "./components/MultiTabOpener"
@@ -33,12 +34,10 @@ const theme = createTheme({
 });
 
 function App() {
-
   return (
-
-    <>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
-      <ThemeProvider theme={theme}>
+      <SnackbarProvider maxSnack={3}> {/* Configure the SnackbarProvider here */}
         <AuthProvider>
           <BrowserRouter>
             <Routes>
@@ -50,8 +49,8 @@ function App() {
             </Routes>
           </BrowserRouter>
         </AuthProvider>
-      </ThemeProvider>
-    </>
+      </SnackbarProvider>
+    </ThemeProvider>
   );
 }
 
