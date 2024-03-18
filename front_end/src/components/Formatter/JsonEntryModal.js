@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, DialogContentText } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from '@mui/material';
 
 function JsonEntryModal({ open, onClose, handleAddJson, existingNames, editingEntry }) {
     const [jsonString, setJsonString] = useState('');
