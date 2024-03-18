@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+// MUI elements
+import { Container, Grid } from '@mui/material';
 // Import scripts
 import { checkLocalStorageForJWTToken } from "../../utils/util";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
@@ -8,14 +10,15 @@ import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 import LoadingSpinner from "../common/LoadingSpinner";
 import Navbar from "../common/Navbar";
 import { AuthContext } from "../../context/AuthContext";
-import JsonTextInput from './JsonTextInput';
-import JsonTreeView from './JsonTreeView';
+import ProjectList from './ProjectList';
+import JsonDetails from './JsonDetails';
+import JsonInfo from './JsonInfo';
+
 
 function Formatter() {
     const navigate = useNavigate();
     const [userFirstName, setUserFirstName] = useState("");
-    const [jsonData, setJsonData] = useState(null);
-    const [parsedJsonData, setParsedJsonData] = useState(null);
+    const [selectedJson, setSelectedJson] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const { isAuthenticated, user, logoutUser, loginUser } =
         useContext(AuthContext);
@@ -82,23 +85,22 @@ function Formatter() {
         return <LoadingSpinner description="Please wait ..." />;
     }
 
-    const handleJsonChange = (event) => {
-        const value = event.target.value;
-        try {
-            // Attempt to parse the input string as JSON
-            const parsedJson = JSON.parse(value);
-            setParsedJsonData(parsedJson); // Set parsed JSON object if successful
-        } catch (error) {
-            console.error("Failed to parse JSON:", error);
-            setParsedJsonData(null); // Reset jsonData or set to a state indicating invalid JSON
-        }
-      };
-
     return (
         <>
             <Navbar />
-            <JsonTextInput value={jsonData} onChange={handleJsonChange} />
-            <JsonTreeView data={parsedJsonData}></JsonTreeView>
+            <Container maxWidth="lg">
+                <Grid container spacing={2}>
+                    <Grid item xs={3}>
+                        <ProjectList setSelectedJson={setSelectedJson} />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <JsonDetails json={selectedJson} />
+                    </Grid>
+                    <Grid item xs={3}>
+                        <JsonInfo json={selectedJson} />
+                    </Grid>
+                </Grid>
+            </Container>
         </>
     );
 }

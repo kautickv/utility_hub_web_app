@@ -1,10 +1,8 @@
 import React from 'react';
+import { Typography, Box } from '@mui/material';
 import {JSONTree} from 'react-json-tree';
 
-const JsonTreeView = ({ data }) => {
-    if (!data) {
-        return <div>Please input valid JSON to visualize.</div>;
-    }
+function JsonDetails({ json }) {
 
     // Define theme options or customization for JSONTree if needed
     const theme = {
@@ -27,14 +25,19 @@ const JsonTreeView = ({ data }) => {
         base0E: '#ae81ff',
         base0F: '#cc6633'
     };
+  return (
+    <Box>
+      {json ? (
+         <JSONTree
+         data={json}
+         theme={theme}
+         shouldExpandNode={(keyName, json, level) => true} // Customizes whether nodes should expand
+     />
+      ) : (
+        <Typography variant="h6">Select a JSON entry to view details</Typography>
+      )}
+    </Box>
+  );
+}
 
-    return (
-        <JSONTree
-            data={data}
-            theme={theme}
-            shouldExpandNode={(keyName, data, level) => true} // Customizes whether nodes should expand
-        />
-    );
-};
-
-export default JsonTreeView;
+export default JsonDetails;
