@@ -1,20 +1,42 @@
 import React, { useState } from 'react';
-import { List, ListItem, ListItemText, Button, ListItemButton } from '@mui/material';
+import { List, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Typography, Box, Tooltip, IconButton } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import ProjectItem from './ProjectItem';
 
 function ProjectList({ setSelectedJson }) {
   const [projects, setProjects] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [newProjectName, setNewProjectName] = useState("");
 
   const handleAddProject = () => {
-    const projectName = prompt("Enter project name:");
-    if (projectName) {
-      setProjects([...projects, { name: projectName, jsonEntries: [] }]);
+    if (newProjectName.trim()) {
+      setProjects([...projects, { name: newProjectName, jsonEntries: [] }]);
+      setOpenModal(false); // Close the modal
+      setNewProjectName(""); // Reset the input field
     }
   };
 
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
   return (
-    <>
-      <List>
+    <Box sx={{ width: '100%', textAlign: 'center', mb: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+        <Typography variant="h6" sx={{ mr: 1 }}>
+          Project List
+        </Typography>
+        <Tooltip title="Add and manage your projects. Click on a project to see its JSON entries.">
+          <IconButton>
+            <InfoIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </Box>
+      <List sx={{ margin: 'auto', maxWidth: 360, bgcolor: 'background.paper' }}>
         {projects.map((project, index) => (
           <ProjectItem
             key={index}
@@ -25,9 +47,32 @@ function ProjectList({ setSelectedJson }) {
           />
         ))}
       </List>
-      <Button variant="contained" onClick={handleAddProject}>Add Project</Button>
-    </>
+      <Button variant="contained" onClick={handleOpenModal} sx={{ mt: 2 }}>Add Project</Button>
+
+      {/* Modal for adding a new project */}
+      <Dialog open={openModal} onClose={handleCloseModal}>
+        <DialogTitle>Add New Project</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Project Name"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={newProjectName}
+            onChange={(e) => setNewProjectName(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal}>Cancel</Button>
+          <Button onClick={handleAddProject}>Add</Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 }
 
 export default ProjectList;
+
