@@ -26,16 +26,6 @@ function ProjectList({ setSelectedJson }) {
 
   return (
     <Box sx={{ width: '100%', textAlign: 'center', mb: 2 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-        <Typography variant="h6" sx={{ mr: 1 }}>
-          Project List
-        </Typography>
-        <Tooltip title="Add and manage your projects. Click on a project to see its JSON entries.">
-          <IconButton>
-            <InfoIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      </Box>
       <List sx={{ margin: 'auto', maxWidth: 360, bgcolor: 'background.paper' }}>
         {projects.map((project, index) => (
           <ProjectItem

@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 // MUI elements
-import { Container, Grid, Card, CardContent, Typography, Paper } from '@mui/material';
+import { Container, Grid, Card, CardContent, Typography, Paper, Tooltip, IconButton, Box } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 // Import scripts
 import { checkLocalStorageForJWTToken } from "../../utils/util";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
@@ -94,7 +95,16 @@ function Formatter() {
                     <Grid item xs={12} md={3}>
                         <Card elevation={4}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>Projects</Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'left', mb: 2 }}>
+                                    <Typography variant="h6" sx={{ mr: -1 }}>
+                                        Projects
+                                    </Typography>
+                                    <Tooltip title="Add and manage your projects. Click on a project to see its JSON entries.">
+                                        <IconButton>
+                                            <InfoIcon fontSize="small" />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
                                 <ProjectList setSelectedJson={setSelectedJson} />
                             </CardContent>
                         </Card>
