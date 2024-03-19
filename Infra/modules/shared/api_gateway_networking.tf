@@ -337,7 +337,7 @@ module "post_json_viewer_projects_json_lambda_integration" {
 
   statement_id = "AllowPOSTJsonViwerProjectsJsonLambdaInvoke"
   function_name = module.json_viewer_lamda_function.function_name 
-  source_arn = "${aws_api_gateway_rest_api.root_api_gateway.execution_arn}/*/${module.post_projects_json_method.http_method}/json_viewer/projects"
+  source_arn = "${aws_api_gateway_rest_api.root_api_gateway.execution_arn}/*/${module.post_projects_json_method.http_method}/json_viewer/projects/json"
   http_method = module.post_projects_json_method.http_method
   resource_id = module.json_viewer_projects_json_resource.resource_id
   rest_api_id = aws_api_gateway_rest_api.root_api_gateway.id
