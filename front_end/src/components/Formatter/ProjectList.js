@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { List, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Typography, Box, Tooltip, IconButton } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
+import { List, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Box } from '@mui/material';
 import ProjectItem from './ProjectItem';
 
 function ProjectList({ setSelectedJson }) {
