@@ -146,7 +146,7 @@ module "json_viewer_lamda_function" {
   layers_arn = [module.lambda_python_layer.layer_arn]
   environment_variables = {
     "MESSAGE"         = "Terraform sends its regards",
-    "USER_TABLE_NAME" = module.auth_dynamodb_table.table_name,
+    "AUTH_SERVICE_LAMBDA_NAME" = module.auth_lamda_function.function_name,
     "S3_BUCKET_NAME" = module.json_viewer_s3_bucket.bucket_name
   }
   timeout = 15
