@@ -114,3 +114,41 @@ module "home_lamda_function" {
   timeout = 15
   memory_size = 128
 }
+
+# CREATE LAMBDA FUNCTION FOR JSON_VIEWER SERVICE
+##----------------------------------------------------------------------------------
+# Zip the current backend python script
+data "archive_file" "json_viewer_lamda_function_zip" {
+  type = "zip"
+  source_dir  = "${path.module}/../../../back_end/json_viewer_service"
+  output_path = "${path.module}/../../../json_viewer_service.zip"
+}
+
+# Upload zip file to s3 bucket created earlier
+resource "aws_s3_object" "json_viewer_lamda_function_object" {
+  bucket = module.lambda_zip_s3_bucket.bucket_id
+
+  key    = "json_viewer_service.zip"
+  source = data.archive_file.json_viewer_lamda_function_zip.output_path
+
+  etag = filemd5(data.archive_file.json_viewer_lamda_function_zip.output_path)
+}
+
+module "json_viewer_lamda_function" {
+  source = "../../modules/lambda/functions"
+
+  function_name = "${var.app_name}_json_viewer_service"
+  s3_bucket_id = module.lambda_zip_s3_bucket.bucket_id
+  s3_bucket_key = aws_s3_object.json_viewer_lamda_function_object.key
+  handler_name = "index.lambda_handler"
+  source_code_hash = data.archive_file.json_viewer_lamda_function_zip.output_base64sha256
+  role_arn = aws_iam_role.json_viewer_lambda_exec_role.arn
+  layers_arn = [module.lambda_python_layer.layer_arn]
+  environment_variables = {
+    "MESSAGE"         = "Terraform sends its regards",
+    "USER_TABLE_NAME" = module.auth_dynamodb_table.table_name,
+    "S3_BUCKET_NAME" = module.json_viewer_s3_bucket.bucket_name
+  }
+  timeout = 15
+  memory_size = 128
+}
