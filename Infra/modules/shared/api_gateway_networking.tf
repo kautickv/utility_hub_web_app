@@ -278,12 +278,12 @@ module "get_json_viewer_projects_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
   statement_id = "AllowGetJsonViwerProjectsLambdaInvoke"
-  function_name = module.auth_lamda_function.function_name // Needs to change
+  function_name = module.json_viewer_lamda_function.function_name 
   source_arn = "${aws_api_gateway_rest_api.root_api_gateway.execution_arn}/*/${module.get_projects_method.http_method}/json_viewer/projects"
   http_method = module.get_projects_method.http_method
   resource_id = module.json_viewer_projects_resource.resource_id
   rest_api_id = aws_api_gateway_rest_api.root_api_gateway.id
-  lambda_invoke_arn = module.auth_lamda_function.invoke_arn  // Needs to change
+  lambda_invoke_arn = module.json_viewer_lamda_function.invoke_arn  
 }
 
 # Create a POST method inside "projects" resource
@@ -302,12 +302,12 @@ module "post_json_viewer_projects_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
   statement_id = "AllowPOSTJsonViwerProjectsLambdaInvoke"
-  function_name = module.auth_lamda_function.function_name // Needs to change
+  function_name = module.json_viewer_lamda_function.function_name 
   source_arn = "${aws_api_gateway_rest_api.root_api_gateway.execution_arn}/*/${module.post_projects_method.http_method}/json_viewer/projects"
   http_method = module.post_projects_method.http_method
   resource_id = module.json_viewer_projects_resource.resource_id
   rest_api_id = aws_api_gateway_rest_api.root_api_gateway.id
-  lambda_invoke_arn = module.auth_lamda_function.invoke_arn  // Needs to change
+  lambda_invoke_arn = module.json_viewer_lamda_function.invoke_arn  
 }
 
 ## /JSON_VIEWER/PROJECTS/JSON RESOURCE
@@ -336,12 +336,12 @@ module "post_json_viewer_projects_json_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
   statement_id = "AllowPOSTJsonViwerProjectsJsonLambdaInvoke"
-  function_name = module.auth_lamda_function.function_name // Needs to change
+  function_name = module.json_viewer_lamda_function.function_name 
   source_arn = "${aws_api_gateway_rest_api.root_api_gateway.execution_arn}/*/${module.post_projects_json_method.http_method}/json_viewer/projects"
   http_method = module.post_projects_json_method.http_method
   resource_id = module.json_viewer_projects_json_resource.resource_id
   rest_api_id = aws_api_gateway_rest_api.root_api_gateway.id
-  lambda_invoke_arn = module.auth_lamda_function.invoke_arn  // Needs to change
+  lambda_invoke_arn = module.json_viewer_lamda_function.invoke_arn 
 }
 
 
