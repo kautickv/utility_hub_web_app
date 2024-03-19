@@ -36,7 +36,7 @@ function JsonDetails({ json }) {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 2, minHeight: '400px', overflow: 'auto', backgroundColor: 'rgba(255, 255, 255, 0.7)' }}>
+    <Paper elevation={0} sx={{ p: 2, minHeight: '400px', overflow: 'auto', backgroundColor: 'rgba(255, 255, 255, 0.7)' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <TextField
           size="small"
@@ -75,5 +75,5 @@ function JsonDetails({ json }) {
       </Paper>
       );
     }
-    
+
     export default JsonDetails;

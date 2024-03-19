@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 // MUI elements
-import { Container, Grid } from '@mui/material';
+import { Container, Grid, Card, CardContent, Typography, Paper } from '@mui/material';
 // Import scripts
 import { checkLocalStorageForJWTToken } from "../../utils/util";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
@@ -88,16 +88,32 @@ function Formatter() {
     return (
         <>
             <Navbar />
-            <Container maxWidth="lg">
-                <Grid container spacing={2}>
-                    <Grid item xs={3}>
-                        <ProjectList setSelectedJson={setSelectedJson} />
+            <Container maxWidth="xl" component={Paper} elevation={0} sx={{ p: 3, mt: 2, borderRadius: 2 }}>
+                <Typography variant="h4" gutterBottom>Formatter Dashboard</Typography>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={3}>
+                        <Card elevation={4}>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>Projects</Typography>
+                                <ProjectList setSelectedJson={setSelectedJson} />
+                            </CardContent>
+                        </Card>
                     </Grid>
-                    <Grid item xs={6}>
-                        <JsonDetails json={selectedJson} />
+                    <Grid item xs={12} md={6}>
+                        <Card elevation={4}>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>JSON Details</Typography>
+                                <JsonDetails json={selectedJson} />
+                            </CardContent>
+                        </Card>
                     </Grid>
-                    <Grid item xs={3}>
-                        <JsonInfo json={selectedJson} />
+                    <Grid item xs={12} md={3}>
+                        <Card elevation={4}>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>JSON Info</Typography>
+                                <JsonInfo json={selectedJson} />
+                            </CardContent>
+                        </Card>
                     </Grid>
                 </Grid>
             </Container>
