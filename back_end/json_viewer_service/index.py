@@ -1,5 +1,9 @@
 from common.CommonUtility import CommonUtility
 from common.Logger import Logger
+from handlers.get_projects_handler import handleGetProjects
+from handlers.post_projects_json_handler import handlerPostProjectJson
+from handlers.post_projects_handler import handlePostProjects
+
 
 def lambda_handler(event, context):
     print(event)
@@ -20,12 +24,16 @@ def lambda_handler(event, context):
             if user_details == None:
                 return common_utility.buildResponse(401, "Unauthorized")
             
-        if http_method == 'POST' and path =='/json_viewer':
-            return common_utility.buildResponse(200, "OK from POST /json_viewer")
+        if http_method == 'GET' and path =='/json_viewer/projects':
+            return handleGetProjects (event, user_details)
     
-        elif http_method == 'GET' and path =='/json_viewer':
+        elif http_method == 'POST' and path =='/json_viewer/projects':
 
-            return common_utility.buildResponse(200, "OK from GET /json_viewer")
+            return handlePostProjects (event, user_details)
+        
+        elif http_method == 'POST' and path =='/json_viewer/projects/json':
+
+            return handlerPostProjectJson (event, user_details)
         else:
             return common_utility.buildResponse(404, "Resource not found")
     

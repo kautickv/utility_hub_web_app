@@ -297,7 +297,7 @@ module "post_projects_method" {
   resource_options_http_method = module.json_viewer_projects_resource.options_http_method
 }
 
-# Configure GET /json_viwer/projects to invoke json_viewer lambda
+# Configure POST /json_viwer/projects to invoke json_viewer lambda
 module "post_json_viewer_projects_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
