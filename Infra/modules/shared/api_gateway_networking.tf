@@ -277,7 +277,7 @@ module "get_projects_method" {
 module "get_json_viewer_projects_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
-  statement_id = "AllowGetJsonViwerProjectsLambdaInvoke"
+  statement_id = "AllowGetJsonViewerProjectsLambdaInvoke"
   function_name = module.json_viewer_lamda_function.function_name 
   source_arn = "${aws_api_gateway_rest_api.root_api_gateway.execution_arn}/*/${module.get_projects_method.http_method}/json_viewer/projects"
   http_method = module.get_projects_method.http_method
@@ -301,7 +301,7 @@ module "post_projects_method" {
 module "post_json_viewer_projects_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
-  statement_id = "AllowPOSTJsonViwerProjectsLambdaInvoke"
+  statement_id = "AllowPOSTJsonViewerProjectsLambdaInvoke"
   function_name = module.json_viewer_lamda_function.function_name 
   source_arn = "${aws_api_gateway_rest_api.root_api_gateway.execution_arn}/*/${module.post_projects_method.http_method}/json_viewer/projects"
   http_method = module.post_projects_method.http_method
@@ -335,7 +335,7 @@ module "post_projects_json_method" {
 module "post_json_viewer_projects_json_lambda_integration" {
   source = "../../modules/api_gateway/method_lambda_integration"
 
-  statement_id = "AllowPOSTJsonViwerProjectsJsonLambdaInvoke"
+  statement_id = "AllowPOSTJsonViewerProjectsJsonLambdaInvoke"
   function_name = module.json_viewer_lamda_function.function_name 
   source_arn = "${aws_api_gateway_rest_api.root_api_gateway.execution_arn}/*/${module.post_projects_json_method.http_method}/json_viewer/projects/json"
   http_method = module.post_projects_json_method.http_method
