@@ -8,6 +8,6 @@ module "lambda_zip_s3_bucket"{
 # Create another s3 Bucket to store json_viewer projects and json objects
 module "json_viewer_s3_bucket"{
     source = "../../modules/s3"
-    bucket_name = "${var.app_name}-json_viewer_feature"
+    bucket_name = "${var.app_name}-json-viewer-feature"
     force_destroy = true
 }
