@@ -1,17 +1,40 @@
 import React, { useState } from 'react';
 import { List, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Box } from '@mui/material';
+import { useSnackbar } from 'notistack';
+
+// Import components
 import ProjectItem from './ProjectItem';
 
+// Import scripts
+import { sendPostToJsonViewerProjects } from "../../utils/json_viewer_utils"
+import { checkLocalStorageForJWTToken } from "../../utils/util"
+
 function ProjectList({ setSelectedJson }) {
+  const { enqueueSnackbar } = useSnackbar();
   const [projects, setProjects] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
 
-  const handleAddProject = () => {
+  const handleAddProject = async () => {
     if (newProjectName.trim()) {
-      setProjects([...projects, { name: newProjectName, jsonEntries: [] }]);
       setOpenModal(false); // Close the modal
       setNewProjectName(""); // Reset the input field
+      // Save project to backend
+      let jwtToken = checkLocalStorageForJWTToken();
+      if (jwtToken !== "") {
+        let response = await sendPostToJsonViewerProjects(jwtToken, newProjectName.trim(), "create");
+        if (response.status === 200) {
+          setProjects([...projects, { name: newProjectName, jsonEntries: [] }]);
+          enqueueSnackbar('Project Created', { variant: 'success' });
+        } else if (response === 500){
+          enqueueSnackbar("An error occurred. Please try again later", { variant: 'error' });
+        }
+        else{
+          enqueueSnackbar(response.json(), { variant: 'error' });
+        }
+      }else{
+        enqueueSnackbar("Authentication expired. Please login again", { variant: 'error' });
+      }
     }
   };
 
@@ -35,6 +58,7 @@ function ProjectList({ setSelectedJson }) {
             setSelectedJson={setSelectedJson}
           />
         ))}
+        
       </List>
       <Button variant="contained" onClick={handleOpenModal} sx={{ mt: 2 }}>Add Project</Button>
 

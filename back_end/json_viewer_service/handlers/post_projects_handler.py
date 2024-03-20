@@ -29,7 +29,7 @@ def handlePostProjects(event, user_details):
             response = s3_client.list_objects_v2(Bucket=BUCKET_NAME, Prefix=folder_prefix)
             if 'Contents' in response:
                 # Project already exists
-                return common_utility.buildResponse(400, 'Project already exists')
+                return common_utility.buildResponse(400, 'Project already exists. Please try a different name or use existing project.')
 
             # If project does not exist, create a new folder in S3
             s3_client.put_object(Bucket=BUCKET_NAME, Key=folder_prefix)
