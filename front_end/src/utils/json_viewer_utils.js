@@ -48,7 +48,7 @@ async function sendPostToJsonViewerProjectJson(jwtToken, projectName, action, js
         body: JSON.stringify({
           "project_name": projectName,
           "action": action,
-          "json_object":{
+          "json_object": {
             "name": jsonName,
             "content": JSON.stringify(jsonContent)
           }
@@ -64,4 +64,30 @@ async function sendPostToJsonViewerProjectJson(jwtToken, projectName, action, js
 
 }
 
-export { sendPostToJsonViewerProjects, sendPostToJsonViewerProjectJson };
+async function sendGetJsonViewerProjects(jwtToken) {
+  /*
+     PURPOSE: Send a GET HTTP POST request to /json_viewer/projects to get all the projects and json files
+     INPUT: 
+         1. JWT Token as string
+     OUTPUT: returns the response. If error, returns 500 error
+     */
+  try {
+    let response = await fetch(
+      `${process.env.REACT_APP_API_GATEWAY_BASE_URL}/json_viewer/projects`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + jwtToken?.trim() ?? "",
+        },
+      }
+    );
+
+    return response;
+  } catch (err) {
+    console.log(`An error occurred GET to /json_viewer/projects. ${err}`);
+    return 500
+  }
+}
+
+export { sendPostToJsonViewerProjects, sendPostToJsonViewerProjectJson, sendGetJsonViewerProjects };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { List, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Box } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
@@ -8,12 +8,40 @@ import ProjectItem from './ProjectItem';
 // Import scripts
 import { sendPostToJsonViewerProjects } from "../../utils/json_viewer_utils"
 import { checkLocalStorageForJWTToken } from "../../utils/util"
+import { sendGetJsonViewerProjects } from "../../utils/json_viewer_utils"
 
 function ProjectList({ setSelectedJson }) {
   const { enqueueSnackbar } = useSnackbar();
   const [projects, setProjects] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
+
+  useEffect(() => {
+
+    const initializeProjects = async () => {
+      try {
+        let jwtToken = checkLocalStorageForJWTToken();
+        if (jwtToken !== "") { 
+          const response = await sendGetJsonViewerProjects(jwtToken);
+          const fetchedProjects = await response.json()
+          console.log(fetchedProjects)
+          const formattedProjects = fetchedProjects.map(proj => ({
+            name: proj.project_name,
+            jsonEntries: proj.files.map(file => ({
+              name: file.json_file_name,
+              json: JSON.parse(file.json_content)
+            }))
+          }));
+          setProjects(formattedProjects);
+        }
+      }
+      catch (e) {
+        console.log(`An error occurred while fetching projects: ${e}`)
+        enqueueSnackbar("Failed to load projects: " + e.message, { variant: 'error' });
+      }
+    }
+    initializeProjects();
+  }, [enqueueSnackbar])
 
   const handleAddProject = async () => {
     if (newProjectName.trim()) {
@@ -26,13 +54,13 @@ function ProjectList({ setSelectedJson }) {
         if (response.status === 200) {
           setProjects([...projects, { name: newProjectName, jsonEntries: [] }]);
           enqueueSnackbar('Project Created', { variant: 'success' });
-        } else if (response === 500){
+        } else if (response === 500) {
           enqueueSnackbar("An error occurred. Please try again later", { variant: 'error' });
         }
-        else{
+        else {
           enqueueSnackbar(response.json(), { variant: 'error' });
         }
-      }else{
+      } else {
         enqueueSnackbar("Authentication expired. Please login again", { variant: 'error' });
       }
     }
@@ -58,7 +86,7 @@ function ProjectList({ setSelectedJson }) {
             setSelectedJson={setSelectedJson}
           />
         ))}
-        
+
       </List>
       <Button variant="contained" onClick={handleOpenModal} sx={{ mt: 2 }}>Add Project</Button>
 
