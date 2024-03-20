@@ -3,7 +3,7 @@
 variable "app_name"{
   description = "The name of the application"
   type = string
-  default = "Utility_hub"
+  default = "utility_hub"
 }
 
 variable "domain_name" {

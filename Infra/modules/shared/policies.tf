@@ -90,3 +90,32 @@ resource "aws_iam_policy" "bookmarkmanager_dynamodb_policy" {
     ]
   })
 }
+
+##--------------------------------------------------------------------------------------------------------------------------------
+## Policy to give read/write access to JSON_VIEWER S3 Bucket
+resource "aws_iam_policy" "jsonviewer_s3_policy" {
+  name        = "${var.app_name}_JsonViewer_S3_Policy"
+  description = "Policy for JsonViewer S3 bucket read/write access"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject"
+        ],
+        Resource = "${module.json_viewer_s3_bucket.bucket_arn}/*" # Grants access to objects in the bucket
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:ListBucket"
+        ],
+        Resource = module.json_viewer_s3_bucket.bucket_arn # Grants access to the bucket itself
+      }
+    ]
+  })
+}
