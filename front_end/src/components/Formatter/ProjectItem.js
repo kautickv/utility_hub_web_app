@@ -10,43 +10,110 @@ import JsonEntryModal from './JsonEntryModal';
 // Import scripts
 import { sendPostToJsonViewerProjects } from "../../utils/json_viewer_utils"
 import { checkLocalStorageForJWTToken } from "../../utils/util"
+import { sendPostToJsonViewerProjectJson } from "../../utils/json_viewer_utils"
 
 function ProjectItem({ project, updateProjects, projects, setSelectedJson }) {
     const { enqueueSnackbar } = useSnackbar();
     const [openModal, setOpenModal] = useState(false);
     const [editingEntry, setEditingEntry] = useState(null); // To keep track of the entry being edited
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+    const [deleteEntryName, setDeleteEntryName] = useState("");
+    const [openDeleteEntryConfirmDialog, setOpenDeleteEntryConfirmDialog] = useState(false);
 
-    const handleAddOrEditJson = (jsonEntry) => {
-        const updatedProjects = projects.map(p => {
-            if (p.name === project.name) {
-                if (editingEntry) {
-                    // Replace the edited entry
-                    return {
-                        ...p,
-                        jsonEntries: p.jsonEntries.map(entry => entry.name === editingEntry.name ? jsonEntry : entry),
-                    };
-                }
-                return { ...p, jsonEntries: [...p.jsonEntries, jsonEntry] };
+
+    const handleAddOrEditJson = async (jsonEntry) => {
+        // Check for JWT token from local storage
+        let jwtToken = checkLocalStorageForJWTToken();
+        if (jwtToken === "") {
+            enqueueSnackbar("Authentication expired. Please login again", { variant: 'error' });
+            return;
+        }
+
+        // Determine if this is an add or edit operation
+        const isEditOperation = editingEntry != null;
+
+        // Prepare data for backend call
+        const projectName = project.name.trim();
+        const jsonName = jsonEntry.name.trim();
+        const jsonContent = jsonEntry.json; // Assuming jsonEntry.json contains the JSON content
+
+        // Send to backend
+        try {
+            let response = await sendPostToJsonViewerProjectJson(jwtToken, projectName, "create", jsonName, jsonContent);
+            if (response.status === 200) {
+                // Backend update successful, now update UI
+                const updatedProjects = projects.map(p => {
+                    if (p.name === projectName) {
+                        if (isEditOperation) {
+                            // Replace the edited entry
+                            return {
+                                ...p,
+                                jsonEntries: p.jsonEntries.map(entry => entry.name === editingEntry.name ? jsonEntry : entry),
+                            };
+                        }
+                        // Add new entry
+                        return { ...p, jsonEntries: [...p.jsonEntries, jsonEntry] };
+                    }
+                    return p;
+                });
+                updateProjects(updatedProjects);
+                enqueueSnackbar(isEditOperation ? 'JSON Edited Successfully' : 'JSON Added Successfully', { variant: 'success' });
+            } else {
+                // Handle non-200 responses
+                const errorText = await response.text();
+                enqueueSnackbar(errorText, { variant: 'error' });
             }
-            return p;
-        });
-        updateProjects(updatedProjects);
-        setEditingEntry(null); // Reset editing state
-        setOpenModal(false); // Close the modal
+        } catch (error) {
+            // Handle network or other unexpected errors
+            console.error("Failed to save JSON entry:", error);
+            enqueueSnackbar("An error occurred while saving JSON. Please try again.", { variant: 'error' });
+        } finally {
+            // Reset states regardless of outcome
+            setEditingEntry(null);
+            setOpenModal(false);
+        }
     };
 
-    const handleDeleteJson = (entryName) => {
-        const updatedProjects = projects.map(p => {
-            if (p.name === project.name) {
-                return {
-                    ...p,
-                    jsonEntries: p.jsonEntries.filter(entry => entry.name !== entryName),
-                };
-            }
-            return p;
-        });
-        updateProjects(updatedProjects);
+    // Function to open the delete confirmation dialog for a JSON entry
+    const handleOpenDeleteEntryConfirmDialog = (entryName) => {
+        setDeleteEntryName(entryName);
+        setOpenDeleteEntryConfirmDialog(true);
+    };
+
+    // Function to close the delete confirmation dialog
+    const handleCloseDeleteEntryConfirmDialog = () => {
+        setOpenDeleteEntryConfirmDialog(false);
+        setDeleteEntryName(""); // Reset selected entry for deletion
+    };
+
+
+    // Adjusted handleDeleteJson to include confirmation logic
+    const handleDeleteJsonConfirmed = async () => {
+        // Assume deleteEntryName has the name of the entry to be deleted
+        const jwtToken = checkLocalStorageForJWTToken();
+        if (!jwtToken) {
+            enqueueSnackbar("Authentication expired. Please login again", { variant: 'error' });
+            return;
+        }
+
+        let response = await sendPostToJsonViewerProjectJson(jwtToken, project.name,"delete", deleteEntryName, "");
+        if (response.status === 200) {
+            // Update UI after successful deletion
+            const updatedProjects = projects.map(p => {
+                if (p.name === project.name) {
+                    return {
+                        ...p,
+                        jsonEntries: p.jsonEntries.filter(entry => entry.name !== deleteEntryName),
+                    };
+                }
+                return p;
+            });
+            updateProjects(updatedProjects);
+            enqueueSnackbar('JSON Entry Deleted Successfully', { variant: 'success' });
+        } else {
+            enqueueSnackbar('Failed to delete JSON Entry', { variant: 'error' });
+        }
+        handleCloseDeleteEntryConfirmDialog();
     };
 
     const handleEditJson = (entry) => {
@@ -124,7 +191,7 @@ function ProjectItem({ project, updateProjects, projects, setSelectedJson }) {
                                     <IconButton edge="end" aria-label="edit" onClick={(e) => { e.stopPropagation(); handleEditJson(entry); }}>
                                         <EditIcon />
                                     </IconButton>
-                                    <IconButton edge="end" aria-label="delete" onClick={(e) => { e.stopPropagation(); handleDeleteJson(entry.name); }}>
+                                    <IconButton edge="end" aria-label="delete" onClick={(e) => { e.stopPropagation(); handleOpenDeleteEntryConfirmDialog(entry.name); }}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </ListItemSecondaryAction>
@@ -158,6 +225,25 @@ function ProjectItem({ project, updateProjects, projects, setSelectedJson }) {
                     <Button onClick={handleCloseConfirmDialog}>Cancel</Button>
                     <Button onClick={handleConfirmDeleteProject} autoFocus>
                         Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openDeleteEntryConfirmDialog}
+                onClose={handleCloseDeleteEntryConfirmDialog}
+                aria-labelledby="delete-entry-dialog-title"
+                aria-describedby="delete-entry-dialog-description"
+            >
+                <DialogTitle id="delete-entry-dialog-title">{"Delete JSON Entry?"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="delete-entry-dialog-description">
+                        Are you sure you want to delete this JSON entry? This action cannot be undone.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDeleteEntryConfirmDialog}>Cancel</Button>
+                    <Button onClick={handleDeleteJsonConfirmed} autoFocus>
+                        Delete
                     </Button>
                 </DialogActions>
             </Dialog>
