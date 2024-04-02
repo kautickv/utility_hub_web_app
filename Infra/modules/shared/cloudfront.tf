@@ -69,5 +69,5 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     minimum_protocol_version = "TLSv1.2_2021"
   }
 
-  web_acl_id = aws_wafv2_web_acl.waf_web_acl.arn
+  #web_acl_id = aws_wafv2_web_acl.waf_web_acl.arn
 }
