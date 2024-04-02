@@ -1,3 +1,4 @@
+/*
 # Create IP Set for the IP addresses to allow
 resource "aws_wafv2_ip_set" "allow_specific_ips" {
   name               = "AllowedIPs"
@@ -55,3 +56,5 @@ resource "aws_wafv2_web_acl" "waf_web_acl" {
     sampled_requests_enabled   = true
   }
 }
+
+*/
