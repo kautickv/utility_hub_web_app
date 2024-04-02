@@ -1,9 +1,10 @@
 import React from "react";
+import { SnackbarProvider } from 'notistack'; 
 import Home from "./components/Home";
 import Login from "./components/Login"
 import MultiTabOpener from "./components/MultiTabOpener"
 import { AuthProvider } from './context/AuthContext';
-import Trading from "./components/Trading"
+import Formatter from "./components/Formatter"
 import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -33,25 +34,23 @@ const theme = createTheme({
 });
 
 function App() {
-
   return (
-
-    <>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
-      <ThemeProvider theme={theme}>
+      <SnackbarProvider maxSnack={3}> {/* Configure the SnackbarProvider here */}
         <AuthProvider>
           <BrowserRouter>
             <Routes>
               <Route exact path='/login' element={<Login />} />
               <Route path='/home' element={<Home />} />
               <Route path='/link-manager' element={<MultiTabOpener />} />
-              <Route path='/trading' element={<Trading />} />
+              <Route path='/formatter' element={<Formatter />} />
               <Route exact path='/' element={<Home />} />
             </Routes>
           </BrowserRouter>
         </AuthProvider>
-      </ThemeProvider>
-    </>
+      </SnackbarProvider>
+    </ThemeProvider>
   );
 }
 

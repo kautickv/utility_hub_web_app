@@ -56,5 +56,4 @@ resource "aws_wafv2_web_acl" "waf_web_acl" {
     sampled_requests_enabled   = true
   }
 }
-
 */
