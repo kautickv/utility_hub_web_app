@@ -3,8 +3,8 @@
 
 Hey there! Welcome to the Utility Hub. I've put together some cool software tools that I find super useful. Made this for fun, and thought I'd share with friends and family. Feel free to check it out and let me know what you think. Enjoy!
 
-Access the live project [here](https://pass.vaisnavsingkautick.com)
-
+Access the live production App [here](https://utilityhub.vaisnavsingkautick.com)
+Access the live development App [here](https://devutilityhub.vaisnavsingkautick.com)
 ## Features
 
 - Password generator
