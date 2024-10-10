@@ -127,7 +127,6 @@ resource "aws_route_table_association" "public_subnet_3_assoc" {
 # NAT Gateway (placed in the first public subnet)
 # Create an Elastic IP address
 resource "aws_eip" "nat_eip" {
-  domain = "vpc"
   tags = {
     Name = "${var.app_name}-NAT-EIP"
   }
