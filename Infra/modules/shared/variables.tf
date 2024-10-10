@@ -27,3 +27,8 @@ variable "region" {
   type = string
 }
 
+variable "use_vpc" {
+  description = "True or False boolean to use VPC setup or not"
+  type        = bool
+}
+
