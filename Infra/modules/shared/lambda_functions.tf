@@ -34,6 +34,7 @@ module "auth_lamda_function" {
   }
   timeout = 15
   memory_size = 128
+  use_vpc = var.use_vpc
 }
 ##----------------------------------------------------------------------------------
 # CREATE LAMBDA FUNCTION FOR BOOKMARKMANAGER SERVICE
@@ -73,6 +74,7 @@ module "bookmarkmanager_lamda_function" {
   }
   timeout = 15
   memory_size = 128
+  use_vpc = var.use_vpc
 }
 
 ##----------------------------------------------------------------------------------
@@ -113,6 +115,7 @@ module "home_lamda_function" {
   }
   timeout = 15
   memory_size = 128
+  use_vpc = var.use_vpc
 }
 
 # CREATE LAMBDA FUNCTION FOR JSON_VIEWER SERVICE
@@ -151,4 +154,5 @@ module "json_viewer_lamda_function" {
   }
   timeout = 15
   memory_size = 128
+  use_vpc = var.use_vpc
 }

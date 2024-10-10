@@ -14,9 +14,17 @@ resource "aws_lambda_function" "lamda_function" {
   environment {
     variables = var.environment_variables
   }
-
   timeout = var.timeout
   memory_size = var.memory_size
+
+  # Conditional VPC Configuration
+  dynamic "vpc_config" {
+    for_each = var.use_vpc ? [1] : []
+    content {
+      subnet_ids         = module.setup_vpc_network.private_subnets
+      security_group_ids = [module.setup_vpc_network.vpc_security_group]
+    }
+  }
 }
 
 # Create a cloudwatch log group for lambda execution logs

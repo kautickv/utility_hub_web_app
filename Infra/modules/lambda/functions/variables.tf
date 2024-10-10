@@ -50,3 +50,9 @@ variable "memory_size" {
   type        = number
   default     = 128
 }
+
+variable "use_vpc" {
+  description = "True or False boolean to use VPC setup or not"
+  type        = bool
+}
+
