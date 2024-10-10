@@ -51,6 +51,16 @@ variable "memory_size" {
   default     = 128
 }
 
+variable "private_subnets" {
+  description = "List of private subnet IDs"
+  type        = list(string)
+}
+
+variable "vpc_lambda_security_group" {
+  description = "Security group for Lambda in VPC"
+  type        = string
+}
+
 variable "use_vpc" {
   description = "True or False boolean to use VPC setup or not"
   type        = bool
