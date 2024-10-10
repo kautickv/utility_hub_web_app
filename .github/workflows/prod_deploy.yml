@@ -3,12 +3,20 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      confirmationWord:
+        description: 'Type "Deploy" to run the job manually'
+        required: true
+        default: ''
 
 jobs:
   main_merge:
     # Run jobs on merge to main
     name: Deploy Prod
     runs-on: ubuntu-latest
+    # Conditional to only run the job on manual input when the confirmation word is "Deploy"
+    if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.confirmationWord == 'Deploy') }}
     permissions:
       contents: read
       id-token: write
