@@ -36,6 +36,12 @@ resource "aws_iam_role_policy_attachment" "auth_role_kms_decrypt_policy_attachme
   policy_arn = aws_iam_policy.kms_decrypt_policy.arn
 }
 
+# Attach EC2 Network Interface Access Policy
+resource "aws_iam_role_policy_attachment" "auth_ec2_network_interface_policy_attachment" {
+  role      = aws_iam_role.auth_lambda_exec_role.name
+  policy_arn = aws_iam_policy.ec2_network_interface_policy.arn
+}
+
 ##--------------------------------------------------------------------------------------------------------------------------------
 ## CREATE A ROLE FOR BOOKMARKMANAGER LAMBDA FUNCTION
 ##--------------------------------------------------------------------------------------------------------------------------------
@@ -80,6 +86,11 @@ resource "aws_iam_role_policy_attachment" "bookmarkmanager_invoke_auth_lambda_po
   role      = aws_iam_role.bookmarkmanager_lambda_exec_role.name
   policy_arn = aws_iam_policy.invoke_auth_lambda_policy.arn
 }
+# Attach EC2 Network Interface Access Policy
+resource "aws_iam_role_policy_attachment" "bookmarkmanager_ec2_network_interface_policy_attachment" {
+  role      = aws_iam_role.bookmarkmanager_lambda_exec_role.name
+  policy_arn = aws_iam_policy.ec2_network_interface_policy.arn
+}
 
 ##--------------------------------------------------------------------------------------------------------------------------------
 ## CREATE A ROLE FOR HOME LAMBDA FUNCTION
@@ -119,6 +130,11 @@ resource "aws_iam_role_policy_attachment" "home_role_kms_decrypt_policy_attachme
 resource "aws_iam_role_policy_attachment" "home_invoke_auth_lambda_policy_attachment" {
   role      = aws_iam_role.home_lambda_exec_role.name
   policy_arn = aws_iam_policy.invoke_auth_lambda_policy.arn
+}
+# Attach EC2 Network Interface Access Policy
+resource "aws_iam_role_policy_attachment" "home_ec2_network_interface_policy_attachment" {
+  role      = aws_iam_role.home_lambda_exec_role.name
+  policy_arn = aws_iam_policy.ec2_network_interface_policy.arn
 }
 
 ##--------------------------------------------------------------------------------------------------------------------------------
@@ -164,4 +180,9 @@ resource "aws_iam_role_policy_attachment" "json_viewer_invoke_auth_lambda_policy
 resource "aws_iam_role_policy_attachment" "json_viewer_s3_bucket_policy_attachment" {
   role      = aws_iam_role.json_viewer_lambda_exec_role.name
   policy_arn = aws_iam_policy.jsonviewer_s3_policy.arn
+}
+# Attach EC2 Network Interface Access Policy
+resource "aws_iam_role_policy_attachment" "json_viewer_ec2_network_interface_policy_attachment" {
+  role      = aws_iam_role.json_viewer_lambda_exec_role.name
+  policy_arn = aws_iam_policy.ec2_network_interface_policy.arn
 }
