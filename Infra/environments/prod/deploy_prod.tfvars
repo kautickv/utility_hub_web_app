@@ -9,3 +9,5 @@ hosted_zone_id= "Z0236168HPT8WHQWIY9"
 ##---------------------------------------------------------
 aws_default_region= "us-east-1"
 dns_account_region= "us-east-1"
+
+use_vpc = true # Use VPC and Subnets to host app?
