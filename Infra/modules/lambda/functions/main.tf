@@ -21,8 +21,8 @@ resource "aws_lambda_function" "lamda_function" {
   dynamic "vpc_config" {
     for_each = var.use_vpc ? [1] : []
     content {
-      subnet_ids         = module.setup_vpc_network.private_subnets
-      security_group_ids = [module.setup_vpc_network.vpc_lambda_security_group]
+      subnet_ids         = var.private_subnets
+      security_group_ids = [var.vpc_lambda_security_group]
     }
   }
 }

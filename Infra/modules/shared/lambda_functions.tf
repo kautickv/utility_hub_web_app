@@ -35,8 +35,8 @@ module "auth_lamda_function" {
   timeout = 15
   memory_size = 128
   # Conditionally pass VPC-related outputs
-  private_subnets = var.use_vpc ? module.setup_vpc_network.private_subnets : []
-  vpc_lambda_security_group = var.use_vpc ? module.setup_vpc_network.vpc_lambda_security_group : ""
+  private_subnets = var.use_vpc ? module.setup_vpc_network[0].private_subnets : []
+  vpc_lambda_security_group = var.use_vpc ? module.setup_vpc_network[0].vpc_lambda_security_group : ""
   use_vpc = var.use_vpc
 }
 ##----------------------------------------------------------------------------------
@@ -78,8 +78,8 @@ module "bookmarkmanager_lamda_function" {
   timeout = 15
   memory_size = 128
   # Conditionally pass VPC-related outputs
-  private_subnets = var.use_vpc ? module.setup_vpc_network.private_subnets : []
-  vpc_lambda_security_group = var.use_vpc ? module.setup_vpc_network.vpc_lambda_security_group : ""
+  private_subnets = var.use_vpc ? module.setup_vpc_network[0].private_subnets : []
+  vpc_lambda_security_group = var.use_vpc ? module.setup_vpc_network[0].vpc_lambda_security_group : ""
   use_vpc = var.use_vpc
 }
 
@@ -122,8 +122,8 @@ module "home_lamda_function" {
   timeout = 15
   memory_size = 128
   # Conditionally pass VPC-related outputs
-  private_subnets = var.use_vpc ? module.setup_vpc_network.private_subnets : []
-  vpc_lambda_security_group = var.use_vpc ? module.setup_vpc_network.vpc_lambda_security_group : ""
+  private_subnets = var.use_vpc ? module.setup_vpc_network[0].private_subnets : []
+  vpc_lambda_security_group = var.use_vpc ? module.setup_vpc_network[0].vpc_lambda_security_group : ""
   use_vpc = var.use_vpc
 }
 
@@ -164,7 +164,7 @@ module "json_viewer_lamda_function" {
   timeout = 15
   memory_size = 128
   # Conditionally pass VPC-related outputs
-  private_subnets = var.use_vpc ? module.setup_vpc_network.private_subnets : []
-  vpc_lambda_security_group = var.use_vpc ? module.setup_vpc_network.vpc_lambda_security_group : ""
+  private_subnets = var.use_vpc ? module.setup_vpc_network[0].private_subnets : []
+  vpc_lambda_security_group = var.use_vpc ? module.setup_vpc_network[0].vpc_lambda_security_group : ""
   use_vpc = var.use_vpc
 }
