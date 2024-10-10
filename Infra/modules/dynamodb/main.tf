@@ -1,7 +1,16 @@
+data "external" "check_dynamodb_table" {
+  program = ["bash", "${path.module}/check_table_exists.sh", var.name, var.region]
+}
+
 resource "aws_dynamodb_table" "table" {
   name         = var.name
   billing_mode = var.billing_mode
   hash_key     = var.hash_key
+
+
+  lifecycle { # Prevent destroy to preserve data
+    prevent_destroy = true
+  }
 
   dynamic "attribute" {
     for_each = var.attributes

@@ -12,4 +12,5 @@ module "build_prod_infra" {
     bucket_name = var.bucket_name
     domain_name = var.domain_name
     hosted_zone_id= var.hosted_zone_id
+    region = var.aws_default_region
 }
