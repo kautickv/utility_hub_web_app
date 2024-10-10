@@ -3,7 +3,7 @@ TABLE_NAME=$1
 REGION=$2
 
 if aws dynamodb describe-table --table-name "$TABLE_NAME" --region "$REGION" > /dev/null 2>&1; then
-    echo "{\"exists\":true}"
+    echo "{\"exists\":\"true\"}"
 else
-    echo "{\"exists\":false}"
+    echo "{\"exists\":\"false\"}"
 fi
