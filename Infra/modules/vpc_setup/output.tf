@@ -8,11 +8,6 @@ output "private_subnets" {
   value       = [aws_subnet.private_subnet_1.id, aws_subnet.private_subnet_2.id, aws_subnet.private_subnet_3.id]
 }
 
-output "vpc_ssm_security_group"{
-    description = "Security group to access SSM Parameter Store"
-    value = aws_security_group.ssm_vpce_sg.id
-}
-
 output "vpc_lambda_security_group"{
     description = "Security group for lambda VPC access"
     value = aws_security_group.lambda_sg.id
