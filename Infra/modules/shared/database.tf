@@ -4,6 +4,7 @@ module "bookmarks_dynamodb_table" {
   source      = "../../modules/dynamodb"
   name        = "${var.app_name}_bookmarks_table"
   hash_key    = "email"
+  region = var.region
   attributes  = [
     { name = "email", type = "S" },
     { name = "config_json", type = "S" },
@@ -35,6 +36,7 @@ module "auth_dynamodb_table" {
   source      = "../../modules/dynamodb"
   name        = "${var.app_name}_authentication_table"
   hash_key    = "email"
+  region = var.region
   attributes  = [
     { name = "email", type = "S" },
     { name = "first_name", type = "S" },

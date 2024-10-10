@@ -19,8 +19,15 @@ variable "attributes" {
   type        = list(map(string))
 }
 
+variable "region"{
+  description = "The region of the table"
+  type = string
+}
+
 variable "global_secondary_indexes" {
   description = "A list of global secondary indexes"
   type        = list(map(any))
   default     = []
 }
+
+
