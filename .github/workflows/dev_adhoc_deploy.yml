@@ -96,15 +96,6 @@ jobs:
         run: |
           terraform init
           ls
-        
-      - name: Terraform Refresh
-        working-directory: ./Infra/environments/dev
-        env:
-          TF_VAR_dns_aws_access_key_id: ${{ env.DNS_AWS_ACCESS_KEY_ID }}
-          TF_VAR_dns_aws_secret_access_key: ${{ env.DNS_AWS_SECRET_ACCESS_KEY }}
-          TF_VAR_dns_aws_session_token: ${{ env.DNS_AWS_SESSION_TOKEN }}
-        run: |
-          terraform refresh -no-color
 
       - name: Terraform Validate
         id: validate
