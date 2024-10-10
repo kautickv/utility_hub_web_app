@@ -22,7 +22,7 @@ resource "aws_lambda_function" "lamda_function" {
     for_each = var.use_vpc ? [1] : []
     content {
       subnet_ids         = module.setup_vpc_network.private_subnets
-      security_group_ids = [module.setup_vpc_network.vpc_security_group]
+      security_group_ids = [module.setup_vpc_network.vpc_lambda_security_group]
     }
   }
 }

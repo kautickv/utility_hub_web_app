@@ -12,3 +12,9 @@ output "vpc_ssm_security_group"{
     description = "Security group to access SSM Parameter Store"
     value = aws_security_group.ssm_vpce_sg.id
 }
+
+output "vpc_lambda_security_group"{
+    description = "Security group for lambda VPC access"
+    value = aws_security_group.lambda_sg.id
+}
+
