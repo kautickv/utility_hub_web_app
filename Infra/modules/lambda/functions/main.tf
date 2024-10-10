@@ -25,6 +25,10 @@ resource "aws_lambda_function" "lamda_function" {
       security_group_ids = [var.vpc_lambda_security_group]
     }
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # Create a cloudwatch log group for lambda execution logs
