@@ -52,3 +52,9 @@ variable "dns_aws_session_token" {
   description = "AWS Session Token for DNS Account"
   type        = string
 }
+
+variable "use_vpc" {
+  description = "True or False boolean to use VPC setup or not"
+  type        = bool
+  default = false
+}

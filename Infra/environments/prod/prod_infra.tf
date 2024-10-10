@@ -13,5 +13,5 @@ module "build_prod_infra" {
     domain_name = var.domain_name
     hosted_zone_id= var.hosted_zone_id
     region = var.aws_default_region
-    use_vpc = false
+    use_vpc = var.use_vpc
 }
