@@ -92,6 +92,28 @@ resource "aws_iam_policy" "bookmarkmanager_dynamodb_policy" {
 }
 
 ##--------------------------------------------------------------------------------------------------------------------------------
+## Policy to give permission to create, describe and destroy EC2 network interfaces
+resource "aws_iam_policy" "ec2_network_interface_policy" {
+  name        = "${var.app_name}_EC2_Network_Interface_Policy"
+  description = "Policy for EC2 Network Interface"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "ec2:CreateNetworkInterface",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DeleteNetworkInterface"
+        ]
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+##--------------------------------------------------------------------------------------------------------------------------------
 ## Policy to give read/write access to JSON_VIEWER S3 Bucket
 resource "aws_iam_policy" "jsonviewer_s3_policy" {
   name        = "${var.app_name}_JsonViewer_S3_Policy"
