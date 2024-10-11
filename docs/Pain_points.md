@@ -60,6 +60,7 @@ resource "aws_s3_bucket_policy" "s3_allow_public_access" {
   bucket = module.s3_static_hosting.bucket_id
   policy = data.aws_iam_policy_document.s3_allow_cloudfront_access.json
 }
+```
 
 
 ## Pain Point 2: Conditional Lambda Deployment with Custom VPC
@@ -140,3 +141,4 @@ resource "aws_lambda_function" "lamda_function" {
     create_before_destroy = true
   }
 }
+```
