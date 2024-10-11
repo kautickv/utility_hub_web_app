@@ -18,7 +18,7 @@ Access the live development App [here](https://devutilityhub.vaisnavsingkautick.
 - Infrastructure As Code (IAC): Terraform.
 
 ## Architecture Diagram
-![Architecture Diagram](docs/images/Architecture_diagram.jpeg)
+![Architecture Diagram](docs/images/UtilityHubArchitecture.jpg)
 
 ## Usage
 As this is a web application hosted on AWS, there is no installation necessary for the end user. Developers looking to run a local version of the app will need to install Node.js and React.js, and configure AWS CLI with the appropriate permissions.
