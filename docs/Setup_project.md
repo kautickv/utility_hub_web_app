@@ -22,6 +22,7 @@ Follow these steps to prepare for deployment with Terraform.
    - **Hosted Zone ID**: The Hosted Zone Id for DNS configuration (ensure domain ownership).
    - **AWS Default Region**: The default AWS region for deploying resources.
    - **DNS Account Region**: Specify the AWS region of the hosted zone, which can be in a different AWS account if necessary.
+   - **use_vpc**: This is a boolean toggle which will deploy all backend resources inside a custom VPC if set to true or will deploy in default AWS VPC if set to false.If set to true, it will create all the required resources to operate a VPC like subnets, reoute tables, internet gateways, NAT gateways, VPC endpints and all associated security groups and IAM policies.
 
 3. **Production Configuration**: Adapt the `deploy_prod.tfvars` file with analogous details tailored for the production environment, following the same structure as the development configuration.
 
