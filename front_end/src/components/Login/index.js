@@ -30,6 +30,7 @@ const StyledContainer = styled(Container)(({ theme }) => ({
 function Login() {
   const [client_id, setClient_id] = useState("");
   const navigate = useNavigate();
+  const [credsFetched, setCredsFetched] = useState(false); // Keeps track if creds has been fetched
   let url = useRef(null);
   let redirectUrl = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -118,6 +119,7 @@ function Login() {
         let ascii = atob(data.client_id_base64);
         let utf8 = decodeURIComponent(escape(ascii));
         setClient_id(utf8);
+        setCredsFetched(true);  // Mark that the credentials are fetched
       } catch (error) {
         // Handle any errors that may occur during the fetch or decoding process
         console.error("Error fetching data:", error);
@@ -196,6 +198,12 @@ function Login() {
   }
 
   function googleLogin() {
+
+    if (!credsFetched || !client_id) {
+      addAlert("warning", "Login credentials are still being fetched. Please wait.");
+      return;
+    }
+
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&prompt=consent&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${redirectUrl.current}&response_type=code&client_id=${client_id}`;
     console.log(redirectUrl.current);
     window.location = googleAuthUrl;
@@ -260,7 +268,7 @@ function Login() {
               color="primary"
               onClick={googleLogin}
             >
-              Login
+              {credsFetched ? "Login" : "Please Wait ..."}
             </Button>
           </Paper>
         </Box>
