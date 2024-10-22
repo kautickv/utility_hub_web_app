@@ -200,7 +200,7 @@ function Login() {
   function googleLogin() {
 
     if (!credsFetched || !client_id) {
-      addAlert("warning", "Login credentials are still being fetched. Please wait.");
+      addAlert("warning", "Please bear with us... We’re making sure everything is perfect!");
       return;
     }
 
@@ -268,7 +268,7 @@ function Login() {
               color="primary"
               onClick={googleLogin}
             >
-              {credsFetched ? "Login" : "Please Wait ..."}
+              {credsFetched ? "Login" : "Setting things up... Almost there!"}
             </Button>
           </Paper>
         </Box>
