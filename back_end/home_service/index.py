@@ -13,7 +13,7 @@ def lambda_handler(event, context):
     # Initialize CommonUtility Class
     common_utility = CommonUtility()
     # Getting data from [slack, jira]
-    getDataFrom = event['queryStringParameters']['from'].strip()
+    actionType = event['queryStringParameters']['actionType'].strip()
     try:
         # Extract auth code
         code = common_utility.getAuthorizationCode(event)
@@ -25,8 +25,8 @@ def lambda_handler(event, context):
             if user_details == None:
                 return common_utility.buildResponse(401, "Unauthorized")
             
-        if http_method == 'GET' and path =='/home' and getDataFrom == 'slack':
-            return get_slack_data_handler(event['queryStringParameters']['number_days'], user_details)
+        if http_method == 'GET' and path =='/home' and actionType == 'PLACEHOLDER':
+            return get_slack_data_handler(event['queryStringParameters']['PLACEHOLDER'], user_details)
     
         else:
             return common_utility.buildResponse(404, "Resource not found")
