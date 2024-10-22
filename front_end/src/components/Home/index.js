@@ -12,6 +12,7 @@ import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 
 // Import components
 import LoadingSpinner from "../common/LoadingSpinner";
+import AlertComponent from "../common/AlertComponent";
 import Navbar from "../common/Navbar";
 import SlackMetrics from "./SlackMetrics";
 import { AuthContext } from "../../context/AuthContext";
@@ -22,6 +23,8 @@ function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const { isAuthenticated, user, logoutUser, loginUser } =
     useContext(AuthContext);
+      // Alerts state
+  const [alerts, setAlerts] = React.useState([]);
 
   useEffect(() => {
     // Check if JWT token exists
@@ -58,7 +61,9 @@ function Home() {
               console(
                 `An error has occurred. Verify Path returns ${verifyResponse}`
               );
-              alert("An error has occurred. Please try again later");
+              // Display alerts on screen
+              addAlert("error","An error has occurred. Please try again later");
+              
             }
             setIsLoading(false);
             navigate("/login");
@@ -71,7 +76,7 @@ function Home() {
         }
       } catch (err) {
         console.log(`An error occurred: ${err}`);
-        alert("An unexpected error occurred. Please try again later");
+        addAlert("error", "An unexpected error occurred. Please try again later");
         setIsLoading(false);
       }
     };
@@ -80,8 +85,28 @@ function Home() {
     verifyIfUserLoggedIn();
   }, [navigate, isAuthenticated, logoutUser, user, loginUser]);
 
+
   if (isLoading) {
     return <LoadingSpinner description="Please wait ..." />;
+  }
+
+  function addAlert(severity, message) {
+    const newAlert = {
+      id: new Date().getTime(),
+      severity,
+      message,
+    };
+    setAlerts(function (prevAlerts) {
+      return [...prevAlerts, newAlert];
+    });
+  }
+  
+  function handleClose(id) {
+    setAlerts(function (prevAlerts) {
+      return prevAlerts.filter(function (alert) {
+        return alert.id !== id;
+      });
+    });
   }
 
   return (
@@ -117,6 +142,15 @@ function Home() {
           {/* More grid items as needed */}
         </Grid>
       </Box>
+      {alerts.map((alert) => (
+        <AlertComponent
+          key={alert.id}
+          open={true}
+          severity={alert.severity}
+          message={alert.message}
+          handleClose={() => handleClose(alert.id)}
+        />
+      ))}
     </>
   );
 }

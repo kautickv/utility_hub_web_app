@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef, useContext} from "react";
-import { Button, Box, Container, Typography, Paper } from '@mui/material';
-import { styled, keyframes } from '@mui/system';
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { Button, Box, Container, Typography, Paper } from "@mui/material";
+import { styled, keyframes } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
-import LoadingSpinner from "../common/LoadingSpinner"; 
-import { AuthContext } from '../../context/AuthContext';
-
+import LoadingSpinner from "../common/LoadingSpinner";
+import AlertComponent from "../common/AlertComponent";
+import { AuthContext } from "../../context/AuthContext";
 
 // Styled components
 // Define keyframes for background animation
@@ -17,24 +17,24 @@ const gradientAnimation = keyframes`
 
 // Create a Styled Container component
 const StyledContainer = styled(Container)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: '100vh',
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "100vh",
   // Add gradient background
   background: `linear-gradient(45deg, ${theme.palette.primary.main} 10%, ${theme.palette.secondary.main} 90%)`,
-  backgroundSize: '200% 200%',
+  backgroundSize: "200% 200%",
   animation: `${gradientAnimation} 3s ease infinite`,
 }));
-
 
 function Login() {
   const [client_id, setClient_id] = useState("");
   const navigate = useNavigate();
   let url = useRef(null);
   let redirectUrl = useRef(null);
-  const [loading, setLoading] = useState(false)
-  const { loginUser, logoutUser} = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const { loginUser, logoutUser } = useContext(AuthContext);
+  const [alerts, setAlerts] = React.useState([]);
 
   // Run this function once every time loads
   useEffect(() => {
@@ -75,7 +75,7 @@ function Login() {
       // User is already logged in
       // Set Context
       let userInfo = await verifyResponse.json();
-      loginUser(userInfo)
+      loginUser(userInfo);
       // Redirect user to main application
       navigate("/home");
     } else if (verifyResponse.status === 401) {
@@ -83,12 +83,13 @@ function Login() {
       localStorage.removeItem("JWT_Token");
 
       // Logout user from context
-      logoutUser()
+      logoutUser();
       navigate("/login");
     } else {
       // An error occurred while verifying
       console.log("An error occurred while verifying user credentials");
-      alert(
+      addAlert(
+        "error",
         "An error occurred while verifying your login credentials. Please login again."
       );
       // User JWT token is not valid
@@ -98,7 +99,7 @@ function Login() {
       navigate("/login");
     }
 
-    setLoading(false)
+    setLoading(false);
   }
 
   function handleURLHasNoCode() {
@@ -123,9 +124,9 @@ function Login() {
       }
     };
 
-    setLoading(true)
+    setLoading(true);
     fetchCreds();
-    setLoading(false)
+    setLoading(false);
   }
 
   function handleURLHasCode() {
@@ -133,7 +134,7 @@ function Login() {
      * This function will be triggered if the URL has the google code as parameter
      */
     // Extract code from URL
-    setLoading(true)
+    setLoading(true);
     const code = extractGoogleCodeFromURL(url.current);
     // Send POST api call to login endpoint to exchange code for token.
     let payload = {
@@ -155,8 +156,8 @@ function Login() {
             localStorage.setItem("JWT_Token", data.JWT_Token);
             // Assign user info to context
             let user_details = data.payload;
-            console.log(user_details)
-            loginUser(user_details)
+            console.log(user_details);
+            loginUser(user_details);
           });
           // Redirect user to main application
           navigate("/home");
@@ -166,11 +167,11 @@ function Login() {
           }
         }
 
-        setLoading(false)
+        setLoading(false);
       })
       .catch((error) => {
-        setLoading(false)
-        console.error("Error:", error)
+        setLoading(false);
+        console.error("Error:", error);
       });
   }
 
@@ -200,50 +201,80 @@ function Login() {
     window.location = googleAuthUrl;
   }
 
-  if (loading){
-    return <LoadingSpinner description="Please wait ..."/>
+  if (loading) {
+    return <LoadingSpinner description="Please wait ..." />;
+  }
+
+  function addAlert(severity, message) {
+    const newAlert = {
+      id: new Date().getTime(),
+      severity,
+      message,
+    };
+    setAlerts(function (prevAlerts) {
+      return [...prevAlerts, newAlert];
+    });
+  }
+
+  function handleClose(id) {
+    setAlerts(function (prevAlerts) {
+      return prevAlerts.filter(function (alert) {
+        return alert.id !== id;
+      });
+    });
   }
 
   return (
-    <StyledContainer component="main" maxWidth="xl">
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        minHeight="100vh"
-        sx={{
-          '& .MuiPaper-root': {
-            padding: '24px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          },
-          '& .MuiButton-root': {
-            margin: '24px 0 16px',
-            padding: '12px 24px',
-          },
-        }}
-      >
-        <Paper>
-          <Typography component="h1" variant="h5" align="center">
-            Utility Hub
-          </Typography>
-          <Typography component="p" align="center">
-            Welcome to your Utility Hub!
-          </Typography>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            onClick={googleLogin}
-          >
-            Login
-          </Button>
-        </Paper>
-      </Box>
-    </StyledContainer>
+    <>
+      <StyledContainer component="main" maxWidth="xl">
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          minHeight="100vh"
+          sx={{
+            "& .MuiPaper-root": {
+              padding: "24px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            },
+            "& .MuiButton-root": {
+              margin: "24px 0 16px",
+              padding: "12px 24px",
+            },
+          }}
+        >
+          <Paper>
+            <Typography component="h1" variant="h5" align="center">
+              Utility Hub
+            </Typography>
+            <Typography component="p" align="center">
+              Welcome to your Utility Hub!
+            </Typography>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={googleLogin}
+            >
+              Login
+            </Button>
+          </Paper>
+        </Box>
+      </StyledContainer>
+      {alerts.map((alert) => (
+        <AlertComponent
+          key={alert.id}
+          open={true}
+          severity={alert.severity}
+          message={alert.message}
+          handleClose={() => handleClose(alert.id)}
+        />
+      ))}
+    </>
   );
 }
 

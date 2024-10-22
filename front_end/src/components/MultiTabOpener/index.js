@@ -37,6 +37,7 @@ import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 // Import components
 import Navbar from "../common/Navbar";
 import LoadingSpinner from "../common/LoadingSpinner";
+import AlertComponent from "../common/AlertComponent";
 import Tile from "./Tile.js";
 import Link from "./Link";
 import { AuthContext } from "../../context/AuthContext";
@@ -48,13 +49,14 @@ function MultiTabOpener() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Set to loading initially
   const [view, setView] = useState("LinkView");
-  const { isAuthenticated, logoutUser, loginUser} = useContext(AuthContext);
+  const { isAuthenticated, logoutUser, loginUser } = useContext(AuthContext);
   const [newTile, setNewTile] = useState({
     title: "",
     description: "",
     default: "No",
     urls: [{ urlTitle: "", url: "" }],
   });
+  const [alerts, setAlerts] = React.useState([]);
 
   const theme = useTheme();
 
@@ -87,13 +89,13 @@ function MultiTabOpener() {
             } else if (verifyResponse.status === 401) {
               // User JWT token is not valid or expired
               // Logout user from context
-              logoutUser()
+              logoutUser();
               navigate("/login");
             } else {
               console(
                 `An error has occurred. Verify Path returns ${verifyResponse}`
               );
-              alert("An error has occurred. Please try again later");
+              addAlert("error", "An error has occurred. Please try again later");
             }
             setIsLoading(false);
             navigate("/login");
@@ -106,7 +108,7 @@ function MultiTabOpener() {
         }
       } catch (err) {
         console.log(`An error occurred: ${err}`);
-        alert("An unexpected error occurred. Please try again later");
+        addAlert("error","An unexpected error occurred. Please try again later");
         setIsLoading(false);
       }
     };
@@ -154,14 +156,14 @@ function MultiTabOpener() {
       if (jwtToken !== null && jwtToken !== "undefined") {
         let httpCode = await sendPostToMultitabBackend(jwtToken, newTileData);
         if (httpCode === 200) {
-          //Pass
+          addAlert("success" , "New Data has been saved")
         } else if (httpCode === 401) {
-          alert("Credentials Expired. Please login again");
+          addAlert("error" ,"Credentials Expired. Please login again");
           navigate("/login");
         } else if (httpCode === 500) {
-          alert("AN error occurred while saving. Please try again later");
+          addAlert("error" ,"A server error occurred while saving. Please try again later");
         } else {
-          alert("An unknown error occurred. Please try again later.");
+          addAlert("error" , "An unknown error occurred. Please try again later.");
         }
       } else {
         // User JWT token is not valid or expired
@@ -170,7 +172,7 @@ function MultiTabOpener() {
       }
     } catch (err) {
       console.log(err);
-      alert("An error ocurred saving urls. Please try again later");
+      addAlert("error" , "An error ocurred saving urls. Please try again later");
     }
   }
 
@@ -233,7 +235,7 @@ function MultiTabOpener() {
 
   async function handleAddTile() {
     if (!newTile.title.trim() || !newTile.description.trim()) {
-      alert("Title and description cannot be empty.");
+      addAlert("warning" , "Title and description cannot be empty.");
       return;
     }
 
@@ -242,7 +244,7 @@ function MultiTabOpener() {
     );
 
     if (validUrls.length === 0) {
-      alert("At least one URL with a title is required.");
+      addAlert("warning", "At least one URL with a title is required.");
       return;
     }
 
@@ -275,6 +277,25 @@ function MultiTabOpener() {
   const filteredLinks = allLinks.filter((link) =>
     link.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  function addAlert(severity, message) {
+    const newAlert = {
+      id: new Date().getTime(),
+      severity,
+      message,
+    };
+    setAlerts(function (prevAlerts) {
+      return [...prevAlerts, newAlert];
+    });
+  }
+
+  function handleClose(id) {
+    setAlerts(function (prevAlerts) {
+      return prevAlerts.filter(function (alert) {
+        return alert.id !== id;
+      });
+    });
+  }
 
   return (
     <>
@@ -495,6 +516,15 @@ function MultiTabOpener() {
           )}
         </>
       )}
+      {alerts.map((alert) => (
+        <AlertComponent
+          key={alert.id}
+          open={true}
+          severity={alert.severity}
+          message={alert.message}
+          handleClose={() => handleClose(alert.id)}
+        />
+      ))}
     </>
   );
 }
