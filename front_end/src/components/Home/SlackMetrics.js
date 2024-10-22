@@ -18,19 +18,6 @@ function SlackMetrics() {
   const [isError, setIsError] = useState(false);
   // Alerts state
   const [alerts, setAlerts] = React.useState([]);
-  // Functions
-  const addAlert = (severity, message) => {
-    const newAlert = {
-      id: new Date().getTime(),
-      severity,
-      message,
-    };
-    setAlerts((prevAlerts) => [...prevAlerts, newAlert]);
-  };
-
-  const handleClose = (id) => {
-    setAlerts((prevAlerts) => prevAlerts.filter((alert) => alert.id !== id));
-  };
   
   useEffect(() => {
     // Fetch slack data
@@ -70,6 +57,25 @@ function SlackMetrics() {
 
   if (isError) {
     return "Error";
+  }
+
+  function addAlert(severity, message) {
+    const newAlert = {
+      id: new Date().getTime(),
+      severity,
+      message,
+    };
+    setAlerts(function (prevAlerts) {
+      return [...prevAlerts, newAlert];
+    });
+  }
+  
+  function handleClose(id) {
+    setAlerts(function (prevAlerts) {
+      return prevAlerts.filter(function (alert) {
+        return alert.id !== id;
+      });
+    });
   }
 
   return (

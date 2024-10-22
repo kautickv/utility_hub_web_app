@@ -3,7 +3,13 @@ import Alert from "@mui/lab/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-
+/*--------------------------------------------------------------------------------------------
+Message Severity Options:
+error: Indicates a serious problem or error.
+warning: Represents a warning that needs attention but is not critical.
+info: Used for providing informational messages.
+success: Signals that an operation was successful.
+--------------------------------------------------------------------------------------------*/
 function AlertComponent({ open, handleClose, severity, message }) {
   return (
     <Snackbar
