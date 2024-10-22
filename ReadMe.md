@@ -7,8 +7,9 @@ Access the live production App [here](https://utilityhub.vaisnavsingkautick.com)
 Access the live development App [here](https://devutilityhub.vaisnavsingkautick.com)
 ## Features
 
-- Password generator
+- User Authentication using Google Accounts
 - Dynamic Link Management tool
+- JSON Viewer/Formatter
 
 ## Technologies Used
 - Frontend: React.js, hosted on AWS S3 and served using AWS CloudFront.
