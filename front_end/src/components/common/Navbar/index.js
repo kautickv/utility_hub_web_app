@@ -13,12 +13,14 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from '@mui/icons-material/Menu';
 import { logout } from "../../../utils/util";
+import AlertComponent from "../AlertComponent";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const open = Boolean(anchorEl);
+  const [alerts, setAlerts] = React.useState([]);
   const theme = useTheme();
 
   const handleDrawerToggle = () => {
@@ -48,7 +50,7 @@ const Navbar = () => {
       console.log(response);
       if (response !== 200) {
         localStorage.setItem("JWT_Token", "");
-        alert("An internal server error occurred. Please try again later.");
+        addAlert("error", "An internal server error occurred. Please try again later.");
       }
       navigate("/login");
     }
@@ -66,7 +68,27 @@ const Navbar = () => {
     </div>
   );
 
+  function addAlert(severity, message) {
+    const newAlert = {
+      id: new Date().getTime(),
+      severity,
+      message,
+    };
+    setAlerts(function (prevAlerts) {
+      return [...prevAlerts, newAlert];
+    });
+  }
+
+  function handleCloseAlert(id) {
+    setAlerts(function (prevAlerts) {
+      return prevAlerts.filter(function (alert) {
+        return alert.id !== id;
+      });
+    });
+  }
+
   return (
+    <>
     <AppBar position="static" sx={{ backgroundColor: theme.palette.primary.main, marginLeft: 0, marginRight: 0, marginTop: 0 }}>
       <Toolbar>
         <Hidden mdUp implementation="css">
@@ -151,6 +173,16 @@ const Navbar = () => {
         </Menu>
       </Toolbar>
     </AppBar>
+    {alerts.map((alert) => (
+        <AlertComponent
+          key={alert.id}
+          open={true}
+          severity={alert.severity}
+          message={alert.message}
+          handleClose={() => handleCloseAlert(alert.id)}
+        />
+      ))}
+    </>
   );
 };
 
