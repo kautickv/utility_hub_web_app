@@ -26,6 +26,20 @@ function Home() {
       // Alerts state
   const [alerts, setAlerts] = React.useState([]);
 
+  // Functions
+  const addAlert = (severity, message) => {
+    const newAlert = {
+      id: new Date().getTime(),
+      severity,
+      message,
+    };
+    setAlerts((prevAlerts) => [...prevAlerts, newAlert]);
+  };
+
+  const handleClose = (id) => {
+    setAlerts((prevAlerts) => prevAlerts.filter((alert) => alert.id !== id));
+  };
+  
   useEffect(() => {
     // Check if JWT token exists
     const verifyIfUserLoggedIn = async () => {
@@ -85,22 +99,10 @@ function Home() {
     verifyIfUserLoggedIn();
   }, [navigate, isAuthenticated, logoutUser, user, loginUser]);
 
+
   if (isLoading) {
     return <LoadingSpinner description="Please wait ..." />;
   }
-
-  const addAlert = (severity, message) => {
-    const newAlert = {
-      id: new Date().getTime(),
-      severity,
-      message,
-    };
-    setAlerts((prevAlerts) => [...prevAlerts, newAlert]);
-  };
-
-  const handleClose = (id) => {
-    setAlerts((prevAlerts) => prevAlerts.filter((alert) => alert.id !== id));
-  };
 
   return (
     <>

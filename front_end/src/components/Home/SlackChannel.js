@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
+
 function SlackChannel({ channel, messages }) {
     const [showGraph, setShowGraph] = React.useState(false);
 
