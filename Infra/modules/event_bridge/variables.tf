@@ -12,6 +12,11 @@ variable "event_params" {
   }
 }
 
+variable "event_rule_name" {
+  description = "Name of the event rule"
+  type        = string
+}
+
 variable "schedule_expression" {
   description = "Cron expression for the EventBridge schedule"
   type        = string
