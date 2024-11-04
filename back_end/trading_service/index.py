@@ -1,3 +1,4 @@
+import json
 from common.CommonUtility import CommonUtility
 from handlers.handlePostTrading import handlePostTrading
 from handlers.handleGetTrading import handleGetTrading
@@ -25,11 +26,15 @@ def lambda_handler(event, context):
         path = event['path']
 
         if http_method == 'POST' and path =='/trading':
-            return handlePostTrading(event)
+             # Parse the JSON body
+            body = event.get('body', '{}')
+            body_params = json.loads(body) if body else {}
+            return handlePostTrading(body_params)
         
         elif http_method == 'GET' and path =='/trading':
-
-            return handleGetTrading(event)
+            query_params = event.get('queryStringParameters', {})
+            
+            return handleGetTrading(query_params)
         else:
             return common_utility.buildResponse(404, "Resource not found")
     
