@@ -1,7 +1,7 @@
 # EventBridge rule to trigger Lambda based on the specified schedule
 resource "aws_cloudwatch_event_rule" "lambda_trigger_rule" {
-  name                = "lambda_trigger_rule"
-  description         = "Trigger Lambda function based on the specified schedule"
+  name                = var.event_rule_name
+  description         = var.event_description
   schedule_expression = var.schedule_expression
 }
 
