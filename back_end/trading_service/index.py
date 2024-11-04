@@ -2,6 +2,7 @@ import json
 from common.CommonUtility import CommonUtility
 from handlers.handlePostTrading import handlePostTrading
 from handlers.handleGetTrading import handleGetTrading
+from handlers.handleAutoTrading import handleAutoTrading
 
 def lambda_handler(event, context):
 
@@ -24,17 +25,21 @@ def lambda_handler(event, context):
         
         http_method = event['httpMethod']
         path = event['path']
+        # Parse the JSON body
+        body = event.get('body', '{}')
+        body_params = json.loads(body) if body else {}
 
         if http_method == 'POST' and path =='/trading':
-             # Parse the JSON body
-            body = event.get('body', '{}')
-            body_params = json.loads(body) if body else {}
+            
             return handlePostTrading(body_params)
         
         elif http_method == 'GET' and path =='/trading':
+
             query_params = event.get('queryStringParameters', {})
-            
             return handleGetTrading(query_params)
+        elif body.get('action', {}) == "auto":
+            # Lambda triggered by eventbridge.
+            return handleAutoTrading(body)
         else:
             return common_utility.buildResponse(404, "Resource not found")
     
