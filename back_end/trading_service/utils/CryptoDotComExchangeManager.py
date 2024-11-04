@@ -287,8 +287,6 @@ class CryptoDotComExchangeManager:
         # OUTPUT: An array [access Key, secret Key]
         ##
 
-        return ["FvVPqPZBTPTVvK52yv27Li", "cxakp_yhuRJh9aHFW2abMbiMKqWb"]
-        '''
         try:
             # Create a Boto3 client for SSM
             ssm_client = boto3.client('ssm')
@@ -316,4 +314,3 @@ class CryptoDotComExchangeManager:
         except Exception as e:
             print(f"Error in reading crypto.com api keys. Error: {str(e)}")
             raise Exception("Error: " + str(e))
-        '''
