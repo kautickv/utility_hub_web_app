@@ -344,6 +344,64 @@ module "post_json_viewer_projects_json_lambda_integration" {
   lambda_invoke_arn = module.json_viewer_lamda_function.invoke_arn 
 }
 
+## TRADING RESOURCE
+##------------------------------------------------------------------------------------
+# Create a new resource called "trading" in root resource
+module "trading_resource" {
+  source = "../../modules/api_gateway/api_gateway_resource"
+  parent_resource_id = aws_api_gateway_rest_api.root_api_gateway.root_resource_id
+  path_part = "trading"
+  rest_api_id = aws_api_gateway_rest_api.root_api_gateway.id
+}
+
+# Create a GET method inside "trading" resource
+module "get_trading_method" {
+  source = "../../modules/api_gateway/api_gateway_method"
+  rest_api_id = aws_api_gateway_rest_api.root_api_gateway.id
+  authorization = "NONE"
+  http_method = "GET"
+  resource_id = module.trading_resource.resource_id
+  resource_options_method = module.trading_resource.options_method_id
+  resource_options_http_method = module.trading_resource.options_http_method
+}
+
+# Configure GET /trading to invoke trading lambda
+module "get_trading_lambda_integration" {
+  source = "../../modules/api_gateway/method_lambda_integration"
+
+  statement_id = "AllowGetTradingLambdaInvoke"
+  function_name = module.trading_lamda_function.function_name 
+  source_arn = "${aws_api_gateway_rest_api.root_api_gateway.execution_arn}/*/${module.get_trading_method.http_method}/trading"
+  http_method = module.get_trading_method.http_method
+  resource_id = module.trading_resource.resource_id
+  rest_api_id = aws_api_gateway_rest_api.root_api_gateway.id
+  lambda_invoke_arn = module.trading_lamda_function.invoke_arn  
+}
+
+# Create a POST method inside "trading" resource
+module "post_trading_method" {
+  source = "../../modules/api_gateway/api_gateway_method"
+  rest_api_id = aws_api_gateway_rest_api.root_api_gateway.id
+  authorization = "NONE"
+  http_method = "POST"
+  resource_id = module.trading_resource.resource_id
+  resource_options_method = module.trading_resource.options_method_id
+  resource_options_http_method = module.trading_resource.options_http_method
+}
+
+# Configure POST /trading to invoke json_viewer lambda
+module "post_trading_lambda_integration" {
+  source = "../../modules/api_gateway/method_lambda_integration"
+
+  statement_id = "AllowPOSTTradingLambdaInvoke"
+  function_name = module.trading_lamda_function.function_name 
+  source_arn = "${aws_api_gateway_rest_api.root_api_gateway.execution_arn}/*/${module.post_trading_method.http_method}/trading"
+  http_method = module.post_trading_method.http_method
+  resource_id = module.trading_resource.resource_id
+  rest_api_id = aws_api_gateway_rest_api.root_api_gateway.id
+  lambda_invoke_arn = module.trading_lamda_function.invoke_arn 
+}
+
 
 
 
@@ -372,8 +430,9 @@ resource "aws_api_gateway_deployment" "root_api_gateway_deployment" {
       module.get_home_lambda_integration,
       module.get_json_viewer_projects_lambda_integration,
       module.post_json_viewer_projects_lambda_integration,
-      module.post_json_viewer_projects_json_lambda_integration
-
+      module.post_json_viewer_projects_json_lambda_integration,
+      module.get_trading_lambda_integration,
+      module.post_trading_lambda_integration
   ]
 }
 
