@@ -2,7 +2,7 @@ from common.CommonUtility import CommonUtility
 from utils.CryptoDotComExchangeManager import CryptoDotComExchangeManager
 
 
-def handleAutoTrading(event):
+def handleAutoPortfolio(event):
     try:
             # Initialize CommonUtility Class
             common_utility = CommonUtility()

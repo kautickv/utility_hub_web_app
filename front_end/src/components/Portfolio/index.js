@@ -17,7 +17,7 @@ import AlertComponent from "../common/AlertComponent";
 import Navbar from "../common/Navbar";
 import { AuthContext } from "../../context/AuthContext";
 
-function Formatter() {
+function Portfolio() {
   const navigate = useNavigate();
   const [userFirstName, setUserFirstName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -133,4 +133,4 @@ function Formatter() {
   );
 }
 
-export default Formatter;
+export default Portfolio;

@@ -1,8 +1,8 @@
 import json
 from common.CommonUtility import CommonUtility
-from handlers.handlePostTrading import handlePostTrading
-from handlers.handleGetTrading import handleGetTrading
-from handlers.handleAutoTrading import handleAutoTrading
+from handlers.handlePostPortfolio import handlePostPortfolio
+from handlers.handleGetPortfolio import handleGetPortfolio
+from handlers.handleAutoPortfolio import handleAutoPortfolio
 
 def lambda_handler(event, context):
 
@@ -20,9 +20,6 @@ def lambda_handler(event, context):
                 user_details = common_utility.verifyAuthStatus(code)
                 if user_details == None:
                     return common_utility.buildResponse(401, "Unauthorized")
-                
-                if user_details['email'] != 'kautickv29@gmail.com':
-                    return common_utility.buildResponse(403, "Forbidden")
         
             http_method = event['httpMethod']
             path = event['path']
@@ -32,12 +29,12 @@ def lambda_handler(event, context):
 
             if http_method == 'POST' and path =='/trading':
                 
-                return handlePostTrading(body_params)
+                return handlePostPortfolio(body_params)
             
             elif http_method == 'GET' and path =='/trading':
 
                 query_params = event.get('queryStringParameters', {})
-                return handleGetTrading(query_params)
+                return handleGetPortfolio(query_params)
             else:
                 return common_utility.buildResponse(404, "Resource not found")
         
@@ -46,7 +43,7 @@ def lambda_handler(event, context):
             params = event.get('detail', {})
             action = params.get('action', None)
             if action == "auto":
-                return handleAutoTrading(event)
+                return handleAutoPortfolio(event)
             else:
                 return "Unknown parameters"
     

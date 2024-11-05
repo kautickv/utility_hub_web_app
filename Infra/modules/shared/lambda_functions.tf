@@ -171,34 +171,34 @@ module "json_viewer_lamda_function" {
 }
 
 ##----------------------------------------------------------------------------------
-# CREATE LAMBDA FUNCTION FOR TRADING SERVICE
+# CREATE LAMBDA FUNCTION FOR PORTFOLIO SERVICE
 ##----------------------------------------------------------------------------------
 # Zip the current backend python script
-data "archive_file" "trading_lamda_function_zip" {
+data "archive_file" "portfolio_lamda_function_zip" {
   type = "zip"
-  source_dir  = "${path.module}/../../../back_end/trading_service"
-  output_path = "${path.module}/../../../trading_service.zip"
+  source_dir  = "${path.module}/../../../back_end/portfolio_service"
+  output_path = "${path.module}/../../../portfolio_service.zip"
 }
 
 # Upload zip file to s3 bucket created earlier
-resource "aws_s3_object" "trading_lamda_function_object" {
+resource "aws_s3_object" "portfolio_lamda_function_object" {
   bucket = module.lambda_zip_s3_bucket.bucket_id
 
-  key    = "trading_service.zip"
-  source = data.archive_file.trading_lamda_function_zip.output_path
+  key    = "portfolio_service.zip"
+  source = data.archive_file.portfolio_lamda_function_zip.output_path
 
-  etag = filemd5(data.archive_file.trading_lamda_function_zip.output_path)
+  etag = filemd5(data.archive_file.portfolio_lamda_function_zip.output_path)
 }
 
-module "trading_lamda_function" {
+module "portfolio_lamda_function" {
   source = "../../modules/lambda/functions"
 
-  function_name = "${var.app_name}_trading_service"
+  function_name = "${var.app_name}_portfolio_service"
   s3_bucket_id = module.lambda_zip_s3_bucket.bucket_id
-  s3_bucket_key = aws_s3_object.trading_lamda_function_object.key
+  s3_bucket_key = aws_s3_object.portfolio_lamda_function_object.key
   handler_name = "index.lambda_handler"
-  source_code_hash = data.archive_file.trading_lamda_function_zip.output_base64sha256
-  role_arn = aws_iam_role.trading_lambda_exec_role.arn
+  source_code_hash = data.archive_file.portfolio_lamda_function_zip.output_base64sha256
+  role_arn = aws_iam_role.portfolio_lambda_exec_role.arn
   layers_arn = [module.lambda_python_layer.layer_arn]
   environment_variables = {
     "MESSAGE"         = "Terraform sends its regards",
