@@ -6,21 +6,30 @@ import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 
 // MUI elements
 import {
-    Container,
-    Typography,
-    Paper,
-  } from "@mui/material";
+  Container,
+  Typography,
+  Paper,
+  Grid,
+  Divider,
+  Button,
+} from "@mui/material";
 
 // Import components
 import LoadingSpinner from "../common/LoadingSpinner";
 import AlertComponent from "../common/AlertComponent";
 import Navbar from "../common/Navbar";
 import { AuthContext } from "../../context/AuthContext";
+import PieChart from "./charts/PieChart"; 
+import LineChart from "./charts/LineChart";
+import TransactionLog from "./TransactionLog"
+import SummaryMetrics from "./SummaryMetrics";
 
 function Portfolio() {
   const navigate = useNavigate();
   const [userFirstName, setUserFirstName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [cryptoData, setCryptoData] = useState([]);
+  const [transactionHistory, setTransactionHistory] = useState([]);
   const { isAuthenticated, user, logoutUser, loginUser } =
     useContext(AuthContext);
   const [alerts, setAlerts] = React.useState([]);
@@ -62,7 +71,10 @@ function Portfolio() {
               console(
                 `An error has occurred. Verify Path returns ${verifyResponse}`
               );
-              addAlert("error","An error has occurred. Please try again later");
+              addAlert(
+                "error",
+                "An error has occurred. Please try again later"
+              );
             }
             setIsLoading(false);
             navigate("/login");
@@ -75,7 +87,10 @@ function Portfolio() {
         }
       } catch (err) {
         console.log(`An error occurred: ${err}`);
-        addAlert("error", "An unexpected error occurred. Please try again later");
+        addAlert(
+          "error",
+          "An unexpected error occurred. Please try again later"
+        );
         setIsLoading(false);
       }
     };
@@ -117,9 +132,35 @@ function Portfolio() {
         sx={{ p: 3, mt: 2, borderRadius: 2 }}
       >
         <Typography variant="h4" gutterBottom>
-          Crypto Dashboard
+          Crypto Portfolio
         </Typography>
+        <Divider sx={{ mb: 3 }} />
+        <Grid container spacing={3}>
+          {/* Crypto Breakdown Pie Chart */}
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Holdings Breakdown</Typography>
+            <PieChart data={cryptoData} />
+          </Grid>
+
+          {/* Balance Over Time Line Chart */}
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Balance Over Time</Typography>
+            <LineChart data={cryptoData.map((item) => item.balanceOverTime)} />
+          </Grid>
+
+          {/* Transaction Log */}
+          <Grid item xs={12}>
+            <Typography variant="h6">Transaction History</Typography>
+            <TransactionLog transactions={transactionHistory} />
+          </Grid>
+
+          {/* Summary Metrics */}
+          <Grid item xs={12}>
+            <SummaryMetrics data={cryptoData} />
+          </Grid>
+        </Grid>
       </Container>
+      {/* Alerts */}
       {alerts.map((alert) => (
         <AlertComponent
           key={alert.id}
