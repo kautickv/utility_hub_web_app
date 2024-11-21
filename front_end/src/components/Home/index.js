@@ -14,7 +14,6 @@ import { sendVerifyAPIToAuthenticationServer } from "../../utils/util";
 import LoadingSpinner from "../common/LoadingSpinner";
 import AlertComponent from "../common/AlertComponent";
 import Navbar from "../common/Navbar";
-import SlackMetrics from "./SlackMetrics";
 import { AuthContext } from "../../context/AuthContext";
 
 function Home() {
@@ -136,7 +135,7 @@ function Home() {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Paper>
-              <SlackMetrics />
+              {/*Insert Components here*/}
             </Paper>
           </Grid>
           {/* More grid items as needed */}
