@@ -2,13 +2,13 @@
   "dev": {
     "default_iam_role_arn": "arn:aws:iam::211125677766:role/pipeline-deployments-role",
     "default_iam_role_region":"us-east-1",
-    "dns_iam_role_arn": "arn:aws:iam::324277551001:role/pipeline-deployments-role",
+    "dns_iam_role_arn": "arn:aws:iam::211125677766:role/pipeline-deployments-role",
     "dns_iam_role_region":"us-east-1"
   },
   "prod": {
     "default_iam_role_arn": "arn:aws:iam::730335476691:role/pipeline-deployment-role",
     "default_iam_role_region":"us-east-1",
-    "dns_iam_role_arn": "arn:aws:iam::324277551001:role/pipeline-deployments-role",
+    "dns_iam_role_arn": "arn:aws:iam::730335476691:role/pipeline-deployment-role",
     "dns_iam_role_region":"us-east-1"
   }
 }
