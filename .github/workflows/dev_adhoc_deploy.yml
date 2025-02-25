@@ -75,9 +75,14 @@ jobs:
       - name: Debug AWS Caller Identity (Primary Role)
         run: aws sts get-caller-identity
 
+      - name: Debug AWS Caller Identity (Primary Role)
+        run: aws sts get-caller-identity
+
       - name: Terraform Init
         id: init
         working-directory: ./Infra/environments/dev
+        env:
+          TF_VAR_dns_iam_role_arn: ${{ env.DNS_IAM_ROLE_ARN }}
         run: |
           terraform init
           ls
@@ -85,18 +90,26 @@ jobs:
       - name: Terraform Validate
         id: validate
         working-directory: ./Infra/environments/dev
+
+        env:
+          TF_VAR_dns_iam_role_arn: ${{ env.DNS_IAM_ROLE_ARN }}
         run: |
           terraform validate -no-color
 
       - name: Terraform Plan
         id: plan
         working-directory: ./Infra/environments/dev
+        env:
+          TF_VAR_dns_iam_role_arn: ${{ env.DNS_IAM_ROLE_ARN }}
+
         run: |
           terraform plan -var-file="deploy_dev.tfvars" -out=tfplan
         continue-on-error: true
 
       - name: Terraform Apply
         working-directory: ./Infra/environments/dev
+        env:
+          TF_VAR_dns_iam_role_arn: ${{ env.DNS_IAM_ROLE_ARN }}
         run: |
           terraform apply -var-file="deploy_dev.tfvars" -auto-approve
 
