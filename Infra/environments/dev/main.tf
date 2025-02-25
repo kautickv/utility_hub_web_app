@@ -34,12 +34,16 @@ provider "aws" {
 }
 
 #Provider for DNS Account setup
-provider "aws"{
-  alias = "dns_account"
+provider "aws" {
+  alias  = "dns_account"
   region = var.dns_account_region
 
-  assume_role {
-    role_arn     = "arn:aws:iam::211125677766:role/pipeline-deployments-role"
-    session_name = "TerraformSession"
+  # Assume different role if default role is not same as DNS role
+  dynamic "assume_role" {
+    for_each = var.dns_iam_role_arn != var.default_iam_role_arn ? [1] : []
+    content {
+      role_arn     = var.dns_iam_role_arn
+      session_name = "TerraformSession"
+    }
   }
 }

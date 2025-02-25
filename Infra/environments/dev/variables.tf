@@ -53,6 +53,16 @@ variable "dns_aws_session_token" {
   type        = string
 }
 
+variable "dns_iam_role_arn"{
+  description = "AWS Role to be used to deploy DNS configurations to hosted zone"
+  type = string
+}
+
+variable "default_iam_role_arn"{
+  description = "AWS Role to be used to deploy entire infrastructure"
+  type = string
+}
+
 variable "use_vpc" {
   description = "True or False boolean to use VPC setup or not"
   type        = bool
