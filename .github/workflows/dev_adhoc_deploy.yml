@@ -9,7 +9,7 @@ jobs:
   pr_commented:
     # This job only runs for pull request comments
     name: PR comment Deploy
-    if: ${{ github.event.issue.pull_request && github.event.comment.body == 'Deploy' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.issue.pull_request && github.event.comment.body == 'Deploy') }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
