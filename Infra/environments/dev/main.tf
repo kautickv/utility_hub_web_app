@@ -38,7 +38,8 @@ provider "aws"{
   alias = "dns_account"
   region = var.dns_account_region
 
-  access_key = var.dns_aws_access_key_id
-  secret_key = var.dns_aws_secret_access_key
-  token      = var.dns_aws_session_token
+  assume_role {
+    role_arn     = "arn:aws:iam::211125677766:role/pipeline-deployments-role"
+    session_name = "TerraformSession"
+  }
 }
