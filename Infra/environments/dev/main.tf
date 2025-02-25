@@ -38,7 +38,7 @@ provider "aws" {
   alias  = "dns_account"
   region = var.dns_account_region
 
-  # Assume different role if default role is not same as DNS role
+  # Only assume role if it's different from the default role
   dynamic "assume_role" {
     for_each = var.dns_iam_role_arn != var.default_iam_role_arn ? [1] : []
     content {
