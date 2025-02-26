@@ -11,7 +11,7 @@ resource "aws_acm_certificate" "ssl_certificate" {
 # Store the DNS Entries
 resource "aws_route53_record" "validation" {
 
-  provider = aws.dns_account # use DNS account
+  #provider = aws.dns_account # use DNS account
   
   zone_id = var.hosted_zone_id
   name    = tolist(aws_acm_certificate.ssl_certificate.domain_validation_options)[0].resource_record_name
