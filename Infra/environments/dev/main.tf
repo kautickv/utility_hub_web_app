@@ -47,3 +47,15 @@ provider "aws" {
     }
   }
 }
+
+output "default_iam_role_arn_debug" {
+  value = "Default IAM Role: '${var.default_iam_role_arn}'"
+}
+
+output "dns_iam_role_arn_debug" {
+  value = "DNS IAM Role: '${var.dns_iam_role_arn}'"
+}
+
+output "comparison_result" {
+  value = var.dns_iam_role_arn != var.default_iam_role_arn ? "Different" : "Same"
+}
