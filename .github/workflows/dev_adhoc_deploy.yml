@@ -75,9 +75,6 @@ jobs:
       - name: Debug AWS Caller Identity (Primary Role)
         run: aws sts get-caller-identity
 
-      - name: Debug AWS Caller Identity (Primary Role)
-        run: aws sts get-caller-identity
-
       - name: Terraform Init
         id: init
         working-directory: ./Infra/environments/dev
