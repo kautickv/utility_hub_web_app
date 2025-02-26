@@ -33,6 +33,10 @@ provider "aws" {
 
 }
 
+locals {
+  same_roles = trimspace(var.dns_iam_role_arn) == trimspace(var.default_iam_role_arn)
+}
+
 #Provider for DNS Account setup
 provider "aws" {
   alias  = "dns_account"
@@ -40,7 +44,7 @@ provider "aws" {
 
   # Only assume role if it's different from the default role
   dynamic "assume_role" {
-    for_each = var.dns_iam_role_arn != var.default_iam_role_arn ? [1] : []
+    for_each = local.same_roles ? [] : [1]
     content {
       role_arn     = var.dns_iam_role_arn
       session_name = "TerraformSession"
