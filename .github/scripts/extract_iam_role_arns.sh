@@ -16,19 +16,27 @@ if [ ! -f "$JSON_FILE" ]; then
     exit 1
 fi
 
-# Extracting IAM role ARNs and regions using Python
+# Extract IAM role ARNs and regions using Python
 DEFAULT_IAM_ROLE_ARN=$(python -c "import json; print(json.load(open('$JSON_FILE'))['$ENVIRONMENT']['default_iam_role_arn'])")
 DEFAULT_IAM_ROLE_REGION=$(python -c "import json; print(json.load(open('$JSON_FILE'))['$ENVIRONMENT']['default_iam_role_region'])")
 DNS_IAM_ROLE_ARN=$(python -c "import json; print(json.load(open('$JSON_FILE'))['$ENVIRONMENT']['dns_iam_role_arn'])")
 DNS_IAM_ROLE_REGION=$(python -c "import json; print(json.load(open('$JSON_FILE'))['$ENVIRONMENT']['dns_iam_role_region'])")
 
-# Setting them as environment variables for GitHub Actions
-echo "DEFAULT_IAM_ROLE_ARN=$DEFAULT_IAM_ROLE_ARN" >> $GITHUB_ENV
-echo "DEFAULT_IAM_ROLE_REGION=$DEFAULT_IAM_ROLE_REGION" >> $GITHUB_ENV
-echo "DNS_IAM_ROLE_ARN=$DNS_IAM_ROLE_ARN" >> $GITHUB_ENV
-echo "DNS_IAM_ROLE_REGION=$DNS_IAM_ROLE_REGION" >> $GITHUB_ENV
+# Ensure no empty variables
+if [[ -z "$DEFAULT_IAM_ROLE_ARN" || -z "$DEFAULT_IAM_ROLE_REGION" || -z "$DNS_IAM_ROLE_ARN" || -z "$DNS_IAM_ROLE_REGION" ]]; then
+    echo "Error: One or more IAM role values are empty. Please check your JSON file."
+    exit 1
+fi
 
-# Print values for debugging (Optional)
+# Correctly setting them as environment variables for GitHub Actions
+{
+    echo "DEFAULT_IAM_ROLE_ARN=$DEFAULT_IAM_ROLE_ARN"
+    echo "DEFAULT_IAM_ROLE_REGION=$DEFAULT_IAM_ROLE_REGION"
+    echo "DNS_IAM_ROLE_ARN=$DNS_IAM_ROLE_ARN"
+    echo "DNS_IAM_ROLE_REGION=$DNS_IAM_ROLE_REGION"
+} >> "$GITHUB_ENV"
+
+# Debugging output
 echo "Extracted IAM Roles:"
-echo "DEFAULT_IAM_ROLE_ARN=${DEFAULT_IAM_ROLE_ARN}"
-echo "DNS_IAM_ROLE_ARN=${DNS_IAM_ROLE_ARN}"
+echo "DEFAULT_IAM_ROLE_ARN=$DEFAULT_IAM_ROLE_ARN"
+echo "DNS_IAM_ROLE_ARN=$DNS_IAM_ROLE_ARN"

@@ -38,19 +38,14 @@ variable "dns_account_region" {
   default     = "us-east-1"
 }
 
-variable "dns_aws_access_key_id" {
-  description = "AWS Access Key ID for DNS Account"
-  type        = string
+variable "dns_iam_role_arn"{
+  description = "AWS Role to be used to deploy DNS configurations to hosted zone"
+  type = string
 }
 
-variable "dns_aws_secret_access_key" {
-  description = "AWS Secret Access Key for DNS Account"
-  type        = string
-}
-
-variable "dns_aws_session_token" {
-  description = "AWS Session Token for DNS Account"
-  type        = string
+variable "default_iam_role_arn"{
+  description = "AWS Role to be used to deploy entire infrastructure"
+  type = string
 }
 
 variable "use_vpc" {

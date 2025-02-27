@@ -33,12 +33,33 @@ provider "aws" {
 
 }
 
+locals {
+  same_roles = trimspace(var.dns_iam_role_arn) == trimspace(var.default_iam_role_arn)
+}
+
 #Provider for DNS Account setup
-provider "aws"{
-  alias = "dns_account"
+provider "aws" {
+  alias  = "dns_account"
   region = var.dns_account_region
 
-  access_key = var.dns_aws_access_key_id
-  secret_key = var.dns_aws_secret_access_key
-  token      = var.dns_aws_session_token
+  # Only assume role if it's different from the default role
+  dynamic "assume_role" {
+    for_each = local.same_roles ? [] : [1]
+    content {
+      role_arn     = var.dns_iam_role_arn
+      session_name = "TerraformSession"
+    }
+  }
+}
+
+output "default_iam_role_arn_debug" {
+  value = "Default IAM Role: '${var.default_iam_role_arn}'"
+}
+
+output "dns_iam_role_arn_debug" {
+  value = "DNS IAM Role: '${var.dns_iam_role_arn}'"
+}
+
+output "comparison_result" {
+  value = var.dns_iam_role_arn != var.default_iam_role_arn ? "Different" : "Same"
 }

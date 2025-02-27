@@ -71,7 +71,7 @@ jobs:
           role-to-assume: ${{ env.DEFAULT_IAM_ROLE_ARN }}
           aws-region: ${{ env.DEFAULT_IAM_ROLE_REGION }}
           role-session-name: devSession
-
+      
       - name: Debug AWS Caller Identity (Primary Role)
         run: aws sts get-caller-identity
 
@@ -88,6 +88,7 @@ jobs:
       - name: Terraform Validate
         id: validate
         working-directory: ./Infra/environments/dev
+
         env:
           TF_VAR_dns_iam_role_arn: ${{ env.DNS_IAM_ROLE_ARN }}
           TF_VAR_default_iam_role_arn: ${{ env.DEFAULT_IAM_ROLE_ARN }}
