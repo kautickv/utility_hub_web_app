@@ -80,7 +80,6 @@ jobs:
         working-directory: ./Infra/environments/dev
         env:
           TF_VAR_dns_iam_role_arn: ${{ env.DNS_IAM_ROLE_ARN }}
-          TF_VAR_default_iam_role_arn: ${{ env.DEFAULT_IAM_ROLE_ARN }}
         run: |
           terraform init
           ls
@@ -90,7 +89,6 @@ jobs:
         working-directory: ./Infra/environments/dev
         env:
           TF_VAR_dns_iam_role_arn: ${{ env.DNS_IAM_ROLE_ARN }}
-          TF_VAR_default_iam_role_arn: ${{ env.DEFAULT_IAM_ROLE_ARN }}
         run: |
           terraform validate -no-color
 
@@ -99,20 +97,14 @@ jobs:
         working-directory: ./Infra/environments/dev
         env:
           TF_VAR_dns_iam_role_arn: ${{ env.DNS_IAM_ROLE_ARN }}
-          TF_VAR_default_iam_role_arn: ${{ env.DEFAULT_IAM_ROLE_ARN }}
         run: |
           terraform plan -var-file="deploy_dev.tfvars" -out=tfplan
         continue-on-error: true
 
-      - name: Show Terraform output variables
-        working-directory: ./Infra/environments/dev
-        run: terraform output
-      
       - name: Terraform Apply
         working-directory: ./Infra/environments/dev
         env:
           TF_VAR_dns_iam_role_arn: ${{ env.DNS_IAM_ROLE_ARN }}
-          TF_VAR_default_iam_role_arn: ${{ env.DEFAULT_IAM_ROLE_ARN }}
         run: |
           terraform apply -var-file="deploy_dev.tfvars" -auto-approve
 
