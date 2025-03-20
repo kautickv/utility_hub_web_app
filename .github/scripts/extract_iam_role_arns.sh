@@ -22,13 +22,8 @@ DEFAULT_IAM_ROLE_REGION=$(python -c "import json; print(json.load(open('$JSON_FI
 DNS_IAM_ROLE_ARN=$(python -c "import json; print(json.load(open('$JSON_FILE'))['$ENVIRONMENT']['dns_iam_role_arn'])")
 DNS_IAM_ROLE_REGION=$(python -c "import json; print(json.load(open('$JSON_FILE'))['$ENVIRONMENT']['dns_iam_role_region'])")
 
-# Setting them as environment variables for GitHub Actions
-echo "DEFAULT_IAM_ROLE_ARN=$DEFAULT_IAM_ROLE_ARN" >> $GITHUB_ENV
-echo "DEFAULT_IAM_ROLE_REGION=$DEFAULT_IAM_ROLE_REGION" >> $GITHUB_ENV
-echo "DNS_IAM_ROLE_ARN=$DNS_IAM_ROLE_ARN" >> $GITHUB_ENV
-echo "DNS_IAM_ROLE_REGION=$DNS_IAM_ROLE_REGION" >> $GITHUB_ENV
-
-# Print values for debugging (Optional)
-echo "Extracted IAM Roles:"
-echo "DEFAULT_IAM_ROLE_ARN=${DEFAULT_IAM_ROLE_ARN}"
-echo "DNS_IAM_ROLE_ARN=${DNS_IAM_ROLE_ARN}"
+# Setting them as environment variables
+echo "DEFAULT_IAM_ROLE_ARN=$DEFAULT_IAM_ROLE_ARN"
+echo "DEFAULT_IAM_ROLE_REGION=$DEFAULT_IAM_ROLE_REGION"
+echo "DNS_IAM_ROLE_ARN=$DNS_IAM_ROLE_ARN"
+echo "DNS_IAM_ROLE_REGION=$DNS_IAM_ROLE_REGION"
