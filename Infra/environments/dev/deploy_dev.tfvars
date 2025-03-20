@@ -1,9 +1,9 @@
 ## App Variables
 ##---------------------------------------------------------
 app_name = "devutility-hub"
-domain_name = "devutilityhub.vaisnavsingkautick.com"
-bucket_name= "devutilityhub.vaisnavsingkautick.com"
-hosted_zone_id= "Z0236168HPT8WHQWIY9"
+domain_name = "utilityhub.qa.bendigitalpro.com"
+bucket_name= "utilityhub.qa.bendigitalpro.com"
+hosted_zone_id= "Z05259013T198EEU9VNGP"
 
 ## Deployment Variables
 ##---------------------------------------------------------
