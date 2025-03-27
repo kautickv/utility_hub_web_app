@@ -6,6 +6,9 @@
 
 ### Latest Updates
 
+#### [changing-domain-to-bengigitalpro.com] - February 2025
+- **Domain Name Migration**:Users should now use the base domain of bendigitalpro.com to access the QA and production website
+
 #### [add-global-setting-storage] - November 2024
 - **Global Settings Storage**: Now users can save their settings across tools! This makes it easier to keep user configurations consistent across features.
 
